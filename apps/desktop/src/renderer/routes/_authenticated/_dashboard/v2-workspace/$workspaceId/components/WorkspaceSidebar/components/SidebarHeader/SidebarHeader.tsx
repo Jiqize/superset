@@ -1,5 +1,9 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
+import {
+	AAIcon,
+	type AAIconName,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { getSidebarHeaderTabButtonClassName } from "renderer/screens/main/components/WorkspaceView/RightSidebar/headerTabStyles";
 import type { SidebarTabDefinition } from "../../types";
 
@@ -8,6 +12,7 @@ interface SidebarHeaderProps {
 	activeTab: string;
 	onTabChange: (id: string) => void;
 	compact?: boolean;
+	aaOffice?: boolean;
 }
 
 export function SidebarHeader({
@@ -15,11 +20,17 @@ export function SidebarHeader({
 	activeTab,
 	onTabChange,
 	compact,
+	aaOffice = false,
 }: SidebarHeaderProps) {
 	const actions = tabs.find((t) => t.id === activeTab)?.actions;
 
 	return (
-		<div className="flex h-10 shrink-0 items-stretch">
+		<div
+			className={cn(
+				"flex h-10 shrink-0 items-stretch",
+				aaOffice && "aa-file-cabinet__tabs",
+			)}
+		>
 			<div className="flex min-w-0 flex-1 items-center h-full overflow-hidden">
 				{tabs.map((tab, index) => {
 					const isActive = activeTab === tab.id;
@@ -28,6 +39,7 @@ export function SidebarHeader({
 							? formatBadgeCount(tab.badge)
 							: null;
 					const label = badge ? `${tab.label} (${badge})` : tab.label;
+					const aaIconName = aaOffice ? getAAIconName(tab.id) : null;
 					const btn = (
 						<button
 							key={tab.id}
@@ -41,11 +53,17 @@ export function SidebarHeader({
 									inverted: true,
 								}),
 								"relative flex-1 justify-center",
+								aaOffice && "aa-file-cabinet__tab",
 								// The resizable panel already draws the sidebar's left edge.
 								index === 0 && "border-l-transparent",
 							)}
+							data-active={isActive || undefined}
 						>
-							{tab.icon && <tab.icon className="size-3" />}
+							{aaIconName ? (
+								<AAIcon name={aaIconName} />
+							) : (
+								tab.icon && <tab.icon className="size-3" />
+							)}
 							{!compact && tab.label}
 							{badge && (
 								<span
@@ -76,7 +94,12 @@ export function SidebarHeader({
 				})}
 			</div>
 			{actions && (
-				<div className="flex shrink-0 items-center h-10 pr-2 gap-0.5">
+				<div
+					className={cn(
+						"flex shrink-0 items-center h-10 pr-2 gap-0.5",
+						aaOffice && "aa-file-cabinet__actions",
+					)}
+				>
 					{actions}
 				</div>
 			)}
@@ -86,4 +109,17 @@ export function SidebarHeader({
 
 function formatBadgeCount(count: number): string {
 	return count > 99 ? "99+" : String(count);
+}
+
+function getAAIconName(tabId: string): AAIconName | null {
+	switch (tabId) {
+		case "files":
+			return "folder";
+		case "changes":
+			return "changes";
+		case "review":
+			return "review";
+		default:
+			return null;
+	}
 }

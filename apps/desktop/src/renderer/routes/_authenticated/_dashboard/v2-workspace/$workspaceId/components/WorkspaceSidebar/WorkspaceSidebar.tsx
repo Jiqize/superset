@@ -1,7 +1,8 @@
 import { eq } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LuFile, LuGitCompareArrows } from "react-icons/lu";
+import { AAFileCabinetHeader } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useWorkspaceGitStatus } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/providers/WorkspaceGitStatusProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { useSettings } from "renderer/stores/settings";
@@ -147,11 +148,20 @@ export function WorkspaceSidebar({
 
 	const tabs: SidebarTabDefinition[] = [filesTab, changesTab, reviewTab];
 	const activeTabDef = tabs.find((t) => t.id === activeTab);
+	const changedFileCount = useMemo(() => {
+		if (!gitStatus.data) return null;
+		return new Set(
+			[...gitStatus.data.staged, ...gitStatus.data.unstaged].map(
+				(file) => file.path,
+			),
+		).size;
+	}, [gitStatus.data]);
 
 	return (
 		<div
 			ref={containerRef}
 			className="aa-workspace-sidebar isolate flex h-full w-full min-h-0 flex-col overflow-hidden bg-background"
+			data-active-tab={activeTab}
 		>
 			<PRActionHeader
 				workspaceId={workspaceId}
@@ -160,13 +170,15 @@ export function WorkspaceSidebar({
 				onRetry={onRetry}
 				createPREnabled={CREATE_PR_BUTTON_ENABLED}
 			/>
+			<AAFileCabinetHeader changedFileCount={changedFileCount} />
 			<SidebarHeader
 				tabs={tabs}
 				activeTab={activeTab}
 				onTabChange={setActiveTab}
 				compact={compact}
+				aaOffice
 			/>
-			<div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+			<div className="aa-file-cabinet__contents flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
 				{activeTabDef?.content}
 			</div>
 		</div>

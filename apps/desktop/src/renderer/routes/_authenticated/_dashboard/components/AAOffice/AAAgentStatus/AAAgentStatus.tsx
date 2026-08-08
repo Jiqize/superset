@@ -63,6 +63,7 @@ export function AAAgentStatus({
 }: AAAgentStatusProps) {
 	const { binding, state } = useAAAgentStatus();
 	const label = state.toUpperCase();
+	const tone = toneForState(state);
 
 	return (
 		<div
@@ -78,13 +79,20 @@ export function AAAgentStatus({
 					: "No active Pi terminal session"
 			}
 		>
-			{!compact && <AAAgentAvatar state={state} />}
+			{!compact && (
+				<span className="aa-agent-status__portrait">
+					<AAAgentAvatar state={state} />
+				</span>
+			)}
 			<div className="aa-agent-status__copy">
 				{!compact && (
-					<span className="aa-agent-status__eyebrow">PI WORKER</span>
+					<span className="aa-agent-status__eyebrow">
+						PI WORKER
+						<AAStatusLight className="aa-agent-status__light" tone={tone} />
+					</span>
 				)}
 				<span className="aa-agent-status__state">
-					<AAStatusLight tone={toneForState(state)} />
+					{compact && <AAStatusLight tone={tone} />}
 					{label}
 				</span>
 			</div>

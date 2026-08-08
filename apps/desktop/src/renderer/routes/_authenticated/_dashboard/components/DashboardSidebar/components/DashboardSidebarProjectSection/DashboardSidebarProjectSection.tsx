@@ -88,7 +88,7 @@ export function DashboardSidebarProjectSection({
 				onRemoveFromSidebar={confirmRemoveFromSidebar}
 				onRename={startRename}
 			>
-				<div className="mt-1 first:mt-0">
+				<div className="aa-briefcase-section mt-1 first:mt-0">
 					<DashboardSidebarCollapsedProjectContent
 						projectId={project.id}
 						projectName={project.name}
@@ -108,7 +108,7 @@ export function DashboardSidebarProjectSection({
 	}
 
 	return (
-		<div className="mt-1 first:mt-0">
+		<div className="aa-briefcase-section mt-1 first:mt-0">
 			<DashboardSidebarProjectContextMenu
 				onCreateSection={handleNewSection}
 				onImportWorktrees={handleImportWorktrees}

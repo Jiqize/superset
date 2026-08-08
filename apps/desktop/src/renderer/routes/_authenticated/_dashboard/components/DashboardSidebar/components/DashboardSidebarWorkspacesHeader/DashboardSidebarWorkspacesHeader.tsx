@@ -22,8 +22,15 @@ import {
 	useOpenTemplateGalleryModal,
 } from "renderer/stores/add-repository-modal";
 import { useSidebarWorkspacesCollapseStore } from "renderer/stores/sidebar-workspaces-collapse";
+import { AAIcon } from "../../../AAOffice";
 
-export function DashboardSidebarWorkspacesHeader() {
+interface DashboardSidebarWorkspacesHeaderProps {
+	aaOffice?: boolean;
+}
+
+export function DashboardSidebarWorkspacesHeader({
+	aaOffice = false,
+}: DashboardSidebarWorkspacesHeaderProps) {
 	const isCollapsed = useSidebarWorkspacesCollapseStore((s) => s.isCollapsed);
 	const toggleCollapsed = useSidebarWorkspacesCollapseStore((s) => s.toggle);
 	const openEmptyProject = useOpenEmptyProjectModal();
@@ -64,9 +71,17 @@ export function DashboardSidebarWorkspacesHeader() {
 					toggleCollapsed();
 				}
 			}}
-			className="group flex min-h-8 w-full shrink-0 items-center gap-1.5 py-1.5 pl-4 pr-2 text-[10px] font-semibold uppercase tracking-[0.075em] text-muted-foreground transition-colors"
+			className={cn(
+				"group flex min-h-8 w-full shrink-0 items-center gap-1.5 py-1.5 pl-4 pr-2 text-[10px] font-semibold uppercase tracking-[0.075em] text-muted-foreground transition-colors",
+				aaOffice && "aa-cabinet-index-header",
+			)}
 		>
-			<span className="min-w-0 truncate text-left">Projects</span>
+			{aaOffice && (
+				<AAIcon className="aa-cabinet-index-header__icon" name="briefcase" />
+			)}
+			<span className="min-w-0 truncate text-left">
+				{aaOffice ? "Briefcase Cabinet" : "Projects"}
+			</span>
 			<HiChevronRight
 				className={cn(
 					"size-3 shrink-0 text-muted-foreground transition-[opacity,transform] duration-150",

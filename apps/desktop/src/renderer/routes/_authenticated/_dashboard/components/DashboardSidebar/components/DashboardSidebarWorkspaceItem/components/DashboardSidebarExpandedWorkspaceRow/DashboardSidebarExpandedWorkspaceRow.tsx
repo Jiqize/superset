@@ -12,6 +12,7 @@ import { HiCheck, HiMiniMinus, HiMiniXMark } from "react-icons/hi2";
 import type { DiffStats } from "renderer/hooks/host-service/useDiffStats";
 import { HotkeyLabel } from "renderer/hotkeys";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
 import { RenameInput } from "renderer/screens/main/components/WorkspaceSidebar/RenameInput";
 import type { ActivePaneStatus } from "shared/tabs-types";
@@ -133,6 +134,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 				}}
 				className={cn(
 					"relative mx-2 rounded-md text-left text-sm transition-colors",
+					"aa-workspace-folder-row",
 					isActive && "bg-fill-selected",
 					isSelected && "bg-fill-selected",
 					onClick &&
@@ -145,6 +147,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 				)}
 				data-selected={isSelected || undefined}
 				data-active={isActive || undefined}
+				data-workspace-type={workspace.type}
 				{...props}
 			>
 				{/* biome-ignore lint/a11y/useSemanticElements: The row contains nested action buttons, so it cannot be a native button. */}
@@ -188,31 +191,41 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 											}
 										}}
 										aria-label={`Open pull request #${pullRequest.number}`}
-										className="relative mr-2.5 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded hover:bg-foreground/10"
+										className="aa-workspace-folder-row__mark relative mr-2.5 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded hover:bg-foreground/10"
 									>
-										<DashboardSidebarWorkspaceIcon
-											hostType={hostType}
-											workspaceType={workspace.type}
-											hostIsOnline={hostIsOnline}
-											isActive={isActive}
-											variant="expanded"
-											workspaceStatus={workspaceStatus}
-											isCreatePending={isPending}
-											pullRequestState={pullRequest.state}
-										/>
+										<span className="aa-workspace-folder-row__folder hidden">
+											<AAIcon name="folder" />
+										</span>
+										<span className="aa-workspace-folder-row__runtime-mark">
+											<DashboardSidebarWorkspaceIcon
+												hostType={hostType}
+												workspaceType={workspace.type}
+												hostIsOnline={hostIsOnline}
+												isActive={isActive}
+												variant="expanded"
+												workspaceStatus={workspaceStatus}
+												isCreatePending={isPending}
+												pullRequestState={pullRequest.state}
+											/>
+										</span>
 									</button>
 								) : (
-									<div className="relative mr-2.5 flex size-5 shrink-0 items-center justify-center">
-										<DashboardSidebarWorkspaceIcon
-											hostType={hostType}
-											workspaceType={workspace.type}
-											hostIsOnline={hostIsOnline}
-											isActive={isActive}
-											variant="expanded"
-											workspaceStatus={workspaceStatus}
-											isCreatePending={isPending}
-											pullRequestState={null}
-										/>
+									<div className="aa-workspace-folder-row__mark relative mr-2.5 flex size-5 shrink-0 items-center justify-center">
+										<span className="aa-workspace-folder-row__folder hidden">
+											<AAIcon name="folder" />
+										</span>
+										<span className="aa-workspace-folder-row__runtime-mark">
+											<DashboardSidebarWorkspaceIcon
+												hostType={hostType}
+												workspaceType={workspace.type}
+												hostIsOnline={hostIsOnline}
+												isActive={isActive}
+												variant="expanded"
+												workspaceStatus={workspaceStatus}
+												isCreatePending={isPending}
+												pullRequestState={null}
+											/>
+										</span>
 									</div>
 								)}
 							</TooltipTrigger>
@@ -295,6 +308,9 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 								)}
 							>
 								{name || branch}
+								<span className="aa-workspace-folder-row__kind hidden">
+									{isMainWorkspace ? "MAIN" : "COPY"}
+								</span>
 								{isSelected && <span className="sr-only">, selected</span>}
 							</span>
 						)}

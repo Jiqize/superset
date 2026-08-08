@@ -7,8 +7,8 @@ import {
 	ContextMenuTrigger,
 } from "@superset/ui/context-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
-import { HiMiniCommandLine } from "react-icons/hi2";
 import { getPresetIcon } from "renderer/assets/app-icons/preset-icons";
+import { AAEmployeeAvatar } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 
 interface BuiltinPresetBarItemProps {
@@ -32,24 +32,17 @@ export function BuiltinPresetBarItem({
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger asChild>
-				<div>
+				<div className="aa-employee-roster__item">
 					<Tooltip delayDuration={700}>
 						<TooltipTrigger asChild>
 							<Button
+								aria-label={`Run employee preset: ${preset.name}`}
 								variant="ghost"
 								size="sm"
-								className="h-6 max-w-32 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+								className="aa-employee-roster__button h-8 max-w-36 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
 								onClick={() => onExecutePreset(preset)}
 							>
-								{icon ? (
-									<img
-										src={icon}
-										alt=""
-										className="size-3.5 shrink-0 object-contain opacity-90"
-									/>
-								) : (
-									<HiMiniCommandLine className="size-3.5 shrink-0" />
-								)}
+								<AAEmployeeAvatar iconSrc={icon} label={preset.name} />
 								<span className="min-w-0 truncate">{preset.name}</span>
 							</Button>
 						</TooltipTrigger>

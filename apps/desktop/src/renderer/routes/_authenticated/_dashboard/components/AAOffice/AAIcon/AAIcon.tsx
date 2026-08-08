@@ -8,6 +8,7 @@ export type AAIconName =
 	| "changes"
 	| "folder"
 	| "home"
+	| "review"
 	| "sessions"
 	| "settings"
 	| "terminal";
@@ -110,6 +111,17 @@ function renderIcon(name: AAIconName) {
 					<path fill="currentColor" d="M6 3h13v17H6zM3 6h2v15h11v2H3z" />
 					<path fill="var(--aa-paper)" d="M8 5h9v13H8z" />
 					<path fill="currentColor" d="M10 8h5v2h-5zm0 4h5v2h-5z" />
+				</>
+			);
+		case "review":
+			return (
+				<>
+					<path fill="currentColor" d="M5 2h12l3 3v17H5z" />
+					<path fill="var(--aa-paper)" d="M7 4h9v3h2v13H7z" />
+					<path
+						fill="currentColor"
+						d="M9 10h6v2H9zm0 4h3v2H9zm4 1 1 1 3-4 1 1-4 6-2-3z"
+					/>
 				</>
 			);
 	}

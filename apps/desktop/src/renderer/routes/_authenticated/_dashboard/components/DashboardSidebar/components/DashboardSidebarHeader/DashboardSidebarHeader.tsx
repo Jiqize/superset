@@ -375,7 +375,10 @@ export function DashboardSidebarHeader({
 
 	return (
 		<div
-			className="flex flex-col gap-px px-2 pt-2 pb-2"
+			className={cn(
+				"flex flex-col gap-px px-2 pt-2 pb-2",
+				aaOffice && "aa-cabinet-toolbar",
+			)}
 			// Pin the top inset so the traffic-light row stays a constant physical
 			// distance from the window top under page zoom (see the row below).
 			style={isMac ? { paddingTop: `${8 / zoomFactor}px` } : undefined}
@@ -409,7 +412,10 @@ export function DashboardSidebarHeader({
 			<button
 				type="button"
 				onClick={() => openModal(activeProjectId)}
-				className="group flex w-full items-center gap-2 rounded-md bg-fill-hover/60 [.light_&]:bg-fill-hover px-1 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-fill-selected [.light_&]:hover:bg-fill-selected hover:text-foreground"
+				className={cn(
+					"group flex w-full items-center gap-2 rounded-md bg-fill-hover/60 [.light_&]:bg-fill-hover px-1 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-fill-selected [.light_&]:hover:bg-fill-selected hover:text-foreground",
+					aaOffice && "aa-cabinet-new-workspace",
+				)}
 			>
 				<div className="flex size-5 shrink-0 items-center justify-center rounded bg-fill-selected">
 					<LuPlus className="size-3" strokeWidth={STROKE_WIDTH_THICK} />
@@ -424,7 +430,10 @@ export function DashboardSidebarHeader({
 				type="button"
 				onPointerDown={handleSearchPointerDown}
 				onClick={handleSearchClick}
-				className="group flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-fill-hover hover:text-foreground"
+				className={cn(
+					"group flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-fill-hover hover:text-foreground",
+					aaOffice && "aa-cabinet-search",
+				)}
 			>
 				<LuSearch
 					className="size-3.5 shrink-0 text-muted-foreground"

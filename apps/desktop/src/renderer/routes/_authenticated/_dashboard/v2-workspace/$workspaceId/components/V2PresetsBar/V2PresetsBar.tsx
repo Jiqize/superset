@@ -23,6 +23,7 @@ import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import type { HotkeyId } from "renderer/hotkeys";
 import { posthog } from "renderer/lib/posthog";
 import { resolveV2PresetIcon } from "renderer/lib/preset-icon";
+import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
@@ -229,9 +230,16 @@ export function V2PresetsBar({
 
 	return (
 		<div
-			className="aa-presets-bar flex h-10 min-w-0 shrink-0 items-center gap-1.5 overflow-x-auto overflow-y-hidden bg-background px-2"
+			className="aa-presets-bar flex h-11 min-w-0 shrink-0 items-center gap-1 overflow-x-auto overflow-y-hidden bg-background px-1.5"
 			style={{ scrollbarWidth: "none" }}
 		>
+			<div className="aa-employee-roster__label" title="Run an agent preset">
+				<AAIcon name="agents" />
+				<span>
+					<strong>EMPLOYEE ROSTER</strong>
+					<small>ASSIGN PRESET</small>
+				</span>
+			</div>
 			<DropdownMenu>
 				<Tooltip delayDuration={1000}>
 					<TooltipTrigger asChild>
@@ -239,7 +247,7 @@ export function V2PresetsBar({
 							<Button
 								variant="ghost"
 								size="icon"
-								className="size-6 shrink-0 text-muted-foreground hover:text-foreground"
+								className="aa-employee-roster__settings size-7 shrink-0 text-muted-foreground hover:text-foreground"
 							>
 								<Settings className="size-3.5" />
 							</Button>

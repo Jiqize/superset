@@ -2,6 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { type ComponentPropsWithoutRef, forwardRef } from "react";
 import { HiChevronRight, HiMiniPlus } from "react-icons/hi2";
+import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
 import { RenameInput } from "renderer/screens/main/components/WorkspaceSidebar/RenameInput";
 
@@ -65,12 +66,17 @@ export const DashboardSidebarProjectRow = forwardRef<
 				className={cn(
 					"group mx-2 flex min-h-8 items-center rounded-md pl-2 pr-1 py-1 text-[13px] font-medium",
 					"hover:bg-fill-hover transition-colors",
+					"aa-briefcase-row",
 					className,
 				)}
+				data-collapsed={isCollapsed || undefined}
 				{...props}
 			>
 				<div className="flex min-w-0 flex-1 items-center gap-2 py-0.5">
-					<div className="flex size-5 shrink-0 items-center justify-center">
+					<span className="aa-briefcase-row__mark hidden" aria-hidden="true">
+						<AAIcon name="briefcase" />
+					</span>
+					<div className="aa-briefcase-row__legacy-mark flex size-5 shrink-0 items-center justify-center">
 						<ProjectThumbnail
 							projectName={projectName}
 							iconUrl={iconUrl}
@@ -96,6 +102,10 @@ export const DashboardSidebarProjectRow = forwardRef<
 						<span className="truncate">{projectName}</span>
 					)}
 				</div>
+				<HiChevronRight
+					aria-hidden="true"
+					className="aa-briefcase-row__chevron hidden size-3 shrink-0"
+				/>
 
 				{!isRenaming && (
 					<div className="ml-1 flex size-6 shrink-0 items-center justify-center">

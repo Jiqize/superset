@@ -237,7 +237,7 @@ export function DashboardSidebar({
 
 								{!isCollapsed && (
 									<DashboardSidebarBulkActions projects={orderedGroups}>
-										<DashboardSidebarWorkspacesHeader />
+										<DashboardSidebarWorkspacesHeader aaOffice={aaOffice} />
 									</DashboardSidebarBulkActions>
 								)}
 
