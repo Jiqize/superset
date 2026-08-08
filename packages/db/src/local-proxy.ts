@@ -1,10 +1,10 @@
 import { neonConfig } from "@neondatabase/serverless";
 
-const LOCAL_DATABASE_HOST = "db.localtest.me";
+const LOCAL_DATABASE_HOSTS = new Set(["db.localtest.me", "localhost"]);
 
 export function isLocalProxy(databaseUrl: string): boolean {
 	try {
-		return new URL(databaseUrl).hostname === LOCAL_DATABASE_HOST;
+		return LOCAL_DATABASE_HOSTS.has(new URL(databaseUrl).hostname);
 	} catch {
 		return false;
 	}
