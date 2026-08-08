@@ -45,12 +45,15 @@ import {
 	useOpenTemplateGalleryModal,
 } from "renderer/stores/add-repository-modal";
 import { useOpenNewWorkspaceModal } from "renderer/stores/new-workspace-modal";
+import { COLLAPSED_WORKSPACE_SIDEBAR_WIDTH } from "renderer/stores/workspace-sidebar-state";
 
 interface DashboardSidebarHeaderProps {
+	aaOffice?: boolean;
 	isCollapsed?: boolean;
 }
 
 export function DashboardSidebarHeader({
+	aaOffice = false,
 	isCollapsed = false,
 }: DashboardSidebarHeaderProps) {
 	const openModal = useOpenNewWorkspaceModal();
@@ -98,6 +101,9 @@ export function DashboardSidebarHeader({
 	// Default to Mac while loading so we don't briefly cover the traffic lights.
 	const isMac = platform === undefined || platform === "darwin";
 	const zoomFactor = useZoomFactor();
+	const trafficLightInset = aaOffice
+		? Math.max(80 / zoomFactor - COLLAPSED_WORKSPACE_SIDEBAR_WIDTH, 0)
+		: 80 / zoomFactor;
 	const matchRoute = useMatchRoute();
 	const { gateFeature } = usePaywall();
 	const isWorkspacesListOpen = !!matchRoute({ to: "/v2-workspaces" });
@@ -391,7 +397,7 @@ export function DashboardSidebarHeader({
 			>
 				<div
 					className="drag h-full shrink-0"
-					style={{ width: isMac ? `${80 / zoomFactor}px` : "8px" }}
+					style={{ width: isMac ? `${trafficLightInset}px` : "8px" }}
 				/>
 				<ZoomStable enabled={isMac} className="flex items-center gap-1.5">
 					<SidebarToggle />
@@ -430,79 +436,87 @@ export function DashboardSidebarHeader({
 				)}
 			</button>
 
-			<button
-				type="button"
-				onClick={handleWorkspacesClick}
-				className={cn(
-					"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
-					isWorkspacesListOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<LuLayers
-					className="size-3.5 shrink-0 text-muted-foreground"
-					strokeWidth={1.5}
-				/>
-				<span className="flex-1 text-left">Workspaces</span>
-			</button>
+			{!aaOffice && (
+				<button
+					type="button"
+					onClick={handleWorkspacesClick}
+					className={cn(
+						"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
+						isWorkspacesListOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<LuLayers
+						className="size-3.5 shrink-0 text-muted-foreground"
+						strokeWidth={1.5}
+					/>
+					<span className="flex-1 text-left">Workspaces</span>
+				</button>
+			)}
 
-			<button
-				type="button"
-				onClick={handleAutomationsClick}
-				className={cn(
-					"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
-					isAutomationsOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<LuClock
-					className="size-3.5 shrink-0 text-muted-foreground"
-					strokeWidth={1.5}
-				/>
-				<span className="flex-1 text-left">Automations</span>
-				{myFailedCount > 0 && (
-					<span
-						title={`${myFailedCount} of your automations failed their last run`}
-						className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 px-1 text-[10px] font-medium tabular-nums text-red-600 dark:text-red-400"
-					>
-						{myFailedCount > 9 ? "9+" : myFailedCount}
-					</span>
-				)}
-			</button>
+			{!aaOffice && (
+				<button
+					type="button"
+					onClick={handleAutomationsClick}
+					className={cn(
+						"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
+						isAutomationsOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<LuClock
+						className="size-3.5 shrink-0 text-muted-foreground"
+						strokeWidth={1.5}
+					/>
+					<span className="flex-1 text-left">Automations</span>
+					{myFailedCount > 0 && (
+						<span
+							title={`${myFailedCount} of your automations failed their last run`}
+							className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 px-1 text-[10px] font-medium tabular-nums text-red-600 dark:text-red-400"
+						>
+							{myFailedCount > 9 ? "9+" : myFailedCount}
+						</span>
+					)}
+				</button>
+			)}
 
-			<button
-				type="button"
-				onClick={handleTasksClick}
-				aria-label="Tasks"
-				aria-current={isTasksOpen ? "page" : undefined}
-				className={cn(
-					"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
-					isTasksOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<HiOutlineClipboardDocumentList className="size-3.5 shrink-0 text-muted-foreground" />
-				<span className="flex-1 text-left">Tasks</span>
-			</button>
+			{!aaOffice && (
+				<button
+					type="button"
+					onClick={handleTasksClick}
+					aria-label="Tasks"
+					aria-current={isTasksOpen ? "page" : undefined}
+					className={cn(
+						"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
+						isTasksOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<HiOutlineClipboardDocumentList className="size-3.5 shrink-0 text-muted-foreground" />
+					<span className="flex-1 text-left">Tasks</span>
+				</button>
+			)}
 
-			<button
-				type="button"
-				onClick={handlePullRequestsClick}
-				aria-label="Pull requests"
-				aria-current={isPullRequestsOpen ? "page" : undefined}
-				className={cn(
-					"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
-					isPullRequestsOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<GoGitPullRequest className="size-3.5 shrink-0 text-muted-foreground" />
-				<span className="flex-1 text-left">Pull requests</span>
-			</button>
+			{!aaOffice && (
+				<button
+					type="button"
+					onClick={handlePullRequestsClick}
+					aria-label="Pull requests"
+					aria-current={isPullRequestsOpen ? "page" : undefined}
+					className={cn(
+						"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[13px] font-medium transition-colors",
+						isPullRequestsOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<GoGitPullRequest className="size-3.5 shrink-0 text-muted-foreground" />
+					<span className="flex-1 text-left">Pull requests</span>
+				</button>
+			)}
 		</div>
 	);
 }

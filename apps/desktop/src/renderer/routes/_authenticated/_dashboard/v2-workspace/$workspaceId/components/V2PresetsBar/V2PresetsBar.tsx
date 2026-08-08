@@ -229,7 +229,7 @@ export function V2PresetsBar({
 
 	return (
 		<div
-			className="flex h-10 min-w-0 shrink-0 items-center gap-1.5 overflow-x-auto overflow-y-hidden bg-background px-2"
+			className="aa-presets-bar flex h-10 min-w-0 shrink-0 items-center gap-1.5 overflow-x-auto overflow-y-hidden bg-background px-2"
 			style={{ scrollbarWidth: "none" }}
 		>
 			<DropdownMenu>

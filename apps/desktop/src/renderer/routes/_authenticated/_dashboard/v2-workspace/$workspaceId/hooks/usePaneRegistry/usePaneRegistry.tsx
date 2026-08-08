@@ -28,6 +28,7 @@ import {
 } from "renderer/lib/terminal/confirm-close-terminals";
 import { consumeTerminalBackgroundIntent } from "renderer/lib/terminal/terminal-background-intents";
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
+import { AATerminalFrame } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { getV2NotificationSourcesForPane } from "renderer/stores/v2-notifications";
@@ -375,14 +376,19 @@ export function usePaneRegistry({
 						/>
 					);
 				},
-				renderPane: (ctx: RendererContext<PaneViewerData>) => (
-					<TerminalPane
-						ctx={ctx}
-						workspaceId={workspaceId}
-						onOpenFile={onOpenFile}
-						onRevealPath={onRevealPath}
-					/>
-				),
+				renderPane: (ctx: RendererContext<PaneViewerData>) => {
+					const { terminalId } = ctx.pane.data as TerminalPaneData;
+					return (
+						<AATerminalFrame terminalId={terminalId}>
+							<TerminalPane
+								ctx={ctx}
+								workspaceId={workspaceId}
+								onOpenFile={onOpenFile}
+								onRevealPath={onRevealPath}
+							/>
+						</AATerminalFrame>
+					);
+				},
 				contextMenuActions: (_ctx, defaults) => {
 					const terminalActions: ContextMenuActionConfig<PaneViewerData>[] = [
 						{

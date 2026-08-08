@@ -144,6 +144,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 					className,
 				)}
 				data-selected={isSelected || undefined}
+				data-active={isActive || undefined}
 				{...props}
 			>
 				{/* biome-ignore lint/a11y/useSemanticElements: The row contains nested action buttons, so it cannot be a native button. */}

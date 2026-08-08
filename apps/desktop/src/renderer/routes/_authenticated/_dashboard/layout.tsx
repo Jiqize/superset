@@ -1,3 +1,4 @@
+import { cn } from "@superset/ui/utils";
 import {
 	createFileRoute,
 	Navigate,
@@ -25,7 +26,9 @@ import {
 	MAX_WORKSPACE_SIDEBAR_WIDTH,
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
+import { AANavigationRail } from "./components/AAOffice";
 import { AddRepositoryModals } from "./components/AddRepositoryModals";
+import "./components/AAOffice/aa-office.css";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
 import { TopBar } from "./components/TopBar";
 
@@ -79,6 +82,8 @@ function DashboardLayout() {
 	const versionMismatch =
 		(isV2CloudEnabled && onV1WorkspaceRoute) ||
 		(!isV2CloudEnabled && onV2WorkspaceRoute);
+	const aaOfficeActive =
+		isV2CloudEnabled && onV2WorkspaceRoute && !versionMismatch;
 
 	const { data: currentWorkspace } = electronTrpc.workspaces.get.useQuery(
 		{ id: currentWorkspaceId ?? "" },
@@ -170,7 +175,10 @@ function DashboardLayout() {
 		isWorkspaceSidebarOpen &&
 		isWorkspaceSidebarCollapsed();
 
-	const sidebarPanel = isWorkspaceSidebarOpen && (
+	const showSidebarPanel =
+		isWorkspaceSidebarOpen &&
+		(!aaOfficeActive || !isWorkspaceSidebarCollapsed());
+	const sidebarPanel = showSidebarPanel && (
 		<ResizablePanel
 			width={workspaceSidebarWidth}
 			onWidthChange={setWorkspaceSidebarWidth}
@@ -186,7 +194,10 @@ function DashboardLayout() {
 			}
 		>
 			{isV2CloudEnabled ? (
-				<DashboardSidebar isCollapsed={isWorkspaceSidebarCollapsed()} />
+				<DashboardSidebar
+					aaOffice={aaOfficeActive}
+					isCollapsed={isWorkspaceSidebarCollapsed()}
+				/>
 			) : (
 				<WorkspaceSidebar
 					isCollapsed={isWorkspaceSidebarCollapsed()}
@@ -222,8 +233,14 @@ function DashboardLayout() {
 		((onNewWorkspaceRoute || onDashboardViewRoute) && sidebarOutsideColumn);
 
 	return (
-		<div className="flex h-full w-full overflow-hidden">
+		<div
+			className={cn(
+				"flex h-full w-full overflow-hidden",
+				aaOfficeActive && "aa-office-shell",
+			)}
+		>
 			<CommandPaletteHost />
+			{aaOfficeActive && <AANavigationRail />}
 			{sidebarOutsideColumn && sidebarPanel}
 			<div className="flex flex-1 flex-col min-w-0 min-h-0">
 				{!hideTopBar && <TopBar />}

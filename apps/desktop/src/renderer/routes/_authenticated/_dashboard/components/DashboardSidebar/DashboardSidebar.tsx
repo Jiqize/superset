@@ -51,6 +51,7 @@ import type { DashboardSidebarProject } from "./types";
 import { getProjectChildrenWorkspaces } from "./utils/projectChildren";
 
 interface DashboardSidebarProps {
+	aaOffice?: boolean;
 	isCollapsed?: boolean;
 }
 
@@ -104,6 +105,7 @@ const SortableProjectWrapper = memo(function SortableProjectWrapper({
 });
 
 export function DashboardSidebar({
+	aaOffice = false,
 	isCollapsed = false,
 }: DashboardSidebarProps) {
 	const {
@@ -222,8 +224,16 @@ export function DashboardSidebar({
 				<DashboardSidebarHoverProvider>
 					<DashboardSidebarPortsProvider enabled={!isCollapsed}>
 						<DashboardSidebarHoverCardOverlay>
-							<div className="flex h-full flex-col border-r border-border bg-muted/45 dark:bg-muted/35">
-								<DashboardSidebarHeader isCollapsed={isCollapsed} />
+							<div
+								className={cn(
+									"flex h-full flex-col border-r border-border bg-muted/45 dark:bg-muted/35",
+									aaOffice && "aa-project-sidebar",
+								)}
+							>
+								<DashboardSidebarHeader
+									aaOffice={aaOffice}
+									isCollapsed={isCollapsed}
+								/>
 
 								{!isCollapsed && (
 									<DashboardSidebarBulkActions projects={orderedGroups}>
@@ -309,46 +319,50 @@ export function DashboardSidebar({
 										projectName={activeV2Project.name}
 									/>
 								)}
-								<HiringBanner surface="v2" isCollapsed={isCollapsed} />
-								<div
-									className={cn(
-										isCollapsed
-											? "flex flex-col items-center gap-2 py-2"
-											: "flex items-center gap-1 p-2",
-									)}
-								>
-									{isCollapsed ? (
-										<OrganizationDropdown variant="collapsed" />
-									) : (
-										<div className="min-w-0 flex-1">
-											<OrganizationDropdown variant="expanded" />
-										</div>
-									)}
+								{!aaOffice && (
+									<HiringBanner surface="v2" isCollapsed={isCollapsed} />
+								)}
+								{!aaOffice && (
+									<div
+										className={cn(
+											isCollapsed
+												? "flex flex-col items-center gap-2 py-2"
+												: "flex items-center gap-1 p-2",
+										)}
+									>
+										{isCollapsed ? (
+											<OrganizationDropdown variant="collapsed" />
+										) : (
+											<div className="min-w-0 flex-1">
+												<OrganizationDropdown variant="expanded" />
+											</div>
+										)}
 
-									<UpdatesPill isCollapsed={isCollapsed} />
-									<Tooltip delayDuration={300}>
-										<TooltipTrigger asChild>
-											<button
-												type="button"
-												aria-label="Settings"
-												onClick={() => navigate({ to: "/settings/account" })}
-												className={cn(
-													"flex size-8 shrink-0 items-center justify-center rounded-md transition-colors",
-													isSettingsOpen
-														? "bg-fill-selected text-muted-foreground"
-														: "text-muted-foreground hover:bg-fill-hover",
-												)}
-											>
-												<HiOutlineCog6Tooth className="size-3.5" />
-											</button>
-										</TooltipTrigger>
-										<TooltipContent side={isCollapsed ? "right" : "top"}>
-											{settingsHotkey !== "Unassigned"
-												? `Settings (${settingsHotkey})`
-												: "Settings"}
-										</TooltipContent>
-									</Tooltip>
-								</div>
+										<UpdatesPill isCollapsed={isCollapsed} />
+										<Tooltip delayDuration={300}>
+											<TooltipTrigger asChild>
+												<button
+													type="button"
+													aria-label="Settings"
+													onClick={() => navigate({ to: "/settings/account" })}
+													className={cn(
+														"flex size-8 shrink-0 items-center justify-center rounded-md transition-colors",
+														isSettingsOpen
+															? "bg-fill-selected text-muted-foreground"
+															: "text-muted-foreground hover:bg-fill-hover",
+													)}
+												>
+													<HiOutlineCog6Tooth className="size-3.5" />
+												</button>
+											</TooltipTrigger>
+											<TooltipContent side={isCollapsed ? "right" : "top"}>
+												{settingsHotkey !== "Unassigned"
+													? `Settings (${settingsHotkey})`
+													: "Settings"}
+											</TooltipContent>
+										</Tooltip>
+									</div>
+								)}
 							</div>
 						</DashboardSidebarHoverCardOverlay>
 					</DashboardSidebarPortsProvider>

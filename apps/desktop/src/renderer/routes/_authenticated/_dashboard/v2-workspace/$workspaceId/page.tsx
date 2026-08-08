@@ -11,6 +11,12 @@ import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { useZoomFactor } from "renderer/hooks/useZoomFactor";
 import { useHotkey } from "renderer/hotkeys";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import {
+	AAAgentStatusProvider,
+	AABottomStatusBar,
+	AAWindowFrame,
+	AAWorkspaceHeader,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { NavigationControls } from "renderer/routes/_authenticated/_dashboard/components/NavigationControls";
 import { SidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/SidebarToggle";
 import { RightSidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/TopBar/components/RightSidebarToggle";
@@ -117,7 +123,11 @@ function V2WorkspacePage() {
 		);
 	}
 
-	return <V2WorkspaceContent />;
+	return (
+		<AAAgentStatusProvider workspaceId={workspace.id}>
+			<V2WorkspaceContent />
+		</AAAgentStatusProvider>
+	);
 }
 
 function V2WorkspaceContent() {
@@ -131,6 +141,10 @@ function V2WorkspaceContent() {
 	} = Route.useSearch();
 	const { workspace } = useWorkspace();
 	const workspaceId = workspace.id;
+	const { data: project } = workspaceTrpc.project.get.useQuery(
+		{ projectId: workspace.projectId },
+		{ retry: false, staleTime: Number.POSITIVE_INFINITY },
+	);
 
 	const {
 		preferences: v2UserPreferences,
@@ -305,12 +319,21 @@ function V2WorkspaceContent() {
 				store={store}
 				sidebarOpen={sidebarOpen}
 			>
-				<div className="flex min-h-0 min-w-0 flex-1">
+				<AAWindowFrame
+					footer={
+						<AABottomStatusBar
+							branch={workspace.branch}
+							workspaceName={workspace.name}
+							workspaceType={workspace.type}
+						/>
+					}
+				>
 					<div
 						className="flex min-h-0 min-w-[320px] flex-1 flex-col overflow-hidden"
 						data-workspace-id={workspaceId}
 					>
 						<Workspace<PaneViewerData>
+							className="aa-office-pane-workspace"
 							key={workspaceId}
 							registry={paneRegistry}
 							paneActions={defaultPaneActions}
@@ -321,16 +344,24 @@ function V2WorkspaceContent() {
 									sources={getV2NotificationSourcesForTab(tab)}
 								/>
 							)}
-							renderBelowTabBar={() =>
-								showPresetsBar ? (
-									<V2PresetsBar
-										matchedPresets={matchedPresets}
-										executePreset={executePreset}
-										showPresetsBar={showPresetsBar}
-										onToggleShowPresetsBar={setShowPresetsBar}
+							renderBelowTabBar={() => (
+								<>
+									<AAWorkspaceHeader
+										branch={workspace.branch}
+										projectName={project?.name}
+										workspaceName={workspace.name}
+										workspaceType={workspace.type}
 									/>
-								) : null
-							}
+									{showPresetsBar && (
+										<V2PresetsBar
+											matchedPresets={matchedPresets}
+											executePreset={executePreset}
+											showPresetsBar={showPresetsBar}
+											onToggleShowPresetsBar={setShowPresetsBar}
+										/>
+									)}
+								</>
+							)}
 							renderAddTabMenu={() => (
 								<AddTabMenu
 									onAddTerminal={addTerminalTab}
@@ -393,7 +424,7 @@ function V2WorkspaceContent() {
 							store={store}
 						/>
 					</div>
-				</div>
+				</AAWindowFrame>
 				{sidebarOpen &&
 					sidebarSlotEl &&
 					createPortal(
