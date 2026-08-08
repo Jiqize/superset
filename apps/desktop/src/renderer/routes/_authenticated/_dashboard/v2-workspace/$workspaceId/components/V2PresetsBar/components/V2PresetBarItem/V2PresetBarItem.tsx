@@ -98,6 +98,7 @@ export function V2PresetBarItem({
 							onClick={() => onExecutePreset(preset)}
 						>
 							<AAEmployeeAvatar
+								agentId={preset.agentId}
 								iconSrc={icon}
 								label={preset.name || "default"}
 							/>

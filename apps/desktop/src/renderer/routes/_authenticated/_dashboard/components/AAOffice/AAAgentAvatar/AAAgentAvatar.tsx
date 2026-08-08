@@ -1,4 +1,5 @@
 import { cn } from "@superset/ui/utils";
+import type { ReactNode } from "react";
 import type { AAAgentState } from "../AAAgentStatus/aaAgentState";
 
 interface AAAgentAvatarProps {
@@ -17,49 +18,167 @@ export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
 		>
 			<rect className="aa-agent-avatar__backdrop" width="40" height="40" />
 			<rect
-				className="aa-agent-avatar__hair"
-				x="13"
-				y="5"
-				width="14"
-				height="5"
-			/>
-			<rect
-				className="aa-agent-avatar__skin"
-				x="14"
-				y="9"
-				width="12"
-				height="11"
-			/>
-			<rect
-				className="aa-agent-avatar__ink"
-				x="17"
-				y="13"
-				width="2"
-				height="2"
-			/>
-			<rect
-				className="aa-agent-avatar__ink"
-				x="22"
-				y="13"
-				width="2"
-				height="2"
+				className="aa-agent-avatar__floor"
+				x="0"
+				y="36"
+				width="40"
+				height="4"
 			/>
 			<rect
 				className="aa-agent-avatar__shirt"
-				x="11"
-				y="20"
-				width="18"
+				x="10"
+				y="21"
+				width="20"
 				height="13"
+			/>
+			<rect
+				className="aa-agent-avatar__shirt-panel"
+				x="16"
+				y="21"
+				width="8"
+				height="12"
 			/>
 			<rect
 				className="aa-agent-avatar__tie"
 				x="19"
-				y="21"
+				y="22"
 				width="3"
-				height="10"
+				height="9"
 			/>
+			<rect
+				className="aa-agent-avatar__skin"
+				x="11"
+				y="11"
+				width="3"
+				height="7"
+			/>
+			<rect
+				className="aa-agent-avatar__skin"
+				x="26"
+				y="11"
+				width="3"
+				height="7"
+			/>
+			<rect
+				className="aa-agent-avatar__hair"
+				x="12"
+				y="4"
+				width="16"
+				height="6"
+			/>
+			<rect
+				className="aa-agent-avatar__hair"
+				x="10"
+				y="7"
+				width="4"
+				height="6"
+			/>
+			<rect
+				className="aa-agent-avatar__hair"
+				x="26"
+				y="7"
+				width="4"
+				height="5"
+			/>
+			<rect
+				className="aa-agent-avatar__skin"
+				x="13"
+				y="8"
+				width="14"
+				height="12"
+			/>
+			{renderExpression(state)}
+			{renderPose(state)}
+		</svg>
+	);
+}
 
-			{state === "working" ? (
+function renderExpression(state: AAAgentState): ReactNode {
+	if (state === "offline") {
+		return (
+			<>
+				<rect
+					className="aa-agent-avatar__ink"
+					x="15"
+					y="14"
+					width="3"
+					height="1"
+				/>
+				<rect
+					className="aa-agent-avatar__ink"
+					x="22"
+					y="14"
+					width="3"
+					height="1"
+				/>
+				<rect
+					className="aa-agent-avatar__mouth"
+					x="18"
+					y="18"
+					width="4"
+					height="1"
+				/>
+			</>
+		);
+	}
+
+	if (state === "error") {
+		return (
+			<>
+				<path
+					className="aa-agent-avatar__ink"
+					d="M15 12h2v1h2v1h-4zm10 0h-2v1h-2v1h4z"
+				/>
+				<rect
+					className="aa-agent-avatar__ink"
+					x="16"
+					y="15"
+					width="2"
+					height="1"
+				/>
+				<rect
+					className="aa-agent-avatar__ink"
+					x="23"
+					y="15"
+					width="2"
+					height="1"
+				/>
+				<path className="aa-agent-avatar__mouth" d="M18 19h1v-1h3v1h1v1h-5z" />
+			</>
+		);
+	}
+
+	return (
+		<>
+			<rect
+				className="aa-agent-avatar__ink"
+				x="16"
+				y="13"
+				width="2"
+				height="2"
+			/>
+			<rect
+				className="aa-agent-avatar__ink"
+				x="23"
+				y={state === "thinking" ? "14" : "13"}
+				width="2"
+				height="2"
+			/>
+			<rect
+				className="aa-agent-avatar__mouth"
+				x="18"
+				y="18"
+				width="4"
+				height="1"
+			/>
+		</>
+	);
+}
+
+function renderPose(state: AAAgentState): ReactNode {
+	switch (state) {
+		case "working":
+			return (
 				<>
 					<rect
 						className="aa-agent-avatar__desk"
@@ -70,17 +189,24 @@ export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
 					/>
 					<rect
 						className="aa-agent-avatar__ink"
-						x="23"
+						x="24"
 						y="22"
 						width="12"
 						height="10"
 					/>
 					<rect
 						className="aa-agent-avatar__screen"
-						x="25"
+						x="26"
 						y="24"
 						width="8"
 						height="6"
+					/>
+					<rect
+						className="aa-agent-avatar__screen-line"
+						x="27"
+						y="26"
+						width="4"
+						height="1"
 					/>
 					<rect
 						className="aa-agent-avatar__hand aa-agent-avatar__hand--left"
@@ -93,23 +219,53 @@ export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
 						className="aa-agent-avatar__hand aa-agent-avatar__hand--right"
 						x="17"
 						y="30"
-						width="6"
+						width="7"
 						height="3"
 					/>
 				</>
-			) : state === "thinking" ? (
+			);
+		case "thinking":
+			return (
 				<>
 					<rect
-						className="aa-agent-avatar__skin aa-agent-avatar__thinking-hand"
-						x="28"
+						className="aa-agent-avatar__shirt"
+						x="8"
+						y="23"
+						width="3"
+						height="9"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="8"
+						y="30"
+						width="3"
+						height="3"
+					/>
+					<rect
+						className="aa-agent-avatar__shirt"
+						x="29"
+						y="22"
+						width="4"
+						height="7"
+					/>
+					<rect
+						className="aa-agent-avatar__hand aa-agent-avatar__thinking-hand"
+						x="27"
 						y="17"
 						width="4"
-						height="9"
+						height="7"
+					/>
+					<rect
+						className="aa-agent-avatar__hand aa-agent-avatar__thinking-hand"
+						x="25"
+						y="16"
+						width="4"
+						height="4"
 					/>
 					<rect
 						className="aa-agent-avatar__thought"
 						x="30"
-						y="7"
+						y="8"
 						width="2"
 						height="2"
 					/>
@@ -117,76 +273,159 @@ export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
 						className="aa-agent-avatar__thought"
 						x="34"
 						y="4"
-						width="2"
-						height="2"
+						width="3"
+						height="3"
 					/>
 				</>
-			) : state === "waiting" ? (
+			);
+		case "waiting":
+			return (
 				<>
 					<rect
+						className="aa-agent-avatar__shirt"
+						x="8"
+						y="24"
+						width="6"
+						height="5"
+					/>
+					<rect
+						className="aa-agent-avatar__shirt"
+						x="26"
+						y="24"
+						width="6"
+						height="5"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="13"
+						y="27"
+						width="4"
+						height="3"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="24"
+						y="27"
+						width="4"
+						height="3"
+					/>
+					<rect
 						className="aa-agent-avatar__paper"
-						x="27"
-						y="20"
+						x="16"
+						y="23"
 						width="9"
-						height="12"
+						height="13"
 					/>
 					<rect
 						className="aa-agent-avatar__ink"
-						x="29"
-						y="23"
+						x="18"
+						y="26"
 						width="5"
 						height="1"
 					/>
 					<rect
 						className="aa-agent-avatar__ink"
-						x="29"
-						y="26"
+						x="18"
+						y="29"
 						width="4"
 						height="1"
 					/>
+					<rect
+						className="aa-agent-avatar__ink"
+						x="18"
+						y="32"
+						width="5"
+						height="1"
+					/>
 				</>
-			) : state === "error" ? (
+			);
+		case "error":
+			return (
 				<>
 					<rect
-						className="aa-agent-avatar__skin"
-						x="5"
-						y="18"
+						className="aa-agent-avatar__shirt"
+						x="6"
+						y="19"
 						width="7"
 						height="4"
 					/>
 					<rect
-						className="aa-agent-avatar__skin"
-						x="29"
-						y="18"
+						className="aa-agent-avatar__shirt"
+						x="28"
+						y="19"
 						width="7"
 						height="4"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="8"
+						y="13"
+						width="4"
+						height="7"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="29"
+						y="13"
+						width="4"
+						height="7"
 					/>
 					<rect
 						className="aa-agent-avatar__paper"
 						x="4"
-						y="27"
-						width="5"
-						height="7"
+						y="28"
+						width="7"
+						height="8"
+					/>
+					<rect
+						className="aa-agent-avatar__error-mark"
+						x="7"
+						y="30"
+						width="1"
+						height="3"
+					/>
+					<rect
+						className="aa-agent-avatar__error-mark"
+						x="7"
+						y="34"
+						width="1"
+						height="1"
 					/>
 				</>
-			) : (
+			);
+		case "idle":
+		case "offline":
+			return (
 				<>
 					<rect
-						className="aa-agent-avatar__ink"
-						x="10"
+						className="aa-agent-avatar__shirt"
+						x="8"
 						y="23"
-						width="2"
-						height="10"
+						width="3"
+						height="8"
 					/>
 					<rect
-						className="aa-agent-avatar__ink"
+						className="aa-agent-avatar__shirt"
 						x="29"
 						y="23"
-						width="2"
-						height="10"
+						width="3"
+						height="8"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="8"
+						y="30"
+						width="3"
+						height="3"
+					/>
+					<rect
+						className="aa-agent-avatar__hand"
+						x="29"
+						y="30"
+						width="3"
+						height="3"
 					/>
 				</>
-			)}
-		</svg>
-	);
+			);
+	}
 }

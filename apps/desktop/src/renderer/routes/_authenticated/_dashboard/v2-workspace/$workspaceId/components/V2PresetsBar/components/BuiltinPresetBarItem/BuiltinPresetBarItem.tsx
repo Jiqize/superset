@@ -42,7 +42,11 @@ export function BuiltinPresetBarItem({
 								className="aa-employee-roster__button h-8 max-w-36 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
 								onClick={() => onExecutePreset(preset)}
 							>
-								<AAEmployeeAvatar iconSrc={icon} label={preset.name} />
+								<AAEmployeeAvatar
+									agentId={preset.agentId}
+									iconSrc={icon}
+									label={preset.name}
+								/>
 								<span className="min-w-0 truncate">{preset.name}</span>
 							</Button>
 						</TooltipTrigger>
