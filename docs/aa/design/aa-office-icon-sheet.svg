@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" shape-rendering="crispEdges">
+  <rect width="960" height="360" fill="#A7A6A1"/>
+  <style>
+    .frame{fill:#E2E0D9;stroke:#242424;stroke-width:4}
+    .ink{fill:#242424}.mid{fill:#777A7E}.paper{fill:#E9E5D8}.brown{fill:#6D482C}.brown2{fill:#9A6B3D}.navy{fill:#173267}.amber{fill:#E0A11B}.green{fill:#6E9B48}.red{fill:#9C302B}.blue{fill:#4D78A8}
+    .label{font:700 15px ui-monospace,monospace;fill:#171717;letter-spacing:1px}
+  </style>
+  <text x="32" y="34" class="label">AA OFFICE ICON SHEET / V0.1 / 4PX GRID</text>
+
+  <!-- HOME -->
+  <g transform="translate(32 64)">
+    <rect class="frame" width="120" height="120"/>
+    <path class="ink" d="M24 56h8v-8h8v-8h8v-8h8v-8h8v8h8v8h8v8h8v8h8v40H72V72H48v24H24z"/>
+    <rect class="navy" x="52" y="76" width="8" height="8"/><rect class="navy" x="64" y="76" width="8" height="8"/><rect class="navy" x="52" y="88" width="8" height="8"/><rect class="navy" x="64" y="88" width="8" height="8"/>
+    <text x="0" y="146" class="label">HOME</text>
+  </g>
+
+  <!-- BRIEFCASE -->
+  <g transform="translate(176 64)">
+    <rect class="frame" width="120" height="120"/>
+    <rect class="brown" x="20" y="48" width="80" height="48"/>
+    <rect class="brown2" x="20" y="48" width="80" height="12"/>
+    <rect class="ink" x="44" y="32" width="32" height="8"/><rect class="ink" x="36" y="40" width="8" height="12"/><rect class="ink" x="76" y="40" width="8" height="12"/>
+    <rect class="ink" x="20" y="44" width="80" height="4"/><rect class="ink" x="20" y="96" width="80" height="4"/><rect class="ink" x="16" y="48" width="4" height="48"/><rect class="ink" x="100" y="48" width="4" height="48"/>
+    <rect class="ink" x="56" y="64" width="12" height="16"/><rect class="paper" x="60" y="68" width="4" height="8"/>
+    <text x="0" y="146" class="label">BRIEFCASE</text>
+  </g>
+
+  <!-- FILING CABINET -->
+  <g transform="translate(320 64)">
+    <rect class="frame" width="120" height="120"/>
+    <rect class="mid" x="32" y="20" width="56" height="80"/><rect class="ink" x="28" y="16" width="64" height="4"/><rect class="ink" x="28" y="100" width="64" height="4"/><rect class="ink" x="28" y="20" width="4" height="80"/><rect class="ink" x="88" y="20" width="4" height="80"/>
+    <rect class="paper" x="36" y="28" width="48" height="28"/><rect class="paper" x="36" y="64" width="48" height="28"/>
+    <rect class="ink" x="52" y="40" width="16" height="4"/><rect class="ink" x="52" y="76" width="16" height="4"/>
+    <text x="0" y="146" class="label">ARCHIVE</text>
+  </g>
+
+  <!-- SPEECH -->
+  <g transform="translate(464 64)">
+    <rect class="frame" width="120" height="120"/>
+    <path class="paper" d="M24 28h72v52H56L40 96V80H24z"/><path class="ink" d="M20 24h80v60H60v4h-4v4h-4v4h-4v4H36V84H20zm8 8v44h16v12l12-12h36V32z"/>
+    <rect class="navy" x="40" y="52" width="8" height="8"/><rect class="navy" x="56" y="52" width="8" height="8"/><rect class="navy" x="72" y="52" width="8" height="8"/>
+    <text x="0" y="146" class="label">SESSIONS</text>
+  </g>
+
+  <!-- AGENT HEAD -->
+  <g transform="translate(608 64)">
+    <rect class="frame" width="120" height="120"/>
+    <rect class="navy" x="36" y="28" width="48" height="64"/><rect class="ink" x="32" y="32" width="4" height="56"/><rect class="ink" x="84" y="32" width="4" height="56"/><rect class="ink" x="40" y="24" width="40" height="4"/><rect class="ink" x="40" y="92" width="40" height="4"/>
+    <rect class="ink" x="28" y="48" width="8" height="24"/><rect class="ink" x="88" y="48" width="8" height="24"/>
+    <rect class="paper" x="44" y="48" width="12" height="12"/><rect class="paper" x="64" y="48" width="12" height="12"/><rect class="paper" x="52" y="72" width="20" height="8"/>
+    <rect class="ink" x="58" y="16" width="4" height="8"/><rect class="ink" x="62" y="12" width="4" height="4"/>
+    <text x="0" y="146" class="label">AGENTS</text>
+  </g>
+
+  <!-- GEAR -->
+  <g transform="translate(752 64)">
+    <rect class="frame" width="120" height="120"/>
+    <path class="ink" d="M52 20h16v12h12l8-8 12 12-8 8v12h12v16H92v12l8 8-12 12-8-8H68v12H52V96H40l-8 8-12-12 8-8V72H16V56h12V44l-8-8 12-12 8 8h12z"/>
+    <rect class="surface" x="44" y="44" width="32" height="32" fill="#C9C8C3"/><rect class="ink" x="52" y="52" width="16" height="16"/>
+    <text x="0" y="146" class="label">SETTINGS</text>
+  </g>
+
+  <!-- SECOND ROW OBJECTS -->
+  <g transform="translate(32 232)">
+    <path class="ink" d="M4 12h28l8 8h44v44H4z"/><path class="paper" d="M8 20h24l8 8h40v32H8z"/><text x="0" y="96" class="label">FOLDER</text>
+  </g>
+  <g transform="translate(176 220)">
+    <rect class="ink" x="4" y="4" width="80" height="60"/><rect class="mid" x="8" y="8" width="72" height="52"/><rect x="16" y="16" width="56" height="32" fill="#202923"/><rect class="green" x="64" y="52" width="8" height="8"/><rect class="ink" x="32" y="64" width="24" height="8"/><rect class="ink" x="24" y="72" width="40" height="4"/><text x="0" y="108" class="label">CRT</text>
+  </g>
+  <g transform="translate(320 220)">
+    <rect class="paper" x="20" y="28" width="56" height="36"/><rect class="paper" x="16" y="24" width="56" height="36"/><rect class="paper" x="12" y="20" width="56" height="36"/><rect class="ink" x="20" y="28" width="36" height="4"/><rect class="ink" x="20" y="36" width="28" height="4"/><text x="0" y="108" class="label">CHANGES</text>
+  </g>
+  <g transform="translate(464 220)">
+    <rect class="ink" x="8" y="8" width="28" height="52"/><rect class="paper" x="12" y="12" width="20" height="44"/><rect class="ink" x="48" y="8" width="28" height="52"/><rect class="paper" x="52" y="12" width="20" height="44"/><rect class="red" x="16" y="24" width="12" height="4"/><rect class="green" x="56" y="32" width="12" height="4"/><text x="0" y="108" class="label">DIFF</text>
+  </g>
+  <g transform="translate(608 220)">
+    <rect class="ink" x="8" y="8" width="72" height="56"/><rect class="paper" x="12" y="12" width="64" height="48"/><rect class="navy" x="12" y="12" width="64" height="8"/><rect class="ink" x="20" y="28" width="20" height="4"/><rect class="ink" x="20" y="36" width="32" height="4"/><text x="0" y="108" class="label">BROWSER</text>
+  </g>
+  <g transform="translate(752 220)">
+    <rect class="offline" x="8" y="20" width="16" height="16"/><rect class="working" x="32" y="20" width="16" height="16"/><rect class="success" x="56" y="20" width="16" height="16"/><rect class="error" x="80" y="20" width="16" height="16"/><rect class="blue" x="104" y="20" width="16" height="16"/>
+    <text x="0" y="108" class="label">STATUS LIGHTS</text>
+  </g>
+</svg>
