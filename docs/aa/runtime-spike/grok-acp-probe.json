@@ -1,0 +1,87 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T13:51:00Z",
+	"runtime": {
+		"name": "Grok Build",
+		"version": "0.2.87",
+		"revision": "0ae0bf47e53",
+		"binary": "$HOME/.local/bin/grok",
+		"platform": "macOS arm64",
+		"signerTeamId": "5Y6N3AJ54S"
+	},
+	"command": "grok agent --no-leader --always-approve stdio",
+	"initialize": {
+		"result": "success",
+		"protocolVersion": 1,
+		"agentCapabilities": {
+			"loadSession": true,
+			"promptCapabilities": {
+				"image": false,
+				"audio": false,
+				"embeddedContext": true
+			},
+			"mcpCapabilities": {
+				"http": true,
+				"sse": true
+			}
+		},
+		"runtimeMetadata": {
+			"agentVersion": "0.2.87",
+			"currentModelId": "grok-build",
+			"availableModels": [],
+			"cancelRewind": true,
+			"sessionRecap": true
+		},
+		"authMethods": ["grok.com"],
+		"defaultAuthMethodId": null
+	},
+	"sessionNew": {
+		"result": "blocked",
+		"jsonRpcErrorCode": -32000,
+		"message": "Authentication required",
+		"data": "no auth method id provided"
+	},
+	"independentAuthCheck": {
+		"command": "grok models",
+		"result": "You are not authenticated.",
+		"credentialsEnteredDuringProbe": false
+	},
+	"locallyDiscoverableStructuredSurface": {
+		"source": "CLI help plus symbols in the signed local binary; presence is not a successful behavioral test.",
+		"methods": [
+			"session/new",
+			"session/load",
+			"session/prompt",
+			"session/cancel",
+			"session/set_model",
+			"session/request_permission"
+		],
+		"updateKinds": [
+			"agent_message_chunk",
+			"agent_thought_chunk",
+			"tool_call",
+			"tool_call_update"
+		],
+		"cliControls": ["--model", "--reasoning-effort", "--always-approve"]
+	},
+	"behavioralCoverage": {
+		"stdioTransport": "verified",
+		"initialize": "verified",
+		"modelReadAtInitialize": "verified",
+		"structuredError": "verified",
+		"sessionCreate": "blocked_by_auth",
+		"sessionId": "blocked_by_auth",
+		"promptAndStreaming": "blocked_by_auth",
+		"toolLifecycle": "blocked_by_auth",
+		"permissionRequest": "blocked_by_auth",
+		"completionStopReason": "blocked_by_auth",
+		"cancel": "blocked_by_auth",
+		"sessionLoadResume": "advertised_not_behaviorally_verified",
+		"reasoningStream": "symbol_present_not_behaviorally_verified",
+		"modelWrite": "symbol_present_not_behaviorally_verified"
+	},
+	"stopReason": "The Phase 3A brief requires stopping a structured sub-experiment at an exact missing prerequisite. Completing Grok OAuth would require user account interaction, so no successful turn or resume is claimed.",
+	"redactions": [
+		"Runtime instance UUIDs, hostname, discovered MCP server details, temporary absolute paths, and all potential credential material are omitted."
+	]
+}

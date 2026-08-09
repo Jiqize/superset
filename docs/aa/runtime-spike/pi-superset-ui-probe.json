@@ -1,0 +1,69 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T13:47:17Z",
+	"runtime": {
+		"name": "Pi",
+		"version": "0.82.1",
+		"surface": "AA Office V2 workspace"
+	},
+	"fixture": {
+		"project": "aa-baseline-fixture",
+		"workspace": "runtime-contract-pi",
+		"workspaceId": "f5e93b86-97dc-4e66-b7f8-611d15a81717",
+		"branch": "runtime-contract-pi",
+		"changedFileCount": 0
+	},
+	"identityComparison": {
+		"supersetTerminalId": "d9f3fb2b-fa41-4b38-8cb2-03da4cc57d18",
+		"piNativeSessionId": "019fe6c7-0087-71e0-8552-55d2f6575e0d",
+		"terminalAgentBindingAgentId": "pi",
+		"terminalAgentBindingAgentSessionId": null,
+		"terminalAgentBindingLastEvent": "Stop",
+		"terminalSessionStatus": "active"
+	},
+	"piNativeMetadata": {
+		"model": {
+			"provider": "google",
+			"id": "gemini-3.5-flash"
+		},
+		"thinking": "high",
+		"sessionEntryCountAfterTurn": 8
+	},
+	"supersetHookTimeline": ["SessionStart", "Start", "PostToolUse", "Stop"],
+	"rendererAfterTurn": {
+		"worker": "PI WORKER / IDLE",
+		"taskFolder": "LAST TURN / COMPLETE",
+		"terminalTab": "Pi",
+		"terminalInputPresent": true
+	},
+	"boundaryChecks": {
+		"rendererReload": {
+			"result": "passed",
+			"sameWorkspaceId": true,
+			"sameSupersetTerminalId": true,
+			"samePiProcess": true,
+			"terminalSessionStatus": "active"
+		},
+		"routeDetachReattach": {
+			"mechanism": "Home navigation followed by browser Back keyboard command",
+			"result": "passed",
+			"backgroundTerminalReported": true,
+			"sameSupersetTerminalId": true,
+			"sameTerminalTab": true
+		},
+		"fullElectronRestart": {
+			"result": "not_run",
+			"reason": "The shared dev Electron/Host Service owned unrelated background terminals and Pi processes; stopping it would risk the user's long-lived environment. Native Pi process restart was tested separately in pi-rpc-probe.json."
+		}
+	},
+	"conclusions": [
+		"The PTY/terminal survives Renderer reload and route detach/reattach.",
+		"Pi itself knows a resumable native session UUID, model, and effective thinking level.",
+		"The installed Superset Pi extension sends none of those fields, so TerminalAgentBinding.agent_session_id remains null.",
+		"The current hook path exposes only coarse lifecycle cadence and loses toolCallId, tool name, model, thinking, and structured messages."
+	],
+	"redactions": [
+		"The harmless prompt and terminal transcript are omitted.",
+		"No environment variables, credentials, tool arguments/results, or unrelated session data are included."
+	]
+}

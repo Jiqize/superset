@@ -1,0 +1,92 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T13:44:36Z",
+	"runtime": {
+		"name": "Pi",
+		"version": "0.82.1",
+		"mode": "rpc"
+	},
+	"scope": "Disposable direct-runtime probe with only the diagnostic extension loaded; no user extensions, skills, or project context.",
+	"session": {
+		"nativeSessionId": "019fe6c4-8216-74a7-a3e8-73027ac66f67",
+		"sessionFile": "$TMP/sessions/2026-08-09T13-44-25-878Z_019fe6c4-8216-74a7-a3e8-73027ac66f67.jsonl",
+		"model": {
+			"provider": "google",
+			"id": "gemini-3.5-flash",
+			"name": "Gemini 3.5 Flash"
+		},
+		"initialThinking": "high",
+		"availableThinkingForEffectiveModel": [
+			"off",
+			"minimal",
+			"low",
+			"medium",
+			"high"
+		]
+	},
+	"liveThinkingChange": {
+		"requested": "low",
+		"confirmedBy": "thinking_level_select",
+		"previousLevel": "high",
+		"effectiveLevel": "low"
+	},
+	"firstProcess": {
+		"messageCountBefore": 0,
+		"messageCountAfter": 4,
+		"tool": {
+			"toolCallId": "qlwshr68",
+			"name": "bash",
+			"startObserved": true,
+			"endObserved": true,
+			"isError": false
+		},
+		"llmTurnIndices": [0, 1],
+		"settledObserved": true,
+		"shutdownReason": "quit"
+	},
+	"resumedProcess": {
+		"launchMechanism": "pi --session <nativeSessionId>",
+		"nativeSessionIdMatched": true,
+		"sessionFileMatched": true,
+		"messageCountOnLoad": 4,
+		"messageCountAfterSecondPrompt": 6,
+		"thinkingOnLoad": "low",
+		"llmTurnIndices": [0],
+		"settledObserved": true
+	},
+	"eventTimeline": [
+		"session_start(startup, thinking=high)",
+		"thinking_level_select(high->low)",
+		"before_agent_start",
+		"agent_start",
+		"turn_start(index=0)",
+		"tool_execution_start(id=qlwshr68, name=bash)",
+		"tool_execution_end(id=qlwshr68, isError=false)",
+		"turn_end(index=0)",
+		"turn_start(index=1)",
+		"turn_end(index=1)",
+		"agent_end",
+		"agent_settled",
+		"session_shutdown(quit)",
+		"process restart",
+		"session_start(startup, same session, thinking=low)",
+		"turn_start(index=0)",
+		"turn_end(index=0)",
+		"agent_end",
+		"agent_settled",
+		"session_shutdown(quit)"
+	],
+	"conclusions": [
+		"Pi exposes a durable native session UUID and session file.",
+		"Model and effective thinking level are authoritative in extension context and RPC state.",
+		"Thinking can change live and the runtime emits the effective selected value.",
+		"Tool start/end share a stable toolCallId.",
+		"turnIndex identifies individual LLM calls inside one process, not a durable user request: it reset to zero after resume.",
+		"A new process explicitly resumed with --session still reported session_start reason startup; the matching native session ID, not the reason string, proves resume.",
+		"agent_settled is the authoritative no-retry/no-continuation boundary for the observed run."
+	],
+	"redactions": [
+		"Temporary absolute paths were replaced with $TMP.",
+		"Prompt text, assistant text, tool arguments/results, cost fields, URLs, and credentials are omitted."
+	]
+}
