@@ -6,7 +6,10 @@ import {
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAIcon } from "../AAIcon";
 import { AAStatusLight } from "../AAStatusLight";
-import { AATaskFolder } from "../AATaskFolder";
+import {
+	AATaskFolder,
+	mapLifecycleEventToAATaskFolderState,
+} from "../AATaskFolder";
 
 interface AATerminalFrameProps {
 	children: ReactNode;
@@ -42,6 +45,14 @@ export function AATerminalFrame({
 		worker.tracking === "unassigned"
 			? "LOCAL TERMINAL"
 			: `${worker.displayName} WORKSTATION`;
+	const taskFolderState = mapLifecycleEventToAATaskFolderState(
+		worker.lastEventType,
+		worker.tracking,
+	);
+	const currentSignalAddsContext =
+		taskFolderState === "error" ||
+		taskFolderState === "session-ended" ||
+		taskFolderState === "turn-complete";
 
 	return (
 		<div className="aa-terminal-frame" data-agent-state={worker.status}>
@@ -57,7 +68,10 @@ export function AATerminalFrame({
 					terminalLabel={workstationLabel}
 					worker={worker}
 				/>
-				<span className="aa-terminal-frame__signal">
+				<span
+					className="aa-terminal-frame__signal"
+					data-semantic={currentSignalAddsContext ? "distinct" : "duplicate"}
+				>
 					<AAStatusLight tone={toneForWorkerStatus(worker.status)} />
 					{worker.status.toUpperCase()}
 				</span>

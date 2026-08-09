@@ -5,7 +5,7 @@ import { AAIcon } from "../AAIcon";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AATaskFolderState,
-	formatAATaskFolderState,
+	getAATaskFolderMetricPresentation,
 	mapLifecycleEventToAATaskFolderState,
 	resolveAATaskFolderRename,
 	resolveAATaskFolderTitle,
@@ -44,11 +44,10 @@ export function AATaskFolder({
 		worker.lastEventType,
 		worker.tracking,
 	);
-	const stateLabel = formatAATaskFolderState(state);
+	const stateMetric = getAATaskFolderMetricPresentation(state);
 	const workerLabel =
 		worker.tracking === "unassigned" ? "—" : worker.displayName;
 	const workerMetric = worker.tracking === "tracked" ? "ASSIGNED" : "WORKER";
-	const stateMetric = worker.tracking === "untracked" ? "TRACKING" : "STATUS";
 	const [isEditing, setIsEditing] = useState(false);
 	const [draft, setDraft] = useState(title);
 	const finishingRef = useRef(false);
@@ -87,7 +86,7 @@ export function AATaskFolder({
 
 	return (
 		<section
-			aria-label={`Task folder: ${title}; ${workerMetric.toLowerCase()}: ${workerLabel}; ${stateMetric.toLowerCase()}: ${stateLabel}`}
+			aria-label={`Task folder: ${title}; ${workerMetric.toLowerCase()}: ${workerLabel}; ${stateMetric.accessibleSummary}`}
 			className="aa-task-folder"
 			data-state={state}
 			title={isEditing ? undefined : title}
@@ -143,9 +142,9 @@ export function AATaskFolder({
 				{workerMetric} <strong>{workerLabel}</strong>
 			</span>
 			<span className="aa-task-folder__metric">
-				{stateMetric}
+				{stateMetric.label}
 				<AAStatusLight tone={toneForTaskState(state)} />
-				<strong>{stateLabel}</strong>
+				<strong>{stateMetric.value}</strong>
 			</span>
 			{changedFileCount !== null && (
 				<span className="aa-task-folder__metric aa-task-folder__files">

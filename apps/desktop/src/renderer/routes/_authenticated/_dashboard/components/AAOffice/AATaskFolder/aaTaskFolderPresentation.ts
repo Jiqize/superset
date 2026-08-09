@@ -13,6 +13,12 @@ export const AA_TASK_FOLDER_STATES = [
 
 export type AATaskFolderState = (typeof AA_TASK_FOLDER_STATES)[number];
 
+export interface AATaskFolderMetricPresentation {
+	accessibleSummary: string;
+	label: "LAST EVENT" | "LAST TURN" | "SESSION" | "STATUS" | "TRACKING";
+	value: string;
+}
+
 interface AATaskTitleSources {
 	explicitTitle?: string | null;
 	sessionLabel?: string | null;
@@ -97,6 +103,48 @@ export function mapLifecycleEventToAATaskFolderState(
 
 export function formatAATaskFolderState(state: AATaskFolderState): string {
 	return state.replaceAll("-", " ").toUpperCase();
+}
+
+export function getAATaskFolderMetricPresentation(
+	state: AATaskFolderState,
+): AATaskFolderMetricPresentation {
+	switch (state) {
+		case "turn-complete":
+			return {
+				accessibleSummary: "last turn: complete",
+				label: "LAST TURN",
+				value: "COMPLETE",
+			};
+		case "session-ended":
+			return {
+				accessibleSummary: "session: ended",
+				label: "SESSION",
+				value: "ENDED",
+			};
+		case "untracked":
+			return {
+				accessibleSummary: "tracking: untracked",
+				label: "TRACKING",
+				value: "UNTRACKED",
+			};
+		case "error":
+			return {
+				accessibleSummary: "last event: error",
+				label: "LAST EVENT",
+				value: "ERROR",
+			};
+		case "idle":
+		case "unassigned":
+		case "waiting":
+		case "working": {
+			const value = formatAATaskFolderState(state);
+			return {
+				accessibleSummary: `status: ${value.toLowerCase()}`,
+				label: "STATUS",
+				value,
+			};
+		}
+	}
 }
 
 function truncateTaskTitle(value: string): string {

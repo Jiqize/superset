@@ -26,6 +26,7 @@ import { resolveV2PresetIcon } from "renderer/lib/preset-icon";
 import {
 	AAAssignmentLabel,
 	type AAAssignmentPhase,
+	AAEmployeeRosterOverflow,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
@@ -280,10 +281,7 @@ export function V2PresetsBar({
 	);
 
 	return (
-		<div
-			className="aa-presets-bar flex h-11 min-w-0 shrink-0 items-center gap-1 overflow-x-auto overflow-y-hidden bg-background px-1.5"
-			style={{ scrollbarWidth: "none" }}
-		>
+		<div className="aa-presets-bar flex h-11 min-w-0 shrink-0 items-center gap-1 overflow-hidden bg-background px-1.5">
 			<AAAssignmentLabel
 				employeeName={assignmentEmployee}
 				phase={assignmentPhase}
@@ -393,33 +391,37 @@ export function V2PresetsBar({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			{visiblePresets.map(({ preset }, visibleIndex) => {
-				const hotkeyId = PRESET_HOTKEY_IDS[visibleIndex];
-				return (
-					<V2PresetBarItem
+			<AAEmployeeRosterOverflow>
+				{visiblePresets.map(({ preset }, visibleIndex) => {
+					const hotkeyId = PRESET_HOTKEY_IDS[visibleIndex];
+					return (
+						<V2PresetBarItem
+							key={preset.id}
+							preset={preset}
+							visibleIndex={visibleIndex}
+							hotkeyId={hotkeyId}
+							isDark={isDark}
+							agents={agents}
+							onAssignPreset={assignPreset}
+							onEdit={(presetToEdit) => handleEditPreset(presetToEdit.id)}
+							onLocalReorder={handleLocalVisibleReorder}
+							onPersistReorder={handlePersistVisibleReorder}
+						/>
+					);
+				})}
+				{/* Built-ins render after user presets, outside the hotkey index. */}
+				{visibleBuiltinPresets.map(({ preset }) => (
+					<BuiltinPresetBarItem
 						key={preset.id}
 						preset={preset}
-						visibleIndex={visibleIndex}
-						hotkeyId={hotkeyId}
 						isDark={isDark}
-						agents={agents}
-						onAssignPreset={assignPreset}
-						onEdit={(presetToEdit) => handleEditPreset(presetToEdit.id)}
-						onLocalReorder={handleLocalVisibleReorder}
-						onPersistReorder={handlePersistVisibleReorder}
+						onAssignPreset={handleAssignBuiltinPreset}
+						onHide={(presetId) =>
+							handleToggleBuiltinVisibility(presetId, false)
+						}
 					/>
-				);
-			})}
-			{/* Built-ins render after user presets, outside the hotkey index. */}
-			{visibleBuiltinPresets.map(({ preset }) => (
-				<BuiltinPresetBarItem
-					key={preset.id}
-					preset={preset}
-					isDark={isDark}
-					onAssignPreset={handleAssignBuiltinPreset}
-					onHide={(presetId) => handleToggleBuiltinVisibility(presetId, false)}
-				/>
-			))}
+				))}
+			</AAEmployeeRosterOverflow>
 		</div>
 	);
 }

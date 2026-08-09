@@ -13,6 +13,13 @@ export {
 } from "./AAAssignmentLabel";
 export { AABottomStatusBar } from "./AABottomStatusBar";
 export { AAEmployeeAvatar } from "./AAEmployeeAvatar";
+export {
+	AAEmployeeRosterOverflow,
+	type AAEmployeeRosterOverflowInput,
+	type AAEmployeeRosterOverflowState,
+	getAAEmployeeRosterOverflowState,
+	getAAEmployeeRosterScrollDistance,
+} from "./AAEmployeeRosterOverflow";
 export { AAFileCabinetHeader } from "./AAFileCabinetHeader";
 export { AAHairState } from "./AAHairState";
 export { AAIcon, type AAIconName } from "./AAIcon";
@@ -27,8 +34,10 @@ export {
 export {
 	AA_TASK_FOLDER_STATES,
 	AATaskFolder,
+	type AATaskFolderMetricPresentation,
 	type AATaskFolderState,
 	formatAATaskFolderState,
+	getAATaskFolderMetricPresentation,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,

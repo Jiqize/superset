@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
+	getAATaskFolderMetricPresentation,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,
@@ -81,5 +82,22 @@ describe("AA Task Folder presentation", () => {
 		expect(mapLifecycleEventToAATaskFolderState(eventType, tracking)).toBe(
 			expected,
 		);
+	});
+
+	it.each([
+		["unassigned", "STATUS", "UNASSIGNED", "status: unassigned"],
+		["idle", "STATUS", "IDLE", "status: idle"],
+		["working", "STATUS", "WORKING", "status: working"],
+		["waiting", "STATUS", "WAITING", "status: waiting"],
+		["untracked", "TRACKING", "UNTRACKED", "tracking: untracked"],
+		["turn-complete", "LAST TURN", "COMPLETE", "last turn: complete"],
+		["session-ended", "SESSION", "ENDED", "session: ended"],
+		["error", "LAST EVENT", "ERROR", "last event: error"],
+	] as const)("presents %s as %s / %s with an explicit temporal summary", (state, label, value, accessibleSummary) => {
+		expect(getAATaskFolderMetricPresentation(state)).toEqual({
+			accessibleSummary,
+			label,
+			value,
+		});
 	});
 });
