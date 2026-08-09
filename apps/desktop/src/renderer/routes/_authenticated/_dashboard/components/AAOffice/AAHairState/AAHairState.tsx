@@ -104,7 +104,6 @@ export function AAHairState({ state }: AAHairStateProps) {
 				</g>
 			);
 		case "full":
-		case undefined:
 			return (
 				<g className="aa-agent-avatar__reasoning-hair" data-hair-state={state}>
 					<rect
@@ -127,6 +126,28 @@ export function AAHairState({ state }: AAHairStateProps) {
 						y="7"
 						width="4"
 						height="5"
+					/>
+				</g>
+			);
+		case undefined:
+			return (
+				<g
+					className="aa-agent-avatar__runtime-cap"
+					data-hair-state="unavailable"
+				>
+					<rect
+						className="aa-agent-avatar__cap"
+						x="12"
+						y="4"
+						width="16"
+						height="5"
+					/>
+					<rect
+						className="aa-agent-avatar__cap"
+						x="10"
+						y="8"
+						width="21"
+						height="2"
 					/>
 				</g>
 			);

@@ -62,6 +62,7 @@ describe("AA active Worker Card presentation", () => {
 				state: "unknown",
 				stateReason: "evidence_insufficient",
 			}),
+			binding: { agentId: "pi", lastEventType: "Stop" },
 			terminal,
 		});
 
@@ -70,6 +71,45 @@ describe("AA active Worker Card presentation", () => {
 			statusLabel: "UNKNOWN",
 			runtimeState: "unknown",
 			stateReason: "evidence_insufficient",
+		});
+	});
+
+	it("surfaces resume quarantine reasons ahead of optimistic legacy state", () => {
+		const presentation = resolveAAActiveWorkerPresentation({
+			runtimeSnapshot: runtimeSnapshot({
+				state: "error",
+				stateReason: "resume_identity_mismatch",
+			}),
+			binding: { agentId: "pi", lastEventType: "Stop" },
+			terminal,
+		});
+
+		expect(presentation).toMatchObject({
+			source: "runtime",
+			status: "error",
+			statusLabel: "RESUME IDENTITY MISMATCH",
+		});
+	});
+
+	it("uses a durable Pi resume candidate as offline evidence after Host restart", () => {
+		const presentation = resolveAAActiveWorkerPresentation({
+			resumeCandidate: {
+				agentId: "pi",
+				lastEventType: "Detached",
+				resumeSupported: true,
+			},
+			terminal: {
+				...terminal,
+				launchIdentity: { agentId: "pi", label: "Pi" },
+			},
+		});
+
+		expect(presentation).toMatchObject({
+			displayName: "PI",
+			source: "resume-candidate",
+			status: "offline",
+			statusLabel: "OFFLINE / RESUMABLE",
+			tracking: "tracked",
 		});
 	});
 

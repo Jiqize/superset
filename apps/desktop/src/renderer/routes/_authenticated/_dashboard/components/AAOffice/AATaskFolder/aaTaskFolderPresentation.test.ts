@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import {
 	getAATaskFolderMetricPresentation,
 	mapAARuntimeSnapshotToAATaskFolderState,
+	mapAAWorkerToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,
@@ -9,6 +10,14 @@ import {
 } from "./aaTaskFolderPresentation";
 
 describe("AA Task Folder presentation", () => {
+	it("keeps an exact saved Pi candidate visibly offline instead of inferring idle", () => {
+		expect(
+			mapAAWorkerToAATaskFolderState({
+				healthCode: "offline_resumable",
+				tracking: "tracked",
+			}),
+		).toBe("offline");
+	});
 	it("uses the highest-priority real title source", () => {
 		expect(
 			resolveAATaskFolderTitle({

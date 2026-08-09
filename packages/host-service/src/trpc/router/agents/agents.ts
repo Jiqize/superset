@@ -188,6 +188,7 @@ export type AgentRunResult =
 
 const SUPERSET_AGENT_ID = "superset";
 const SUPERSET_AGENT_LABEL = "Superset";
+export const PI_RESUME_CONFIRMATION_TIMEOUT_MS = 30_000;
 
 /**
  * Validate an explicit effort override before launch. Omitting effort always
@@ -439,6 +440,13 @@ async function runTerminalAgent(
 			code: "INTERNAL_SERVER_ERROR",
 			message: result.error,
 		});
+	}
+
+	if (expectsPiResume) {
+		const confirmationTimer = setTimeout(() => {
+			ctx.runtime.aaRuntime.expireResumeExpectation(terminalId);
+		}, PI_RESUME_CONFIRMATION_TIMEOUT_MS);
+		confirmationTimer.unref();
 	}
 
 	return {

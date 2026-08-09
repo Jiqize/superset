@@ -88,6 +88,10 @@ describe("AARuntimeRegistry", () => {
 		expect(
 			registry.ingest({ ...turnStarted, eventId: "pi:epoch-1:3", sequence: 3 }),
 		).toMatchObject({ status: "quarantined" });
+		expect(registry.get(SESSION_KEY)).toMatchObject({
+			state: "unknown",
+			stateReason: "event_gap_quarantined",
+		});
 		expect(registry.ingest(turnStarted)).toEqual({ status: "accepted" });
 		expect(
 			registry.ingest({ ...turnStarted, eventId: "late-event", sequence: 1 }),
@@ -343,5 +347,28 @@ describe("AARuntimeRegistry", () => {
 			stateReason: "resume_identity_not_confirmed",
 			observedAt: 400,
 		});
+	});
+
+	it("expires a resume that stays alive without a sequence-one identity confirmation", () => {
+		const registry = new AARuntimeRegistry();
+		registry.expectResume(
+			{
+				nativeSessionId: "session-expected",
+				runtime: "pi",
+				terminalId: "terminal-resume",
+				workspaceId: "workspace-1",
+			},
+			50,
+		);
+
+		expect(registry.expireResumeExpectation("terminal-resume", 500)).toBe(true);
+		expect(registry.get("aa:pi:session-expected")).toMatchObject({
+			state: "error",
+			stateReason: "resume_identity_not_confirmed",
+			observedAt: 500,
+		});
+		expect(registry.expireResumeExpectation("terminal-resume", 600)).toBe(
+			false,
+		);
 	});
 });

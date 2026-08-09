@@ -1,10 +1,10 @@
+import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
 import { AAAgentAvatar } from "../AAAgentAvatar";
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAEmployeeAvatar } from "../AAEmployeeAvatar";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AAActiveTerminalPresentationInput,
-	type AAWorkerStatus,
 	resolveAAActiveWorkerPresentation,
 } from "./aaActiveWorkerPresentation";
 
@@ -13,13 +13,25 @@ interface AAActiveWorkerCardProps {
 }
 
 export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
-	const { bindings, runtimeSnapshots } = useAAAgentStatus();
+	const { bindings, runtimeSnapshots, workspaceId } = useAAAgentStatus();
+	const { candidate: resumeCandidate } = useTerminalResumeCandidate(
+		workspaceId,
+		terminal?.terminalId ?? "",
+	);
 	const binding = terminal ? bindings.get(terminal.terminalId) : undefined;
 	const runtimeSnapshot = terminal
 		? runtimeSnapshots.get(terminal.terminalId)
 		: undefined;
 	const presentation = resolveAAActiveWorkerPresentation({
 		binding,
+		...(resumeCandidate
+			? {
+					resumeCandidate: {
+						agentId: resumeCandidate.agentId,
+						resumeSupported: resumeCandidate.resumeSupported,
+					},
+				}
+			: {}),
 		runtimeSnapshot,
 		terminal,
 	});
@@ -37,11 +49,8 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 			className="aa-agent-status aa-active-worker-card"
 			data-source={presentation.source}
 			data-state={presentation.status}
-			title={getCardDetail(
-				presentation.source,
-				presentation.lastEventType,
-				presentation.stateReason,
-			)}
+			data-runtime-health={presentation.healthCode}
+			title={getCardDetail(presentation)}
 		>
 			<span className="aa-agent-status__portrait">
 				{isPi ? (
@@ -62,7 +71,7 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 					{presentation.heading}
 					<AAStatusLight
 						className="aa-agent-status__light"
-						tone={toneForStatus(presentation.status)}
+						tone={toneForPresentation(presentation)}
 					/>
 				</span>
 				<span className="aa-agent-status__state">
@@ -71,9 +80,9 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 				{presentation.model && (
 					<span
 						className="aa-active-worker-card__runtime"
-						title={presentation.model.displayName ?? presentation.model.id}
+						title={formatModelDetail(presentation.model)}
 					>
-						MODEL: {presentation.model.displayName ?? presentation.model.id}
+						MODEL: {presentation.model.id}
 					</span>
 				)}
 				{presentation.reasoning && (
@@ -87,15 +96,16 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 }
 
 function getCardDetail(
-	source: string,
-	lastEventType?: string,
-	stateReason?: string,
+	presentation: ReturnType<typeof resolveAAActiveWorkerPresentation>,
 ): string {
-	switch (source) {
+	if (presentation.healthDiagnostic) return presentation.healthDiagnostic;
+	switch (presentation.source) {
 		case "runtime":
-			return `Authoritative Tier 1 runtime snapshot${stateReason ? `: ${stateReason}` : ""}`;
+			return "Authoritative Tier 1 runtime snapshot";
+		case "resume-candidate":
+			return "Saved Pi conversation is offline and available for exact resume";
 		case "binding":
-			return `Tracked terminal-agent binding: ${lastEventType ?? "Attached"}`;
+			return `Tracked terminal-agent binding: ${presentation.lastEventType ?? "Attached"}`;
 		case "launch":
 		case "pane-title":
 			return "Known launch identity; lifecycle tracking unavailable";
@@ -106,8 +116,27 @@ function getCardDetail(
 	}
 }
 
-function toneForStatus(status: AAWorkerStatus): AAStatusTone {
-	switch (status) {
+function formatModelDetail(model: {
+	displayName: string | null;
+	id: string;
+	provider: string | null;
+}): string {
+	return [model.displayName, model.id, model.provider]
+		.filter((value, index, values) => value && values.indexOf(value) === index)
+		.join(" · ");
+}
+
+function toneForPresentation(
+	presentation: ReturnType<typeof resolveAAActiveWorkerPresentation>,
+): AAStatusTone {
+	if (
+		presentation.healthCode === "offline_resumable" ||
+		presentation.healthCode === "unknown" ||
+		presentation.healthCode === "starting"
+	) {
+		return "attention";
+	}
+	switch (presentation.status) {
 		case "working":
 		case "thinking":
 			return "working";

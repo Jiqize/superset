@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 1,
+	"evidenceKind": "aa-phase-3c-grok-auth-boundary",
+	"runtime": "grok",
+	"transport": "acp",
+	"executableVersion": "grok 0.2.87 (0ae0bf47e53)",
+	"initializeSucceeded": true,
+	"protocolVersion": 1,
+	"sessionNewResult": "authentication_required",
+	"credentialsPresentBeforeProbe": false,
+	"credentialsEnteredByTest": false,
+	"authenticatedTurnAttempted": false,
+	"productUiChanged": false,
+	"capabilityBoundaryRemainsTruthful": true,
+	"nextAcceptance": "After a user-owned Grok login, repeat initialize and session/new, then run one narrowly scoped harmless turn through the existing ACP manager and validate lifecycle/tool/capability events against AA-RUNTIME-CONTRACT-V0.1."
+}

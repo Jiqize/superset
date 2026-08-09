@@ -1,3 +1,5 @@
+import type { AARuntimeState } from "@superset/session-protocol";
+
 export const AA_AGENT_STATES = [
 	"offline",
 	"idle",
@@ -74,5 +76,3 @@ export function selectLatestPiBinding<T extends AAAgentBindingLike>(
 	}
 	return latest;
 }
-
-import type { AARuntimeState } from "@superset/session-protocol";

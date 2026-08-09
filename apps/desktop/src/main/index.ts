@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { settings } from "@superset/local-db";
@@ -24,6 +25,7 @@ import {
 	PLATFORM,
 	PROTOCOL_SCHEME,
 } from "shared/constants";
+import { applyAARuntimeQaEnvironment } from "../../scripts/aa-runtime-qa-profile-config";
 import { setupAgentIntegrations } from "./lib/agent-setup";
 import { initAppState } from "./lib/app-state";
 import { requestAppleEventsAccess } from "./lib/apple-events-permission";
@@ -53,6 +55,17 @@ import {
 import { disposeTray, initTray } from "./lib/tray";
 import { startNetworkLogger, stopNetworkLogger } from "./network-logger";
 import { MainWindow } from "./windows/main";
+
+const aaRuntimeQaProfile = applyAARuntimeQaEnvironment(process.env);
+if (aaRuntimeQaProfile) {
+	mkdirSync(aaRuntimeQaProfile.electronUserDataDir, {
+		recursive: true,
+		mode: 0o700,
+	});
+	app.setPath("userData", aaRuntimeQaProfile.electronUserDataDir);
+	app.setPath("sessionData", aaRuntimeQaProfile.electronUserDataDir);
+	console.log("[main] Disposable AA runtime QA profile active");
+}
 
 console.log("[main] Local database ready:", !!localDb);
 const IS_DEV = process.env.NODE_ENV === "development";

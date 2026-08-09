@@ -1,12 +1,16 @@
 import type { RendererContext } from "@superset/panes";
-import { Button } from "@superset/ui/button";
 import { toast } from "@superset/ui/sonner";
 import { workspaceTrpc } from "@superset/workspace-client";
-import { History, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
 import type { ConnectionState } from "renderer/lib/terminal/terminal-runtime-registry";
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
+import {
+	AAIcon,
+	resolveAAResumeSessionPresentation,
+	useAAAgentStatus,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import type {
 	PaneViewerData,
 	TerminalPaneData,
@@ -37,6 +41,7 @@ export function TerminalAgentResumeBanner({
 		workspaceId,
 		terminalId,
 	);
+	const { runtimeSnapshots } = useAAAgentStatus();
 	const [dismissed, setDismissed] = useState(false);
 
 	// The host marks the binding ended during the attach that cold-respawns a
@@ -59,7 +64,12 @@ export function TerminalAgentResumeBanner({
 		},
 	});
 
-	if (!candidate?.resumeSupported || dismissed) return null;
+	const presentation = resolveAAResumeSessionPresentation({
+		candidate,
+		runtimeSnapshot: runtimeSnapshots.get(terminalId),
+	});
+	if (!candidate || presentation.availability !== "available" || dismissed)
+		return null;
 
 	const handleResume = async () => {
 		try {
@@ -99,33 +109,47 @@ export function TerminalAgentResumeBanner({
 	};
 
 	return (
-		<div className="absolute top-2 left-1/2 z-20 -translate-x-1/2">
-			<div className="flex items-center gap-2 rounded-md border border-border bg-background/95 py-1 pl-2.5 pr-1 shadow-md">
-				<History
-					aria-hidden="true"
-					className="size-3.5 shrink-0 text-muted-foreground"
-				/>
-				<span className="select-text cursor-text whitespace-nowrap text-xs text-muted-foreground">
-					{candidate.agentLabel} was interrupted
-				</span>
-				<Button
-					size="sm"
-					className="h-6 px-2 text-xs"
-					onClick={() => void handleResume()}
-					disabled={runAgent.isPending}
-				>
-					{runAgent.isPending ? "Resuming…" : "Resume"}
-				</Button>
-				<Button
-					variant="ghost"
-					size="icon"
-					className="size-6"
-					aria-label="Dismiss resume prompt"
-					onClick={() => setDismissed(true)}
-				>
-					<X className="size-3.5" />
-				</Button>
-			</div>
-		</div>
+		<output className="aa-resume-session">
+			<span className="aa-resume-session__mark" aria-hidden="true">
+				<AAIcon name="folder" />
+			</span>
+			<span className="aa-resume-session__copy">
+				<strong>{presentation.contextLabel}</strong>
+				<small>
+					{candidate.agentLabel.toUpperCase()} INTERRUPTED
+					{presentation.endedAt ? (
+						<time dateTime={new Date(presentation.endedAt).toISOString()}>
+							{" · "}
+							{formatResumeTime(presentation.endedAt)}
+						</time>
+					) : null}
+				</small>
+			</span>
+			<button
+				aria-label="Resume exact saved Pi session"
+				className="aa-resume-session__action"
+				type="button"
+				title="Resume the exact saved Pi conversation; runtime identity must be confirmed"
+				onClick={() => void handleResume()}
+				disabled={runAgent.isPending}
+			>
+				{runAgent.isPending ? "RESUMING…" : presentation.actionLabel}
+			</button>
+			<button
+				type="button"
+				className="aa-resume-session__dismiss"
+				aria-label="Dismiss resume prompt"
+				onClick={() => setDismissed(true)}
+			>
+				<X className="size-3.5" />
+			</button>
+		</output>
 	);
+}
+
+function formatResumeTime(timestamp: number): string {
+	return new Intl.DateTimeFormat(undefined, {
+		hour: "2-digit",
+		minute: "2-digit",
+	}).format(timestamp);
 }

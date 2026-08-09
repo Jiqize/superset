@@ -6,9 +6,12 @@ import type {
 } from "@superset/session-protocol";
 import {
 	type AAAgentState,
-	mapAARuntimeStateToAAState,
 	mapLifecycleEventToAAState,
 } from "../AAAgentStatus/aaAgentState";
+import {
+	type AARuntimeHealthCode,
+	resolveAARuntimeHealth,
+} from "../AAAgentStatus/aaRuntimeHealth";
 import {
 	type AAEmployeePersonaId,
 	resolveAAEmployeePersona,
@@ -31,10 +34,17 @@ interface AAWorkerBindingLike {
 	lastEventType: string;
 }
 
+interface AAWorkerResumeCandidateLike {
+	agentId: string;
+	lastEventType?: string;
+	resumeSupported: boolean;
+}
+
 export type AAWorkerTracking = "tracked" | "untracked" | "unassigned";
 export type AAWorkerStatus = AAAgentState | "untracked" | "unassigned";
 export type AAWorkerIdentitySource =
 	| "runtime"
+	| "resume-candidate"
 	| "binding"
 	| "launch"
 	| "pane-title"
@@ -45,6 +55,8 @@ export interface AAActiveWorkerPresentation {
 	agentId?: string;
 	displayName: string;
 	heading: string;
+	healthCode?: AARuntimeHealthCode;
+	healthDiagnostic?: string;
 	lastEventType?: string;
 	model?: AARuntimeModel;
 	personaId: AAEmployeePersonaId;
@@ -60,6 +72,7 @@ export interface AAActiveWorkerPresentation {
 interface ResolveAAActiveWorkerPresentationInput {
 	binding?: AAWorkerBindingLike;
 	runtimeSnapshot?: AARuntimeSessionSnapshot;
+	resumeCandidate?: AAWorkerResumeCandidateLike;
 	terminal?: AAActiveTerminalPresentationInput | null;
 }
 
@@ -81,6 +94,7 @@ const PERSONA_LABELS: Record<
 export function resolveAAActiveWorkerPresentation({
 	binding,
 	runtimeSnapshot,
+	resumeCandidate,
 	terminal,
 }: ResolveAAActiveWorkerPresentationInput): AAActiveWorkerPresentation {
 	if (!terminal) {
@@ -99,6 +113,11 @@ export function resolveAAActiveWorkerPresentation({
 		runtimeSnapshot &&
 		runtimeSnapshot.transport.terminalId === terminal.terminalId
 	) {
+		const health = resolveAARuntimeHealth({
+			state: runtimeSnapshot.state,
+			stateReason: runtimeSnapshot.stateReason,
+			canResume: runtimeSnapshot.resume.canResume,
+		});
 		const identity = resolveIdentity(
 			runtimeSnapshot.agentId,
 			runtimeSnapshot.agentId,
@@ -118,6 +137,8 @@ export function resolveAAActiveWorkerPresentation({
 			displayName: identity.displayName,
 			heading: `${identity.displayName} WORKER`,
 			...(model ? { model } : {}),
+			healthCode: health.code,
+			healthDiagnostic: health.diagnostic,
 			personaId: identity.personaId,
 			...(reasoning ? { reasoning } : {}),
 			runtimeState: runtimeSnapshot.state,
@@ -125,8 +146,30 @@ export function resolveAAActiveWorkerPresentation({
 			...(runtimeSnapshot.stateReason
 				? { stateReason: runtimeSnapshot.stateReason }
 				: {}),
-			status: mapAARuntimeStateToAAState(runtimeSnapshot.state),
-			statusLabel: formatRuntimeState(runtimeSnapshot.state),
+			status: health.avatarState,
+			statusLabel: health.label,
+			tracking: "tracked",
+		};
+	}
+
+	if (resumeCandidate?.agentId === "pi") {
+		const identity = resolveIdentity("pi", "pi");
+		const health = resolveAARuntimeHealth({
+			state: "offline",
+			stateReason: "saved_session_interrupted",
+			canResume: resumeCandidate.resumeSupported,
+		});
+		return {
+			agentId: "pi",
+			displayName: identity.displayName,
+			heading: `${identity.displayName} WORKER`,
+			healthCode: health.code,
+			healthDiagnostic: health.diagnostic,
+			lastEventType: resumeCandidate.lastEventType,
+			personaId: identity.personaId,
+			source: "resume-candidate",
+			status: health.avatarState,
+			statusLabel: health.label,
 			tracking: "tracked",
 		};
 	}
@@ -189,10 +232,6 @@ export function resolveAAActiveWorkerPresentation({
 		statusLabel: "UNASSIGNED",
 		tracking: "unassigned",
 	};
-}
-
-function formatRuntimeState(state: AARuntimeState): string {
-	return state.replaceAll("_", " ").toUpperCase();
 }
 
 function resolveIdentity(

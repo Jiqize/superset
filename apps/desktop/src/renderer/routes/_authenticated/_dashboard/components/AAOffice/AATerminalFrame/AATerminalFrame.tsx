@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
 import {
 	type AAWorkerLaunchIdentity,
 	resolveAAActiveWorkerPresentation,
@@ -6,11 +7,7 @@ import {
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAIcon } from "../AAIcon";
 import { AAStatusLight } from "../AAStatusLight";
-import {
-	AATaskFolder,
-	mapAARuntimeSnapshotToAATaskFolderState,
-	mapLifecycleEventToAATaskFolderState,
-} from "../AATaskFolder";
+import { AATaskFolder, mapAAWorkerToAATaskFolderState } from "../AATaskFolder";
 
 interface AATerminalFrameProps {
 	children: ReactNode;
@@ -31,11 +28,23 @@ export function AATerminalFrame({
 	taskTitleEdited,
 	terminalId,
 }: AATerminalFrameProps) {
-	const { bindings, runtimeSnapshots } = useAAAgentStatus();
+	const { bindings, runtimeSnapshots, workspaceId } = useAAAgentStatus();
+	const { candidate: resumeCandidate } = useTerminalResumeCandidate(
+		workspaceId,
+		terminalId,
+	);
 	const binding = bindings.get(terminalId);
 	const runtimeSnapshot = runtimeSnapshots.get(terminalId);
 	const worker = resolveAAActiveWorkerPresentation({
 		binding,
+		...(resumeCandidate
+			? {
+					resumeCandidate: {
+						agentId: resumeCandidate.agentId,
+						resumeSupported: resumeCandidate.resumeSupported,
+					},
+				}
+			: {}),
 		runtimeSnapshot,
 		terminal: {
 			launchIdentity,
@@ -48,15 +57,7 @@ export function AATerminalFrame({
 		worker.tracking === "unassigned"
 			? "LOCAL TERMINAL"
 			: `${worker.displayName} WORKSTATION`;
-	const taskFolderState = worker.runtimeState
-		? mapAARuntimeSnapshotToAATaskFolderState(
-				worker.runtimeState,
-				worker.stateReason,
-			)
-		: mapLifecycleEventToAATaskFolderState(
-				worker.lastEventType,
-				worker.tracking,
-			);
+	const taskFolderState = mapAAWorkerToAATaskFolderState(worker);
 	const currentSignalAddsContext =
 		taskFolderState === "error" ||
 		taskFolderState === "session-ended" ||
@@ -80,7 +81,7 @@ export function AATerminalFrame({
 					className="aa-terminal-frame__signal"
 					data-semantic={currentSignalAddsContext ? "distinct" : "duplicate"}
 				>
-					<AAStatusLight tone={toneForWorkerStatus(worker.status)} />
+					<AAStatusLight tone={toneForWorker(worker)} />
 					{worker.statusLabel}
 				</span>
 			</div>
@@ -89,10 +90,17 @@ export function AATerminalFrame({
 	);
 }
 
-function toneForWorkerStatus(
-	status: ReturnType<typeof resolveAAActiveWorkerPresentation>["status"],
+function toneForWorker(
+	worker: ReturnType<typeof resolveAAActiveWorkerPresentation>,
 ): "attention" | "error" | "idle" | "offline" | "success" | "working" {
-	switch (status) {
+	if (
+		worker.healthCode === "offline_resumable" ||
+		worker.healthCode === "unknown" ||
+		worker.healthCode === "starting"
+	) {
+		return "attention";
+	}
+	switch (worker.status) {
 		case "thinking":
 		case "working":
 			return "working";

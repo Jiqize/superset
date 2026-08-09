@@ -1,5 +1,6 @@
 import type { AARuntimeState } from "@superset/session-protocol";
 import type { AAWorkerTracking } from "../AAActiveWorkerCard";
+import type { AARuntimeHealthCode } from "../AAAgentStatus/aaRuntimeHealth";
 
 export const AA_TASK_FOLDER_STATES = [
 	"unassigned",
@@ -130,6 +131,48 @@ export function mapAARuntimeSnapshotToAATaskFolderState(
 			return "session-ended";
 		case "unknown":
 			return "unknown";
+	}
+}
+
+export function mapAAWorkerToAATaskFolderState(worker: {
+	healthCode?: AARuntimeHealthCode;
+	lastEventType?: string;
+	runtimeState?: AARuntimeState;
+	stateReason?: string;
+	tracking: AAWorkerTracking;
+}): AATaskFolderState {
+	if (worker.runtimeState) {
+		return mapAARuntimeSnapshotToAATaskFolderState(
+			worker.runtimeState,
+			worker.stateReason,
+		);
+	}
+
+	switch (worker.healthCode) {
+		case "offline":
+		case "offline_resumable":
+			return "offline";
+		case "starting":
+			return "starting";
+		case "working":
+			return "working";
+		case "idle":
+			return "idle";
+		case "waiting":
+			return "waiting";
+		case "cancelling":
+			return "cancelling";
+		case "unknown":
+			return "unknown";
+		case "error":
+		case "resume_identity_mismatch":
+		case "resume_not_confirmed":
+			return "error";
+		case undefined:
+			return mapLifecycleEventToAATaskFolderState(
+				worker.lastEventType,
+				worker.tracking,
+			);
 	}
 }
 

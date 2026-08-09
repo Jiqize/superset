@@ -9,10 +9,13 @@ import { AAAgentAvatar } from "../AAAgentAvatar";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AAAgentState,
-	mapAARuntimeStateToAAState,
 	mapLifecycleEventToAAState,
 	selectLatestPiBinding,
 } from "./aaAgentState";
+import {
+	type AARuntimeHealthPresentation,
+	resolveAARuntimeHealth,
+} from "./aaRuntimeHealth";
 import { useAARuntimeSnapshots } from "./useAARuntimeSnapshots";
 
 interface AAAgentStatusValue {
@@ -20,8 +23,10 @@ interface AAAgentStatusValue {
 	bindings: Map<string, TerminalAgentBinding>;
 	runtimeSnapshot?: AARuntimeSessionSnapshot;
 	runtimeSnapshots: Map<string, AARuntimeSessionSnapshot>;
+	runtimeHealth?: AARuntimeHealthPresentation;
 	state: AAAgentState;
 	statusLabel: string;
+	workspaceId: string;
 }
 
 const AAAgentStatusContext = createContext<AAAgentStatusValue | null>(null);
@@ -40,19 +45,28 @@ export function AAAgentStatusProvider({
 		const runtimeSnapshot = selectLatestPiRuntimeSnapshot(
 			runtimeSnapshots.values(),
 		);
+		const runtimeHealth = runtimeSnapshot
+			? resolveAARuntimeHealth({
+					state: runtimeSnapshot.state,
+					stateReason: runtimeSnapshot.stateReason,
+					canResume: runtimeSnapshot.resume.canResume,
+				})
+			: undefined;
 		return {
 			binding,
 			bindings,
 			runtimeSnapshot,
 			runtimeSnapshots,
-			state: runtimeSnapshot
-				? mapAARuntimeStateToAAState(runtimeSnapshot.state)
+			...(runtimeHealth ? { runtimeHealth } : {}),
+			state: runtimeHealth
+				? runtimeHealth.avatarState
 				: mapLifecycleEventToAAState(binding?.lastEventType),
-			statusLabel: runtimeSnapshot
-				? runtimeSnapshot.state.replaceAll("_", " ").toUpperCase()
+			statusLabel: runtimeHealth
+				? runtimeHealth.label
 				: mapLifecycleEventToAAState(binding?.lastEventType).toUpperCase(),
+			workspaceId,
 		};
-	}, [bindings, runtimeSnapshots]);
+	}, [bindings, runtimeSnapshots, workspaceId]);
 
 	return (
 		<AAAgentStatusContext.Provider value={value}>
@@ -80,8 +94,9 @@ export function AAAgentStatus({
 	className,
 	compact = false,
 }: AAAgentStatusProps) {
-	const { binding, runtimeSnapshot, state, statusLabel } = useAAAgentStatus();
-	const tone = toneForState(state);
+	const { binding, runtimeHealth, runtimeSnapshot, state, statusLabel } =
+		useAAAgentStatus();
+	const tone = runtimeHealth?.tone ?? toneForState(state);
 	const reasoning =
 		runtimeSnapshot?.capabilities.reasoningRead.support === "available"
 			? runtimeSnapshot.reasoning
@@ -96,8 +111,8 @@ export function AAAgentStatus({
 			)}
 			data-state={state}
 			title={
-				runtimeSnapshot
-					? `Pi runtime: ${runtimeSnapshot.state}${runtimeSnapshot.stateReason ? ` (${runtimeSnapshot.stateReason})` : ""}`
+				runtimeHealth
+					? runtimeHealth.diagnostic
 					: binding
 						? `Pi lifecycle: ${binding.lastEventType}`
 						: "No active Pi terminal session"

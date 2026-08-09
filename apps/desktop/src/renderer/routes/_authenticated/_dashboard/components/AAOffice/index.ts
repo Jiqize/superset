@@ -5,7 +5,11 @@ export {
 	type AAWorkerLaunchIdentity,
 	resolveAAActiveWorkerPresentation,
 } from "./AAActiveWorkerCard";
-export { AAAgentStatus, AAAgentStatusProvider } from "./AAAgentStatus";
+export {
+	AAAgentStatus,
+	AAAgentStatusProvider,
+	useAAAgentStatus,
+} from "./AAAgentStatus";
 export {
 	AAAssignmentLabel,
 	type AAAssignmentPhase,
@@ -32,12 +36,18 @@ export {
 	getAAReasoningPresentation,
 } from "./AAReasoningIndicator";
 export {
+	type AAPiResumeCandidateLike,
+	type AAResumeSessionPresentation,
+	resolveAAResumeSessionPresentation,
+} from "./AAResumeSessionAction";
+export {
 	AA_TASK_FOLDER_STATES,
 	AATaskFolder,
 	type AATaskFolderMetricPresentation,
 	type AATaskFolderState,
 	formatAATaskFolderState,
 	getAATaskFolderMetricPresentation,
+	mapAAWorkerToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,

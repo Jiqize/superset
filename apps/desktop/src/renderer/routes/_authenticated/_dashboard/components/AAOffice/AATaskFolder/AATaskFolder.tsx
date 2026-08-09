@@ -6,8 +6,7 @@ import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AATaskFolderState,
 	getAATaskFolderMetricPresentation,
-	mapAARuntimeSnapshotToAATaskFolderState,
-	mapLifecycleEventToAATaskFolderState,
+	mapAAWorkerToAATaskFolderState,
 	resolveAATaskFolderRename,
 	resolveAATaskFolderTitle,
 } from "./aaTaskFolderPresentation";
@@ -41,15 +40,7 @@ export function AATaskFolder({
 		sessionLabel,
 		terminalLabel,
 	});
-	const state = worker.runtimeState
-		? mapAARuntimeSnapshotToAATaskFolderState(
-				worker.runtimeState,
-				worker.stateReason,
-			)
-		: mapLifecycleEventToAATaskFolderState(
-				worker.lastEventType,
-				worker.tracking,
-			);
+	const state = mapAAWorkerToAATaskFolderState(worker);
 	const stateMetric = getAATaskFolderMetricPresentation(state);
 	const workerLabel =
 		worker.tracking === "unassigned" ? "—" : worker.displayName;

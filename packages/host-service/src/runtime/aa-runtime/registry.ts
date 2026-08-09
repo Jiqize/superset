@@ -106,6 +106,11 @@ export class AARuntimeRegistry {
 			return { status: "stale", reason: "event predates current snapshot" };
 		}
 		if (order === "gap") {
+			this.markSessionUnknown(
+				current,
+				"event_gap_quarantined",
+				event.occurredAt,
+			);
 			return {
 				status: "quarantined",
 				reason: "event sequence is not gapless for the active epoch",
@@ -113,6 +118,11 @@ export class AARuntimeRegistry {
 		}
 		if (order === "new_epoch") {
 			if (event.kind !== "snapshot") {
+				this.markSessionUnknown(
+					current,
+					"new_epoch_without_snapshot",
+					event.occurredAt,
+				);
 				return {
 					status: "quarantined",
 					reason: "a new epoch must begin with a snapshot",
@@ -215,6 +225,13 @@ export class AARuntimeRegistry {
 		this.blockedResumeTerminals.delete(terminalId);
 	}
 
+	expireResumeExpectation(
+		terminalId: string,
+		occurredAt = Date.now(),
+	): boolean {
+		return this.recordUnconfirmedResumeFailure(terminalId, occurredAt);
+	}
+
 	markTerminalOffline(terminalId: string, occurredAt = Date.now()): boolean {
 		if (this.recordUnconfirmedResumeFailure(terminalId, occurredAt))
 			return true;
@@ -267,6 +284,20 @@ export class AARuntimeRegistry {
 			const removed = session.events.shift();
 			if (removed) session.eventIds.delete(removed.eventId);
 		}
+	}
+
+	private markSessionUnknown(
+		session: RegistrySession,
+		stateReason: string,
+		occurredAt: number,
+	): void {
+		session.snapshot = {
+			...session.snapshot,
+			state: "unknown",
+			stateReason,
+			observedAt: Math.max(session.snapshot.observedAt, occurredAt),
+		};
+		this.emit({ event: null, snapshot: session.snapshot });
 	}
 
 	private recordResumeMismatch(

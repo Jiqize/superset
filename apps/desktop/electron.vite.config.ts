@@ -10,6 +10,7 @@ import injectProcessEnvPlugin from "rollup-plugin-inject-process-env";
 import tsconfigPathsPlugin from "vite-tsconfig-paths";
 import { dependencies, resources, version } from "./package.json";
 import { mainExternalizedDependencies } from "./runtime-dependencies";
+import { applyAARuntimeQaEnvironment } from "./scripts/aa-runtime-qa-profile-config";
 import {
 	copyResourcesPlugin,
 	defineEnv,
@@ -19,6 +20,7 @@ import {
 
 // override: true ensures .env values take precedence over inherited env vars
 config({ path: resolve(__dirname, "../../.env"), override: true, quiet: true });
+applyAARuntimeQaEnvironment(process.env);
 
 const DEV_SERVER_PORT = Number(process.env.DESKTOP_VITE_PORT);
 

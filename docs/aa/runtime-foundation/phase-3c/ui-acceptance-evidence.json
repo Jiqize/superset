@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"evidenceKind": "aa-phase-3c-ui-acceptance",
+	"interaction": "real Electron UI through pointer and keyboard input",
+	"logicalViewport": {
+		"width": 1440,
+		"height": 800
+	},
+	"checks": {
+		"piWorkingAndSettled": true,
+		"modelAndReasoningVisible": true,
+		"reasoningHairBackedByRuntime": true,
+		"offlineResumableVisibleAfterColdRestart": true,
+		"exactResumeActionKeyboardOperable": true,
+		"rendererReloadRetainedSnapshot": true,
+		"terminalFocusAndInputAfterReload": true,
+		"filesTab": true,
+		"changesTab": true,
+		"reviewTab": true,
+		"diffOpened": true,
+		"tier2CodexDispatched": true,
+		"tier2CodexStayedUntracked": true,
+		"routeNavigation": true,
+		"reducedMotionRulePresent": true
+	},
+	"workspaceSelectionDogfood": {
+		"multipleProjectsPresent": true,
+		"newWorkspaceInvokedFromOriginatingBriefcase": true,
+		"originatingProjectPreselected": true,
+		"findingReproduced": false,
+		"codeChangeMade": false
+	},
+	"knownUiNotes": [
+		"After Renderer reload, the restored xterm canvas remained blank until new terminal input arrived; input and live rendering then worked normally.",
+		"The disposable repository had no remote, so its background fetch warning was expected and unrelated to runtime productization."
+	]
+}

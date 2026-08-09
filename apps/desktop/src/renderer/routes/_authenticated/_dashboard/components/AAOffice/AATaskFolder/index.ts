@@ -6,6 +6,7 @@ export {
 	formatAATaskFolderState,
 	getAATaskFolderMetricPresentation,
 	mapAARuntimeSnapshotToAATaskFolderState,
+	mapAAWorkerToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,

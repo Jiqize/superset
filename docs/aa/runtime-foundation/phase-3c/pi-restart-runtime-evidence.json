@@ -1,0 +1,71 @@
+{
+	"schemaVersion": 1,
+	"evidenceKind": "aa-phase-3c-pi-full-restart",
+	"profile": "phase-3c",
+	"profileWasDisposable": true,
+	"baselineCommit": "ea53df214cead5972941fd63b73421ef01c6f903",
+	"runtime": "pi",
+	"transport": "terminal",
+	"effectiveModel": {
+		"provider": "google",
+		"id": "gemini-3.5-flash"
+	},
+	"effectiveReasoning": "high",
+	"nativeSessionFingerprint": "2df5034831c6",
+	"preRestartEpochFingerprint": "74c56a880343",
+	"postRestartEpochFingerprint": "bc8b06c6d071",
+	"preRestart": {
+		"firstSequence": 1,
+		"lastSequence": 10,
+		"eventKinds": [
+			"snapshot",
+			"session.started",
+			"turn.started",
+			"tool.started",
+			"tool.finished",
+			"turn.settled"
+		],
+		"toolFinishDidNotSettleTurn": true,
+		"finalState": "idle"
+	},
+	"restart": {
+		"electronFullyQuit": true,
+		"hostFullyQuit": true,
+		"ptyChildrenFullyQuit": true,
+		"sameProfileRelaunched": true,
+		"claimedLiveBeforeRuntimeEvidence": false,
+		"preResumePresentation": "OFFLINE / RESUMABLE",
+		"resumeAction": "RESUME PI SESSION",
+		"pendingPresentation": "STARTING"
+	},
+	"postRestart": {
+		"sameNativeSession": true,
+		"newEpoch": true,
+		"firstSequence": 1,
+		"eventKinds": [
+			"snapshot",
+			"session.started",
+			"turn.started",
+			"turn.settled"
+		],
+		"priorContextMarkerRecovered": true,
+		"rendererReloadSnapshotRetained": true,
+		"terminalInputAfterRendererReload": true,
+		"finalState": "idle"
+	},
+	"cleanup": {
+		"workspaceRemoved": true,
+		"worktreeRemoved": true,
+		"branchRemoved": true,
+		"terminalProcessesRemoved": true,
+		"profileRemoved": true,
+		"qaPortsReleased": true
+	},
+	"privacy": {
+		"rawNativeSessionIdIncluded": false,
+		"rawEpochIncluded": false,
+		"promptOrTranscriptPersisted": false,
+		"toolArgumentsOrResultsIncluded": false,
+		"fingerprintsAreTruncatedSha256": true
+	}
+}
