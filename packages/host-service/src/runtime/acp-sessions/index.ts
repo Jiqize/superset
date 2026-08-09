@@ -5,6 +5,12 @@ export {
 	AcpSessionNotFoundError,
 	AcpWorkspaceMismatchError,
 } from "./acp-sessions";
+export type { AcpAdapterProcessDescriptor } from "./adapter-descriptor";
+export {
+	createGrokAcpAdapterDescriptor,
+	createGrokFoundationObservation,
+	type GrokFoundationObservation,
+} from "./grok-acp-adapter";
 export { type JournalPage, SessionJournal } from "./journal";
 export {
 	type AcpSessionPersistence,

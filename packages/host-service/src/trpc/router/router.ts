@@ -1,4 +1,5 @@
 import { router } from "../index";
+import { aaRuntimeRouter } from "./aa-runtime";
 import { acpSessionsRouter } from "./acp-sessions";
 import { agentsRouter } from "./agents";
 import { attachmentsRouter } from "./attachments";
@@ -25,6 +26,7 @@ import { workspaceCreationRouter } from "./workspace-creation";
 import { workspacesRouter } from "./workspaces";
 
 export const appRouter = router({
+	aaRuntime: aaRuntimeRouter,
 	acpSessions: acpSessionsRouter,
 	agents: agentsRouter,
 	attachments: attachmentsRouter,

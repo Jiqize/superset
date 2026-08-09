@@ -9,7 +9,7 @@ import {
 export const PI_EXTENSION_FILE = "superset-hooks.ts";
 
 const PI_EXTENSION_SIGNATURE = "// Superset pi extension";
-const PI_EXTENSION_VERSION = "v1";
+const PI_EXTENSION_VERSION = "v2";
 export const PI_EXTENSION_MARKER = `${PI_EXTENSION_SIGNATURE} ${PI_EXTENSION_VERSION}`;
 
 const PI_EXTENSION_TEMPLATE_PATH = path.join(

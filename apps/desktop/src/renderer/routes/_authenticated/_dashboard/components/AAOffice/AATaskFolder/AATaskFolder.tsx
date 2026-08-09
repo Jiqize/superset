@@ -6,6 +6,7 @@ import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AATaskFolderState,
 	getAATaskFolderMetricPresentation,
+	mapAARuntimeSnapshotToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 	resolveAATaskFolderRename,
 	resolveAATaskFolderTitle,
@@ -40,10 +41,15 @@ export function AATaskFolder({
 		sessionLabel,
 		terminalLabel,
 	});
-	const state = mapLifecycleEventToAATaskFolderState(
-		worker.lastEventType,
-		worker.tracking,
-	);
+	const state = worker.runtimeState
+		? mapAARuntimeSnapshotToAATaskFolderState(
+				worker.runtimeState,
+				worker.stateReason,
+			)
+		: mapLifecycleEventToAATaskFolderState(
+				worker.lastEventType,
+				worker.tracking,
+			);
 	const stateMetric = getAATaskFolderMetricPresentation(state);
 	const workerLabel =
 		worker.tracking === "unassigned" ? "—" : worker.displayName;
@@ -168,6 +174,11 @@ function toneForTaskState(state: AATaskFolderState): AAStatusTone {
 			return "error";
 		case "idle":
 			return "idle";
+		case "starting":
+		case "cancelling":
+		case "unknown":
+			return "attention";
+		case "offline":
 		case "session-ended":
 		case "unassigned":
 			return "offline";

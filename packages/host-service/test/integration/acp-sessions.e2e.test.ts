@@ -759,6 +759,27 @@ describe("acp-sessions e2e (fake adapter)", () => {
 		await inflight;
 	}, 30_000);
 
+	test("owns an external ACP adapter descriptor without applying Claude policy", async () => {
+		const manager = new AcpSessionManager({
+			resolveWorkspaceCwd: () => workspaceDir,
+			adapterProcess: {
+				harness: "grok-build-acp",
+				command: process.execPath,
+				args: [FAKE_ADAPTER],
+				forceDefaultPermissionMode: false,
+			},
+		});
+		managers.push(manager);
+
+		const state = await manager.create({
+			sessionId: "e2e-external-adapter",
+			workspaceId: WORKSPACE_ID,
+		});
+
+		expect(state.harness).toBe("grok-build-acp");
+		expect(state.currentMode?.currentModeId).toBe("bypassPermissions");
+	}, 30_000);
+
 	test("setMode and setConfigOption round-trip through the adapter", async () => {
 		const manager = newManager();
 		const sessionId = "e2e-config";

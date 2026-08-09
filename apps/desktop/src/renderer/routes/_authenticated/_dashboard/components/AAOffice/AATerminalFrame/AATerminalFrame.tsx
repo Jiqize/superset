@@ -8,6 +8,7 @@ import { AAIcon } from "../AAIcon";
 import { AAStatusLight } from "../AAStatusLight";
 import {
 	AATaskFolder,
+	mapAARuntimeSnapshotToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 } from "../AATaskFolder";
 
@@ -30,10 +31,12 @@ export function AATerminalFrame({
 	taskTitleEdited,
 	terminalId,
 }: AATerminalFrameProps) {
-	const { bindings } = useAAAgentStatus();
+	const { bindings, runtimeSnapshots } = useAAAgentStatus();
 	const binding = bindings.get(terminalId);
+	const runtimeSnapshot = runtimeSnapshots.get(terminalId);
 	const worker = resolveAAActiveWorkerPresentation({
 		binding,
+		runtimeSnapshot,
 		terminal: {
 			launchIdentity,
 			paneTitle: taskTitle ?? sessionLabel,
@@ -45,10 +48,15 @@ export function AATerminalFrame({
 		worker.tracking === "unassigned"
 			? "LOCAL TERMINAL"
 			: `${worker.displayName} WORKSTATION`;
-	const taskFolderState = mapLifecycleEventToAATaskFolderState(
-		worker.lastEventType,
-		worker.tracking,
-	);
+	const taskFolderState = worker.runtimeState
+		? mapAARuntimeSnapshotToAATaskFolderState(
+				worker.runtimeState,
+				worker.stateReason,
+			)
+		: mapLifecycleEventToAATaskFolderState(
+				worker.lastEventType,
+				worker.tracking,
+			);
 	const currentSignalAddsContext =
 		taskFolderState === "error" ||
 		taskFolderState === "session-ended" ||
@@ -73,7 +81,7 @@ export function AATerminalFrame({
 					data-semantic={currentSignalAddsContext ? "distinct" : "duplicate"}
 				>
 					<AAStatusLight tone={toneForWorkerStatus(worker.status)} />
-					{worker.status.toUpperCase()}
+					{worker.statusLabel}
 				</span>
 			</div>
 			<div className="aa-terminal-frame__viewport">{children}</div>

@@ -16,6 +16,7 @@ import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import type { HostDb } from "../../../db";
 import { hostAgentConfigs, workspaces } from "../../../db/schema";
+import type { AARuntimeRegistry } from "../../../runtime/aa-runtime";
 import { createTerminalSessionInternal } from "../../../terminal/terminal";
 import type { HostServiceContext } from "../../../types";
 import { protectedProcedure, router } from "../../index";
@@ -336,7 +337,7 @@ async function runChatAgent(
 export function buildTerminalAgentLaunch(
 	db: HostDb,
 	input: AgentRunInput,
-): { fullCommand: string; label: string } {
+): { fullCommand: string; label: string; presetId: string } {
 	const config = resolveHostAgentConfig(db, input.agent);
 	if (!config) {
 		// Worded for end users (automation run errors show this verbatim), but
@@ -375,25 +376,65 @@ export function buildTerminalAgentLaunch(
 	return {
 		fullCommand: `${envOverlayPrefix({ ...config.env, ...modelEnv })}${command}`,
 		label: config.label,
+		presetId: config.presetId,
 	};
 }
 
+export function registerPiResumeExpectation(
+	registry: AARuntimeRegistry,
+	launch: Pick<ResolvedHostAgentConfig, "presetId">,
+	input: AgentRunInput,
+	terminalId: string,
+	requestedAt = Date.now(),
+): boolean {
+	if (launch.presetId !== "pi" || !input.resumeSessionId) return false;
+	registry.expectResume(
+		{
+			nativeSessionId: input.resumeSessionId,
+			runtime: "pi",
+			terminalId,
+			workspaceId: input.workspaceId,
+		},
+		requestedAt,
+	);
+	return true;
+}
+
 async function runTerminalAgent(
-	ctx: { db: HostDb; eventBus: import("../../../events").EventBus },
+	ctx: Pick<HostServiceContext, "db" | "eventBus" | "runtime">,
 	input: AgentRunInput,
 ): Promise<AgentRunResult> {
-	const { fullCommand, label } = buildTerminalAgentLaunch(ctx.db, input);
+	const launch = buildTerminalAgentLaunch(ctx.db, input);
 
 	const terminalId = crypto.randomUUID();
-	const result = await createTerminalSessionInternal({
+	const expectsPiResume = registerPiResumeExpectation(
+		ctx.runtime.aaRuntime,
+		launch,
+		input,
 		terminalId,
-		workspaceId: input.workspaceId,
-		db: ctx.db,
-		eventBus: ctx.eventBus,
-		initialCommand: fullCommand,
-	});
+	);
+	let result: Awaited<ReturnType<typeof createTerminalSessionInternal>>;
+	try {
+		result = await createTerminalSessionInternal({
+			terminalId,
+			workspaceId: input.workspaceId,
+			db: ctx.db,
+			eventBus: ctx.eventBus,
+			initialCommand: launch.fullCommand,
+		});
+	} catch (error) {
+		if (expectsPiResume) {
+			ctx.runtime.aaRuntime.markTerminalOffline(terminalId);
+			ctx.runtime.aaRuntime.clearResumeExpectation(terminalId);
+		}
+		throw error;
+	}
 
 	if ("error" in result) {
+		if (expectsPiResume) {
+			ctx.runtime.aaRuntime.markTerminalOffline(terminalId);
+			ctx.runtime.aaRuntime.clearResumeExpectation(terminalId);
+		}
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
 			message: result.error,
@@ -403,7 +444,7 @@ async function runTerminalAgent(
 	return {
 		kind: "terminal",
 		sessionId: result.terminalId,
-		label,
+		label: launch.label,
 	};
 }
 

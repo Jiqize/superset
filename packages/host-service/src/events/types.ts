@@ -1,4 +1,8 @@
 import type { DetectedPort } from "@superset/port-scanner";
+import type {
+	AARuntimeEventEnvelope,
+	AARuntimeSessionSnapshot,
+} from "@superset/session-protocol";
 import type { AgentIdentity } from "@superset/shared/agent-identity";
 import type { FsWatchEvent } from "@superset/workspace-fs/host";
 import type { AgentLifecycleEventType } from "./map-event-type.ts";
@@ -41,6 +45,15 @@ export interface TerminalLifecycleMessage {
 	eventType: "exit";
 	exitCode: number;
 	signal: number;
+	occurredAt: number;
+}
+
+export interface AARuntimeChangedMessage {
+	type: "aa-runtime:changed";
+	workspaceId: string;
+	snapshot: AARuntimeSessionSnapshot;
+	/** Null for host-derived transport loss, which is not an adapter event. */
+	event: AARuntimeEventEnvelope | null;
 	occurredAt: number;
 }
 
@@ -120,6 +133,7 @@ export type ServerMessage =
 	| GitChangedMessage
 	| AgentLifecycleMessage
 	| TerminalLifecycleMessage
+	| AARuntimeChangedMessage
 	| PortChangedMessage
 	| WorkspaceChangedMessage
 	| ProjectChangedMessage

@@ -1,0 +1,110 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T16:14:01Z",
+	"purpose": "Curated Phase 3B real Pi runtime-contract acceptance evidence",
+	"environment": {
+		"platform": "macOS 26.4 arm64",
+		"piVersion": "0.82.1",
+		"contractVersion": "0.1",
+		"profile": "existing local development profile; disposable workspace"
+	},
+	"session": {
+		"workspaceLabel": "runtime-foundation-pi-live",
+		"nativeSessionId": "019fe73e-4e95-76b3-8c72-4a1f8c424246",
+		"initialTerminalId": "74dffcab-1075-42e4-8537-f2df461c7f6e",
+		"initialEpoch": "80a27e89-8a4f-4441-8455-124991d08620",
+		"model": {
+			"provider": "google",
+			"id": "gemini-3.5-flash",
+			"displayName": "Gemini 3.5 Flash"
+		},
+		"reasoning": "high"
+	},
+	"initialEpochEvents": [
+		{
+			"sequence": 1,
+			"kind": "snapshot"
+		},
+		{
+			"sequence": 2,
+			"kind": "session.started"
+		},
+		{
+			"sequence": 3,
+			"kind": "turn.started"
+		},
+		{
+			"sequence": 4,
+			"kind": "tool.started",
+			"toolCallId": "74912gbz",
+			"tool": "bash"
+		},
+		{
+			"sequence": 5,
+			"kind": "tool.progress",
+			"toolCallId": "74912gbz"
+		},
+		{
+			"sequence": 6,
+			"kind": "tool.progress",
+			"toolCallId": "74912gbz"
+		},
+		{
+			"sequence": 7,
+			"kind": "tool.finished",
+			"toolCallId": "74912gbz",
+			"outcome": "completed"
+		},
+		{
+			"sequence": 8,
+			"kind": "tool.started",
+			"toolCallId": "7avn8mh8",
+			"tool": "bash"
+		},
+		{
+			"sequence": 9,
+			"kind": "tool.progress",
+			"toolCallId": "7avn8mh8"
+		},
+		{
+			"sequence": 10,
+			"kind": "tool.finished",
+			"toolCallId": "7avn8mh8",
+			"outcome": "completed"
+		},
+		{
+			"sequence": 11,
+			"kind": "turn.settled"
+		}
+	],
+	"assertions": {
+		"nativeUuidReachedHostRegistry": true,
+		"nativeUuidPersistedInLegacyBinding": true,
+		"modelReachedSnapshotAndRenderer": true,
+		"reasoningReachedSnapshotAndRenderer": true,
+		"reasoningHairDisplayedExactHighValue": true,
+		"toolCallIdsCorrelatedAcrossLifecycle": true,
+		"stateStayedWorkingAfterFirstToolFinished": true,
+		"stateBecameIdleOnlyAfterTurnSettled": true,
+		"rendererReloadRetainedSnapshot": true,
+		"terminalFocusAndKeyboardInputWorked": true
+	},
+	"exactResume": {
+		"commandShape": "pi --session <native UUID>",
+		"resumedTerminalId": "39f880d9-029e-44d6-a875-312520ea4c28",
+		"resumedNativeSessionId": "019fe73e-4e95-76b3-8c72-4a1f8c424246",
+		"resumedEpoch": "3e0dbb62-820f-4dc8-9a43-b7efcbeb56d6",
+		"identityMatched": true,
+		"epochChanged": true,
+		"priorConversationMarkerRecovered": true,
+		"resumedTurnSettledAtSequence": 4
+	},
+	"cleanup": {
+		"disposableWorkspaceDeletedThroughUi": true,
+		"disposableWorktreeAndBranchRemoved": true,
+		"testTerminalProcessesEnded": true
+	},
+	"redactions": [
+		"No prompts, assistant transcript, tool arguments/results, environment data, credentials, hostnames, or absolute local paths are included."
+	]
+}

@@ -1,6 +1,11 @@
 import { describe, expect, it, mock } from "bun:test";
+import {
+	AA_RUNTIME_CONTRACT_VERSION,
+	createAARuntimeCapabilities,
+} from "@superset/session-protocol";
 import type { AgentIdentity } from "@superset/shared/agent-identity";
 import type { AgentLifecycleEventType } from "../../../events";
+import { AARuntimeRegistry } from "../../../runtime/aa-runtime";
 import { TerminalAgentStore } from "../../../terminal-agents";
 import type { HostServiceContext } from "../../../types";
 import { notificationsRouter } from "./notifications";
@@ -33,6 +38,7 @@ function createContext(originWorkspaceId: string | null): {
 					},
 	}));
 	const terminalAgentStore = new TerminalAgentStore();
+	const aaRuntime = new AARuntimeRegistry();
 
 	const ctx = {
 		db: {
@@ -46,6 +52,7 @@ function createContext(originWorkspaceId: string | null): {
 			broadcastAgentLifecycle,
 		},
 		terminalAgentStore,
+		runtime: { aaRuntime },
 	} as unknown as HostServiceContext;
 
 	return { ctx, broadcastAgentLifecycle, findFirst, terminalAgentStore };
@@ -199,5 +206,85 @@ describe("notificationsRouter.hook", () => {
 
 		const broadcast = broadcastAgentLifecycle.mock.calls[0]?.[0];
 		expect(broadcast?.agent).toBeUndefined();
+	});
+
+	it("validates and ingests a structured Pi runtime snapshot", async () => {
+		const { ctx, broadcastAgentLifecycle } = createContext("workspace-1");
+		const snapshot = {
+			contractVersion: AA_RUNTIME_CONTRACT_VERSION,
+			sessionKey: "aa:pi:native-session",
+			runtime: "pi" as const,
+			agentId: "pi",
+			workspaceId: "workspace-1",
+			transport: { kind: "terminal" as const, terminalId: "terminal-1" },
+			nativeSessionId: "native-session",
+			nativeTurnId: null,
+			model: { provider: "anthropic", id: "claude-sonnet", displayName: null },
+			reasoning: { value: "high", availableValues: null },
+			state: "idle" as const,
+			stateReason: "session_attached",
+			capabilities: createAARuntimeCapabilities(),
+			resume: {
+				canResume: true,
+				mechanism: "pi_session" as const,
+				lastConfirmedAt: 100,
+			},
+			epoch: "epoch-1",
+			lastSequence: 1,
+			observedAt: 100,
+		};
+		const result = await notificationsRouter.createCaller(ctx).hook({
+			terminalId: "terminal-1",
+			runtimeEvent: {
+				contractVersion: AA_RUNTIME_CONTRACT_VERSION,
+				eventId: "pi:epoch-1:1",
+				sessionKey: snapshot.sessionKey,
+				runtime: "pi",
+				workspaceId: "workspace-1",
+				terminalId: "terminal-1",
+				nativeSessionId: "native-session",
+				nativeTurnId: null,
+				epoch: "epoch-1",
+				sequence: 1,
+				occurredAt: 100,
+				kind: "snapshot",
+				payload: { snapshot },
+			},
+		});
+
+		expect(result).toMatchObject({
+			success: true,
+			ignored: false,
+			runtimeStatus: "accepted",
+		});
+		expect(ctx.runtime.aaRuntime.get(snapshot.sessionKey)).toEqual(snapshot);
+		expect(broadcastAgentLifecycle).not.toHaveBeenCalled();
+	});
+
+	it("rejects a structured event whose terminal or workspace identity differs", async () => {
+		const { ctx } = createContext("workspace-1");
+		const runtimeEvent = {
+			contractVersion: AA_RUNTIME_CONTRACT_VERSION,
+			eventId: "pi:epoch-1:2",
+			sessionKey: "aa:pi:native-session",
+			runtime: "pi",
+			workspaceId: "workspace-other",
+			terminalId: "terminal-other",
+			nativeSessionId: "native-session",
+			nativeTurnId: null,
+			epoch: "epoch-1",
+			sequence: 2,
+			occurredAt: 200,
+			kind: "turn.started",
+			payload: { correlationId: null },
+		};
+
+		await expect(
+			notificationsRouter.createCaller(ctx).hook({
+				terminalId: "terminal-1",
+				runtimeEvent,
+			}),
+		).rejects.toMatchObject({ code: "BAD_REQUEST" });
+		expect(ctx.runtime.aaRuntime.list()).toEqual([]);
 	});
 });

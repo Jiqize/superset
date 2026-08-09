@@ -1,0 +1,58 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T16:14:01Z",
+	"purpose": "Curated Phase 3B real Grok ACP foundation evidence",
+	"environment": {
+		"platform": "macOS 26.4 arm64",
+		"runtime": "Grok Build",
+		"version": "0.2.87",
+		"revision": "0ae0bf47e53",
+		"contractVersion": "0.1"
+	},
+	"transport": {
+		"command": "grok agent --no-leader stdio",
+		"protocol": "ACP JSON-RPC over structured stdio",
+		"owner": "existing Host AcpSessionManager",
+		"harness": "grok-build-acp"
+	},
+	"initialize": {
+		"result": "success",
+		"protocolVersion": 1,
+		"agentVersion": "0.2.87",
+		"currentModelId": "grok-build",
+		"loadSessionAdvertised": true,
+		"authMethods": ["grok.com"]
+	},
+	"sessionNew": {
+		"result": "blocked",
+		"jsonRpcErrorCode": -32000,
+		"message": "Authentication required",
+		"rawErrorDataRetained": false
+	},
+	"mappedSnapshot": {
+		"state": "error",
+		"stateReason": "authentication_required",
+		"nativeSessionId": null,
+		"nativeTurnId": null,
+		"modelRead": "available",
+		"sessionIdentity": "conditional",
+		"lifecycle": "conditional",
+		"toolLifecycle": "conditional",
+		"resume": "conditional",
+		"modelWrite": "unknown",
+		"reasoningRead": "unknown",
+		"reasoningWrite": "unknown"
+	},
+	"assertions": {
+		"liveInitializeCompleted": true,
+		"authenticationRequiredWasStructured": true,
+		"falseLiveSessionWasNotClaimed": true,
+		"registryAcceptedSanitizedErrorSnapshot": true,
+		"existingAcpManagerSurvivedStructuredError": true,
+		"credentialsEnteredDuringVerification": false
+	},
+	"stopReason": "Authenticated session, turn, tool, permission, cancellation, and resume behavior require user-owned Grok authentication and were not claimed.",
+	"redactions": [
+		"Runtime instance IDs, raw authentication data, hostnames, absolute paths, environment data, credentials, prompts, and transcript content are omitted."
+	]
+}

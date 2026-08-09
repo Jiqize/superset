@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
+	mapAARuntimeStateToAAState,
 	mapLifecycleEventToAAState,
 	selectLatestPiBinding,
 } from "./aaAgentState";
@@ -41,5 +42,20 @@ describe("AA Pi worker state", () => {
 		]);
 
 		expect(selected?.terminalId).toBe("current-pi-terminal");
+	});
+
+	it.each([
+		["starting", "offline"],
+		["idle", "idle"],
+		["working", "working"],
+		["waiting_permission", "waiting"],
+		["waiting_user", "waiting"],
+		["cancelling", "waiting"],
+		["offline", "offline"],
+		["error", "error"],
+		["ended", "offline"],
+		["unknown", "offline"],
+	] as const)("maps runtime state %s to avatar state %s", (state, expected) => {
+		expect(mapAARuntimeStateToAAState(state)).toBe(expected);
 	});
 });

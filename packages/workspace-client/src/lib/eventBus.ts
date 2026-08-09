@@ -13,6 +13,7 @@ type EventType =
 	| "fs:events"
 	| "git:changed"
 	| "agent:lifecycle"
+	| "aa-runtime:changed"
 	| "terminal:lifecycle"
 	| "port:changed"
 	| "workspace:changed"
@@ -43,6 +44,17 @@ export interface TerminalLifecyclePayload {
 	terminalId: string;
 	exitCode: number;
 	signal: number;
+	occurredAt: number;
+}
+
+type AARuntimeChangedMessage = Extract<
+	ServerMessage,
+	{ type: "aa-runtime:changed" }
+>;
+
+export interface AARuntimeChangedPayload {
+	snapshot: AARuntimeChangedMessage["snapshot"];
+	event: AARuntimeChangedMessage["event"];
 	occurredAt: number;
 }
 
@@ -93,15 +105,17 @@ type EventListener<T extends EventType> = T extends "fs:events"
 		? (workspaceId: string, payload: GitChangedPayload) => void
 		: T extends "agent:lifecycle"
 			? (workspaceId: string, payload: AgentLifecyclePayload) => void
-			: T extends "terminal:lifecycle"
-				? (workspaceId: string, payload: TerminalLifecyclePayload) => void
-				: T extends "port:changed"
-					? (workspaceId: string, payload: PortChangedPayload) => void
-					: T extends "workspace:changed"
-						? (workspaceId: string, payload: WorkspaceChangedPayload) => void
-						: T extends "project:changed"
-							? (projectId: string, payload: ProjectChangedPayload) => void
-							: never;
+			: T extends "aa-runtime:changed"
+				? (workspaceId: string, payload: AARuntimeChangedPayload) => void
+				: T extends "terminal:lifecycle"
+					? (workspaceId: string, payload: TerminalLifecyclePayload) => void
+					: T extends "port:changed"
+						? (workspaceId: string, payload: PortChangedPayload) => void
+						: T extends "workspace:changed"
+							? (workspaceId: string, payload: WorkspaceChangedPayload) => void
+							: T extends "project:changed"
+								? (projectId: string, payload: ProjectChangedPayload) => void
+								: never;
 
 interface ListenerEntry {
 	type: EventType;
@@ -155,6 +169,7 @@ function handleMessage(state: ConnectionState, data: unknown): void {
 			message.type === "fs:events" ||
 			message.type === "git:changed" ||
 			message.type === "agent:lifecycle" ||
+			message.type === "aa-runtime:changed" ||
 			message.type === "terminal:lifecycle" ||
 			message.type === "port:changed" ||
 			message.type === "workspace:changed"
@@ -186,6 +201,15 @@ function handleMessage(state: ConnectionState, data: unknown): void {
 					eventType: message.eventType,
 					terminalId: message.terminalId,
 					...(message.agent ? { agent: message.agent } : {}),
+					occurredAt: message.occurredAt,
+				},
+			);
+		} else if (message.type === "aa-runtime:changed") {
+			(entry.callback as EventListener<"aa-runtime:changed">)(
+				message.workspaceId,
+				{
+					snapshot: message.snapshot,
+					event: message.event,
 					occurredAt: message.occurredAt,
 				},
 			);

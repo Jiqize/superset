@@ -5,6 +5,7 @@ export {
 	mapEventType,
 } from "./map-event-type.ts";
 export type {
+	AARuntimeChangedMessage,
 	AgentLifecycleMessage,
 	ClientMessage,
 	EventBusErrorMessage,

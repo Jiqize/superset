@@ -41,6 +41,29 @@ export function mapLifecycleEventToAAState(
 	}
 }
 
+/** Avatar pose mapping only; callers retain the exact runtime label. */
+export function mapAARuntimeStateToAAState(
+	state: AARuntimeState,
+): AAAgentState {
+	switch (state) {
+		case "idle":
+			return "idle";
+		case "working":
+			return "working";
+		case "waiting_permission":
+		case "waiting_user":
+		case "cancelling":
+			return "waiting";
+		case "error":
+			return "error";
+		case "starting":
+		case "offline":
+		case "ended":
+		case "unknown":
+			return "offline";
+	}
+}
+
 export function selectLatestPiBinding<T extends AAAgentBindingLike>(
 	bindings: Iterable<T>,
 ): T | undefined {
@@ -51,3 +74,5 @@ export function selectLatestPiBinding<T extends AAAgentBindingLike>(
 	}
 	return latest;
 }
+
+import type { AARuntimeState } from "@superset/session-protocol";

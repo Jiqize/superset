@@ -1,0 +1,61 @@
+{
+	"schemaVersion": 1,
+	"capturedAt": "2026-08-09T16:14:01Z",
+	"purpose": "Curated AA Office Phase 3B UI regression evidence",
+	"interactionMethod": {
+		"application": "real Electron development build",
+		"ui": "CDP pointer and keyboard input",
+		"domClickBypassUsed": false,
+		"accessibilityNote": "The macOS accessibility driver could not inspect this Electron window despite granted permissions; repository-standard CDP input was used."
+	},
+	"checks": {
+		"piTuiInputAndFocus": "passed",
+		"briefcaseAndWorkspaceNavigation": "passed",
+		"tier2SupersetCliLaunch": "passed",
+		"tier2DispatchedAndUntracked": "passed",
+		"filesTab": "passed",
+		"changesTab": "passed",
+		"reviewTab": "passed",
+		"diffEmptyState": "passed",
+		"routeNavigationAndBack": "passed",
+		"rendererReload": "passed",
+		"savedPaneLayout": "passed; the route and active terminal-pane count survived renderer reload",
+		"taskFolderRename": "passed through real pointer/keyboard input; the renamed title survived reload and the original title was restored",
+		"reducedMotion": "passed; matchMedia returned true under emulation",
+		"layout1440x800": "passed; no document overflow"
+	},
+	"screenshots": [
+		{
+			"path": "01-pi-working.png",
+			"assertion": "Real Pi snapshot displayed WORKING with authoritative model and reasoning"
+		},
+		{
+			"path": "02-pi-idle-after-renderer-reload.png",
+			"assertion": "Renderer reload retained the live Pi snapshot and IDLE state"
+		},
+		{
+			"path": "03-pi-offline-resumable.png",
+			"assertion": "Pi process loss displayed OFFLINE while exact resume remained available"
+		},
+		{
+			"path": "04-pi-idle-after-exact-resume.png",
+			"assertion": "Exact UUID resume returned to IDLE with model and reasoning intact"
+		},
+		{
+			"path": "05-aa-office-1440x800-regression.png",
+			"assertion": "Single-workspace AA Office fit at a 1440 by 800 CSS viewport"
+		},
+		{
+			"path": "06-tier2-dispatched-untracked.png",
+			"assertion": "Tier 2 Superset CLI retained truthful DISPATCHED and UNTRACKED semantics"
+		}
+	],
+	"cleanup": {
+		"disposableWorkspacesDeletedThroughUi": true,
+		"fixtureReturnedToCleanState": true,
+		"developmentStackStopped": true
+	},
+	"redactions": [
+		"Screenshots are limited to safe product chrome or an empty disposable workspace; terminal prompts and transcript content are excluded."
+	]
+}

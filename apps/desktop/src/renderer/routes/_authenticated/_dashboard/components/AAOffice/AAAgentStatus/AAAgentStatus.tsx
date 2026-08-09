@@ -1,3 +1,4 @@
+import type { AARuntimeSessionSnapshot } from "@superset/session-protocol";
 import { cn } from "@superset/ui/utils";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
 import {
@@ -8,14 +9,19 @@ import { AAAgentAvatar } from "../AAAgentAvatar";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AAAgentState,
+	mapAARuntimeStateToAAState,
 	mapLifecycleEventToAAState,
 	selectLatestPiBinding,
 } from "./aaAgentState";
+import { useAARuntimeSnapshots } from "./useAARuntimeSnapshots";
 
 interface AAAgentStatusValue {
 	binding?: TerminalAgentBinding;
 	bindings: Map<string, TerminalAgentBinding>;
+	runtimeSnapshot?: AARuntimeSessionSnapshot;
+	runtimeSnapshots: Map<string, AARuntimeSessionSnapshot>;
 	state: AAAgentState;
+	statusLabel: string;
 }
 
 const AAAgentStatusContext = createContext<AAAgentStatusValue | null>(null);
@@ -28,14 +34,25 @@ export function AAAgentStatusProvider({
 	workspaceId: string;
 }) {
 	const bindings = useTerminalAgentBindings(workspaceId);
+	const runtimeSnapshots = useAARuntimeSnapshots(workspaceId);
 	const value = useMemo<AAAgentStatusValue>(() => {
 		const binding = selectLatestPiBinding(bindings.values());
+		const runtimeSnapshot = selectLatestPiRuntimeSnapshot(
+			runtimeSnapshots.values(),
+		);
 		return {
 			binding,
 			bindings,
-			state: mapLifecycleEventToAAState(binding?.lastEventType),
+			runtimeSnapshot,
+			runtimeSnapshots,
+			state: runtimeSnapshot
+				? mapAARuntimeStateToAAState(runtimeSnapshot.state)
+				: mapLifecycleEventToAAState(binding?.lastEventType),
+			statusLabel: runtimeSnapshot
+				? runtimeSnapshot.state.replaceAll("_", " ").toUpperCase()
+				: mapLifecycleEventToAAState(binding?.lastEventType).toUpperCase(),
 		};
-	}, [bindings]);
+	}, [bindings, runtimeSnapshots]);
 
 	return (
 		<AAAgentStatusContext.Provider value={value}>
@@ -63,9 +80,12 @@ export function AAAgentStatus({
 	className,
 	compact = false,
 }: AAAgentStatusProps) {
-	const { binding, state } = useAAAgentStatus();
-	const label = state.toUpperCase();
+	const { binding, runtimeSnapshot, state, statusLabel } = useAAAgentStatus();
 	const tone = toneForState(state);
+	const reasoning =
+		runtimeSnapshot?.capabilities.reasoningRead.support === "available"
+			? runtimeSnapshot.reasoning
+			: null;
 
 	return (
 		<div
@@ -76,14 +96,16 @@ export function AAAgentStatus({
 			)}
 			data-state={state}
 			title={
-				binding
-					? `Pi lifecycle: ${binding.lastEventType}`
-					: "No active Pi terminal session"
+				runtimeSnapshot
+					? `Pi runtime: ${runtimeSnapshot.state}${runtimeSnapshot.stateReason ? ` (${runtimeSnapshot.stateReason})` : ""}`
+					: binding
+						? `Pi lifecycle: ${binding.lastEventType}`
+						: "No active Pi terminal session"
 			}
 		>
 			{!compact && (
 				<span className="aa-agent-status__portrait">
-					<AAAgentAvatar state={state} />
+					<AAAgentAvatar reasoningLevel={reasoning?.value} state={state} />
 				</span>
 			)}
 			<div className="aa-agent-status__copy">
@@ -95,11 +117,22 @@ export function AAAgentStatus({
 				)}
 				<span className="aa-agent-status__state">
 					{compact && <AAStatusLight tone={tone} />}
-					{label}
+					{statusLabel}
 				</span>
 			</div>
 		</div>
 	);
+}
+
+function selectLatestPiRuntimeSnapshot(
+	snapshots: Iterable<AARuntimeSessionSnapshot>,
+): AARuntimeSessionSnapshot | undefined {
+	let latest: AARuntimeSessionSnapshot | undefined;
+	for (const snapshot of snapshots) {
+		if (snapshot.runtime !== "pi") continue;
+		if (!latest || snapshot.observedAt > latest.observedAt) latest = snapshot;
+	}
+	return latest;
 }
 
 function toneForState(state: AAAgentState): AAStatusTone {

@@ -13,9 +13,16 @@ interface AAActiveWorkerCardProps {
 }
 
 export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
-	const { bindings } = useAAAgentStatus();
+	const { bindings, runtimeSnapshots } = useAAAgentStatus();
 	const binding = terminal ? bindings.get(terminal.terminalId) : undefined;
-	const presentation = resolveAAActiveWorkerPresentation({ binding, terminal });
+	const runtimeSnapshot = terminal
+		? runtimeSnapshots.get(terminal.terminalId)
+		: undefined;
+	const presentation = resolveAAActiveWorkerPresentation({
+		binding,
+		runtimeSnapshot,
+		terminal,
+	});
 	const isPi = presentation.personaId === "pi";
 	const avatarState =
 		presentation.tracking === "tracked" &&
@@ -26,15 +33,22 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 
 	return (
 		<section
-			aria-label={`${presentation.heading}: ${presentation.status}`}
+			aria-label={`${presentation.heading}: ${presentation.statusLabel}`}
 			className="aa-agent-status aa-active-worker-card"
 			data-source={presentation.source}
 			data-state={presentation.status}
-			title={getCardDetail(presentation.source, presentation.lastEventType)}
+			title={getCardDetail(
+				presentation.source,
+				presentation.lastEventType,
+				presentation.stateReason,
+			)}
 		>
 			<span className="aa-agent-status__portrait">
 				{isPi ? (
-					<AAAgentAvatar state={avatarState} />
+					<AAAgentAvatar
+						reasoningLevel={presentation.reasoning?.value}
+						state={avatarState}
+					/>
 				) : (
 					<AAEmployeeAvatar
 						agentId={presentation.agentId}
@@ -52,15 +66,34 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 					/>
 				</span>
 				<span className="aa-agent-status__state">
-					{presentation.status.toUpperCase()}
+					{presentation.statusLabel}
 				</span>
+				{presentation.model && (
+					<span
+						className="aa-active-worker-card__runtime"
+						title={presentation.model.displayName ?? presentation.model.id}
+					>
+						MODEL: {presentation.model.displayName ?? presentation.model.id}
+					</span>
+				)}
+				{presentation.reasoning && (
+					<span className="aa-active-worker-card__runtime">
+						REASONING: {presentation.reasoning.value}
+					</span>
+				)}
 			</div>
 		</section>
 	);
 }
 
-function getCardDetail(source: string, lastEventType?: string): string {
+function getCardDetail(
+	source: string,
+	lastEventType?: string,
+	stateReason?: string,
+): string {
 	switch (source) {
+		case "runtime":
+			return `Authoritative Tier 1 runtime snapshot${stateReason ? `: ${stateReason}` : ""}`;
 		case "binding":
 			return `Tracked terminal-agent binding: ${lastEventType ?? "Attached"}`;
 		case "launch":

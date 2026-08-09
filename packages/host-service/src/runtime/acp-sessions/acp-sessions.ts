@@ -35,6 +35,7 @@ import {
 	encodeMessagesCursor,
 	selectedOptionIds,
 } from "@superset/session-protocol";
+import type { AcpAdapterProcessDescriptor } from "./adapter-descriptor";
 import { SessionJournal } from "./journal";
 import type { AcpSessionPersistence, AcpSessionRecord } from "./persistence";
 
@@ -170,6 +171,12 @@ export interface AcpSessionManagerOptions {
 	 */
 	adapterEntry?: string;
 	/**
+	 * External structured-stdio adapter process owned by this same manager.
+	 * Mutually exclusive with adapterEntry, which remains the test seam for
+	 * the bundled Claude adapter.
+	 */
+	adapterProcess?: AcpAdapterProcessDescriptor;
+	/**
 	 * Durable session registry. When set, every session's binding row
 	 * (workspace, adapter session id, title, stop reason) is upserted on each
 	 * state emit, and rows found at construction are exposed as `offline`
@@ -180,14 +187,16 @@ export interface AcpSessionManagerOptions {
 }
 
 /**
- * Owns Claude Code sessions as ACP adapter child processes: one
- * `claude-agent-acp` process per session, spoken to over JSON-RPC/stdio via
- * the official SDK. Every session/update, permission request/resolution, and
- * state transition is journaled as a seq-numbered envelope (gapless, from 1)
- * and broadcast to subscribers — the WS stream and getMessages pagination
- * both read from that journal. Sessions are kept alive until the adapter
- * process dies or the manager is disposed; dead sessions keep their journal
- * (list/get/getMessages still serve them) until the graveyard evicts them.
+ * Owns ACP sessions as adapter child processes: one structured-stdio process
+ * per session, spoken to over JSON-RPC via the official SDK. The bundled
+ * Claude adapter remains the default; an explicit process descriptor lets the
+ * same manager own another verified ACP runtime. Every session/update,
+ * permission request/resolution, and state transition is journaled as a
+ * seq-numbered envelope (gapless, from 1) and broadcast to subscribers — the
+ * WS stream and getMessages pagination both read from that journal. Sessions
+ * are kept alive until the adapter process dies or the manager is disposed;
+ * dead sessions keep their journal (list/get/getMessages still serve them)
+ * until the graveyard evicts them.
  *
  * With `persistence`, session binding rows survive host restarts: a restarted
  * manager lists them as `offline` (get/list are passive) and `ensureLive` —
@@ -201,6 +210,7 @@ export class AcpSessionManager {
 	private readonly resolveWorkspaceCwd: AcpSessionManagerOptions["resolveWorkspaceCwd"];
 	private readonly journalCapacity: number;
 	private readonly adapterEntry: string | undefined;
+	private readonly adapterProcess: AcpAdapterProcessDescriptor | undefined;
 	private readonly persistence: AcpSessionPersistence | undefined;
 	private readonly runtimes = new Map<string, AcpSessionRuntime>();
 	private readonly creations = new Map<string, InflightCreation>();
@@ -220,7 +230,11 @@ export class AcpSessionManager {
 			);
 		}
 		this.journalCapacity = journalCapacity;
+		if (options.adapterEntry && options.adapterProcess) {
+			throw new Error("adapterEntry and adapterProcess are mutually exclusive");
+		}
 		this.adapterEntry = options.adapterEntry;
+		this.adapterProcess = options.adapterProcess;
 		this.persistence = options.persistence;
 		if (this.persistence) {
 			try {
@@ -647,21 +661,24 @@ export class AcpSessionManager {
 		// shell profile) must never reach the agent child: they silently
 		// override the user's own Claude login for the whole session. Scrubbed
 		// here — the spawn site — so every launch path is covered, not just dev.
-		const env: Record<string, string | undefined> = {
-			...process.env,
-			ELECTRON_RUN_AS_NODE: "1",
-		};
+		const env: Record<string, string | undefined> = { ...process.env };
+		const command = this.adapterProcess?.command ?? process.execPath;
+		const args = this.adapterProcess
+			? [...this.adapterProcess.args]
+			: [this.adapterEntry ?? resolveAdapterEntry()];
+		if (this.adapterProcess) {
+			// External executables must not inherit the Electron-specific Node mode.
+			delete env.ELECTRON_RUN_AS_NODE;
+		} else {
+			env.ELECTRON_RUN_AS_NODE = "1";
+		}
 		delete env.ANTHROPIC_API_KEY;
 		delete env.ANTHROPIC_AUTH_TOKEN;
-		const child = spawn(
-			process.execPath,
-			[this.adapterEntry ?? resolveAdapterEntry()],
-			{
-				cwd,
-				env,
-				stdio: ["pipe", "pipe", "pipe"],
-			},
-		);
+		const child = spawn(command, args, {
+			cwd,
+			env,
+			stdio: ["pipe", "pipe", "pipe"],
+		});
 		if (!child.stdin || !child.stdout) {
 			child.kill();
 			throw new Error("adapter child process is missing stdio pipes");
@@ -786,7 +803,12 @@ export class AcpSessionManager {
 			const forceDefaultMode = resume
 				? modes?.currentModeId === "bypassPermissions"
 				: modes !== null && modes.currentModeId !== "default";
-			if (modes && hasDefaultMode && forceDefaultMode) {
+			if (
+				(this.adapterProcess?.forceDefaultPermissionMode ?? true) &&
+				modes &&
+				hasDefaultMode &&
+				forceDefaultMode
+			) {
 				await connection.agent.request("session/set_mode", {
 					sessionId: acpSessionId,
 					modeId: "default",
@@ -799,7 +821,7 @@ export class AcpSessionManager {
 				state: {
 					sessionId,
 					workspaceId,
-					harness: "claude-agent-acp",
+					harness: this.adapterProcess?.harness ?? "claude-agent-acp",
 					status: "idle",
 					title: resume?.title ?? null,
 					currentMode: modes,

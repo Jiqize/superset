@@ -830,6 +830,28 @@
 	min-width: 40px;
 }
 
+.aa-active-worker-card {
+	width: 164px;
+	min-width: 164px;
+}
+
+.aa-active-worker-card__runtime {
+	display: block;
+	max-width: 100%;
+	overflow: hidden;
+	color: var(--aa-muted);
+	font-size: 6px;
+	font-weight: 750;
+	letter-spacing: 0.2px;
+	line-height: 8px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.aa-active-worker-card__runtime:last-child {
+	color: var(--aa-text);
+}
+
 .aa-active-worker-card__employee .aa-employee-avatar__worker {
 	width: 38px;
 	height: 38px;

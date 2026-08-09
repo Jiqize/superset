@@ -37,7 +37,15 @@ function runNotifyHook(
 
 describe("getNotifyScriptContent", () => {
 	it("bumps the notify hook marker when hook semantics change", () => {
-		expect(NOTIFY_SCRIPT_MARKER).toBe("# Superset agent notification hook v7");
+		expect(NOTIFY_SCRIPT_MARKER).toBe("# Superset agent notification hook v8");
+	});
+
+	it("forwards Pi v2 runtime envelopes as raw structured input only to Host", () => {
+		const script = readNotifyHookTemplate();
+
+		expect(script).toContain('[ "$EVENT_TYPE" = "AARuntime" ]');
+		expect(script).toContain('[ "$SUPERSET_AGENT_ID" = "pi" ] || exit 0');
+		expect(script).toContain('\\"runtimeEvent\\":$INPUT');
 	});
 
 	it("exits silently outside Superset terminals even with a payload session id", () => {

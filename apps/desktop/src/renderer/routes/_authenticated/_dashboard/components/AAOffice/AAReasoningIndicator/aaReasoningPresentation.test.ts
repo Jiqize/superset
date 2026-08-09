@@ -9,6 +9,7 @@ describe("AA Pi reasoning presentation", () => {
 		["medium", "receding"],
 		["high", "sparse"],
 		["xhigh", "bald"],
+		["max", "bald"],
 	] as const)("maps real Pi level %s to %s hair", (level, hairState) => {
 		expect(getAAReasoningPresentation(level)).toEqual({
 			hairState,
@@ -25,7 +26,6 @@ describe("AA Pi reasoning presentation", () => {
 		undefined,
 		null,
 		"",
-		"max",
 		"very-high",
 	])("does not invent a presentation for %s", (value) => {
 		expect(getAAReasoningPresentation(value)).toBeNull();

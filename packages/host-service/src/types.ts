@@ -4,6 +4,7 @@ import type { AppRouter } from "@superset/trpc";
 import type { TRPCClient } from "@trpc/client";
 import type { HostDb } from "./db";
 import type { EventBus } from "./events";
+import type { AARuntimeRegistry } from "./runtime/aa-runtime";
 import type { AcpSessionManager } from "./runtime/acp-sessions";
 import type { ChatRuntimeManager } from "./runtime/chat";
 import type { WorkspaceFilesystemManager } from "./runtime/filesystem";
@@ -15,6 +16,7 @@ import type { ExecGh } from "./trpc/router/workspace-creation/utils/exec-gh";
 export type ApiClient = TRPCClient<AppRouter>;
 
 export interface HostServiceRuntime {
+	aaRuntime: AARuntimeRegistry;
 	acpSessions: AcpSessionManager;
 	/**
 	 * Feature gate for the pre-release ACP session harness. Off by default;

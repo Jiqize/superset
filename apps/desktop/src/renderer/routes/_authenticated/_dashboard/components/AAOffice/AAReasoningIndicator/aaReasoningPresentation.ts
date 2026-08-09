@@ -5,6 +5,7 @@ export const AA_PI_REASONING_LEVELS = [
 	"medium",
 	"high",
 	"xhigh",
+	"max",
 ] as const;
 
 export type AAPiReasoningLevel = (typeof AA_PI_REASONING_LEVELS)[number];
@@ -31,6 +32,7 @@ const REASONING_PRESENTATION: Record<
 	medium: { hairState: "receding", label: "MEDIUM", level: "medium" },
 	high: { hairState: "sparse", label: "HIGH", level: "high" },
 	xhigh: { hairState: "bald", label: "XHIGH", level: "xhigh" },
+	max: { hairState: "bald", label: "MAX", level: "max" },
 };
 
 export function getAAReasoningPresentation(

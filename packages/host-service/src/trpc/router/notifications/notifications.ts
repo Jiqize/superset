@@ -1,4 +1,9 @@
+import {
+	type AARuntimeEventEnvelope,
+	parseAARuntimeEvent,
+} from "@superset/session-protocol";
 import type { AgentIdentity } from "@superset/shared/agent-identity";
+import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { terminalSessions } from "../../../db/schema";
@@ -19,6 +24,7 @@ const hookInput = z.object({
 	terminalId: z.string().optional(),
 	eventType: z.string().optional(),
 	agent: agentIdentityInput,
+	runtimeEvent: z.unknown().optional(),
 });
 
 function trimOrUndefined(value: string | undefined): string | undefined {
@@ -52,6 +58,55 @@ export const notificationsRouter = router({
 	 * agent shell's env for zero practical gain.
 	 */
 	hook: publicProcedure.input(hookInput).mutation(async ({ ctx, input }) => {
+		if (input.runtimeEvent !== undefined) {
+			if (!input.terminalId) {
+				return { success: true, ignored: true as const };
+			}
+
+			let runtimeEvent: AARuntimeEventEnvelope;
+			try {
+				runtimeEvent = parseAARuntimeEvent(input.runtimeEvent);
+			} catch {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Malformed AA runtime event",
+				});
+			}
+			if (
+				runtimeEvent.runtime !== "pi" ||
+				runtimeEvent.terminalId !== input.terminalId ||
+				runtimeEvent.nativeSessionId === null
+			) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "AA runtime event identity mismatch",
+				});
+			}
+
+			const terminalSession = ctx.db.query.terminalSessions
+				.findFirst({
+					where: eq(terminalSessions.id, input.terminalId),
+					columns: { originWorkspaceId: true },
+				})
+				.sync();
+			if (!terminalSession?.originWorkspaceId) {
+				return { success: true, ignored: true as const };
+			}
+			if (runtimeEvent.workspaceId !== terminalSession.originWorkspaceId) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "AA runtime event workspace mismatch",
+				});
+			}
+
+			const result = ctx.runtime.aaRuntime.ingest(runtimeEvent);
+			return {
+				success: true,
+				ignored: result.status !== "accepted",
+				runtimeStatus: result.status,
+			};
+		}
+
 		const eventType = mapEventType(input.eventType);
 		if (!eventType) {
 			return { success: true, ignored: true as const };

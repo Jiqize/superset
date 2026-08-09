@@ -106,6 +106,25 @@ json_escape() {
   printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
 }
 
+# Pi Runtime Bridge v2 already supplies a bounded structured contract event.
+# Forward the event object verbatim inside the tRPC input wrapper. Never fall
+# back to the v1 endpoint: it cannot represent the runtime contract safely.
+if [ "$EVENT_TYPE" = "AARuntime" ]; then
+  [ "$SUPERSET_AGENT_ID" = "pi" ] || exit 0
+  [ -n "$SUPERSET_HOST_AGENT_HOOK_URL" ] && [ -n "$SUPERSET_TERMINAL_ID" ] || exit 0
+  PAYLOAD="{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"runtimeEvent\":$INPUT}}"
+  STATUS_CODE=$(curl -sX POST "$SUPERSET_HOST_AGENT_HOOK_URL" \
+    --connect-timeout 2 --max-time 5 \
+    -H "Content-Type: application/json" \
+    -d "$PAYLOAD" \
+    -o /dev/null -w "%{http_code}" 2>/dev/null)
+  if [ "$DEBUG_HOOKS_ENABLED" = "1" ]; then
+    echo "[notify-hook] AA runtime dispatched status=$STATUS_CODE" >&2
+  fi
+  debug_log "AA runtime status=$STATUS_CODE url=$SUPERSET_HOST_AGENT_HOOK_URL"
+  exit 0
+fi
+
 if [ -n "$SUPERSET_HOST_AGENT_HOOK_URL" ] && [ -n "$SUPERSET_TERMINAL_ID" ]; then
   PAYLOAD="{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"agent\":{\"agentId\":\"$(json_escape "$SUPERSET_AGENT_ID")\",\"sessionId\":\"$(json_escape "$SESSION_ID")\"}}}"
 

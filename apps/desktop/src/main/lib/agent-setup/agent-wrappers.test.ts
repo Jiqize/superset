@@ -32,7 +32,7 @@ mock.module("shared/env.shared", () => ({
 
 mock.module("./notify-hook", () => ({
 	NOTIFY_SCRIPT_NAME: "notify.sh",
-	NOTIFY_SCRIPT_MARKER: "# Superset agent notification hook v7",
+	NOTIFY_SCRIPT_MARKER: "# Superset agent notification hook v8",
 	getNotifyScriptPath: () => path.join(TEST_HOOKS_DIR, "notify.sh"),
 	getNotifyScriptContent: () => "#!/bin/bash\nexit 0\n",
 	createNotifyScript: () => {},
@@ -1920,8 +1920,11 @@ describe("agent-wrappers pi", () => {
 
 	it("renders pi extension content with the marker substituted", () => {
 		const content = getPiExtensionContent();
+		expect(PI_EXTENSION_MARKER).toContain("v2");
 		expect(content).toContain(PI_EXTENSION_MARKER);
 		expect(content).not.toContain("{{MARKER}}");
+		expect(content).toContain('pi.on("agent_settled"');
+		expect(content).not.toContain('pi.on("agent_end"');
 	});
 
 	it("renders pi extension content as a valid extension default-export shape", () => {

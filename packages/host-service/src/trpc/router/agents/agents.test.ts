@@ -6,10 +6,12 @@ import { drizzle } from "drizzle-orm/bun-sqlite";
 import { migrate } from "drizzle-orm/bun-sqlite/migrator";
 import type { HostDb } from "../../../db";
 import * as schema from "../../../db/schema";
+import { AARuntimeRegistry } from "../../../runtime/aa-runtime";
 import {
 	buildAgentCommandString,
 	buildTerminalAgentLaunch,
 	isChatAgent,
+	registerPiResumeExpectation,
 	validateAgentEffortSelection,
 	validateAgentResumeSelection,
 } from "./agents";
@@ -287,6 +289,48 @@ describe("buildTerminalAgentLaunch", () => {
 				prompt: "p",
 			}),
 		).toThrow(/No host agent config matching 'nope'/);
+	});
+});
+
+describe("Pi exact resume registration", () => {
+	it("registers the exact native UUID before launch and leaves other presets alone", () => {
+		const registry = new AARuntimeRegistry();
+		const registered = registerPiResumeExpectation(
+			registry,
+			{ presetId: "pi" },
+			{
+				workspaceId: "11111111-1111-1111-1111-111111111111",
+				agent: "pi",
+				prompt: "",
+				resumeSessionId: "native-session",
+			},
+			"terminal-resume",
+			100,
+		);
+
+		expect(registered).toBe(true);
+		expect(registry.get("aa:pi:native-session")).toMatchObject({
+			nativeSessionId: "native-session",
+			workspaceId: "11111111-1111-1111-1111-111111111111",
+			transport: { terminalId: "terminal-resume" },
+			state: "starting",
+			stateReason: "resume_requested",
+		});
+		expect(
+			registerPiResumeExpectation(
+				registry,
+				{ presetId: "claude" },
+				{
+					workspaceId: "11111111-1111-1111-1111-111111111111",
+					agent: "claude",
+					prompt: "",
+					resumeSessionId: "claude-session",
+				},
+				"terminal-claude",
+				100,
+			),
+		).toBe(false);
+		expect(registry.get("aa:pi:claude-session")).toBeUndefined();
 	});
 });
 

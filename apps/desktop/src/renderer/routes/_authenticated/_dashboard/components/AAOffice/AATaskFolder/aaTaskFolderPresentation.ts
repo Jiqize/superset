@@ -1,3 +1,4 @@
+import type { AARuntimeState } from "@superset/session-protocol";
 import type { AAWorkerTracking } from "../AAActiveWorkerCard";
 
 export const AA_TASK_FOLDER_STATES = [
@@ -9,6 +10,10 @@ export const AA_TASK_FOLDER_STATES = [
 	"session-ended",
 	"error",
 	"untracked",
+	"starting",
+	"cancelling",
+	"offline",
+	"unknown",
 ] as const;
 
 export type AATaskFolderState = (typeof AA_TASK_FOLDER_STATES)[number];
@@ -101,6 +106,33 @@ export function mapLifecycleEventToAATaskFolderState(
 	}
 }
 
+export function mapAARuntimeSnapshotToAATaskFolderState(
+	state: AARuntimeState,
+	stateReason: string | null | undefined,
+): AATaskFolderState {
+	switch (state) {
+		case "starting":
+			return "starting";
+		case "idle":
+			return stateReason === "turn_settled" ? "turn-complete" : "idle";
+		case "working":
+			return "working";
+		case "waiting_permission":
+		case "waiting_user":
+			return "waiting";
+		case "cancelling":
+			return "cancelling";
+		case "offline":
+			return "offline";
+		case "error":
+			return "error";
+		case "ended":
+			return "session-ended";
+		case "unknown":
+			return "unknown";
+	}
+}
+
 export function formatAATaskFolderState(state: AATaskFolderState): string {
 	return state.replaceAll("-", " ").toUpperCase();
 }
@@ -136,7 +168,11 @@ export function getAATaskFolderMetricPresentation(
 		case "idle":
 		case "unassigned":
 		case "waiting":
-		case "working": {
+		case "working":
+		case "starting":
+		case "cancelling":
+		case "offline":
+		case "unknown": {
 			const value = formatAATaskFolderState(state);
 			return {
 				accessibleSummary: `status: ${value.toLowerCase()}`,

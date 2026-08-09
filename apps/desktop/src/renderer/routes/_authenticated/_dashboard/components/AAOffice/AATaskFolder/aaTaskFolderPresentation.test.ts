@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import {
 	getAATaskFolderMetricPresentation,
+	mapAARuntimeSnapshotToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
 	normalizeAATaskFolderTitleInput,
 	resolveAATaskFolderRename,
@@ -84,6 +85,21 @@ describe("AA Task Folder presentation", () => {
 		);
 	});
 
+	it("uses authoritative runtime settlement rather than tool completion", () => {
+		expect(
+			mapAARuntimeSnapshotToAATaskFolderState("working", "tool_finished"),
+		).toBe("working");
+		expect(
+			mapAARuntimeSnapshotToAATaskFolderState("idle", "turn_settled"),
+		).toBe("turn-complete");
+		expect(mapAARuntimeSnapshotToAATaskFolderState("unknown", null)).toBe(
+			"unknown",
+		);
+		expect(mapAARuntimeSnapshotToAATaskFolderState("starting", null)).toBe(
+			"starting",
+		);
+	});
+
 	it.each([
 		["unassigned", "STATUS", "UNASSIGNED", "status: unassigned"],
 		["idle", "STATUS", "IDLE", "status: idle"],
@@ -93,6 +109,10 @@ describe("AA Task Folder presentation", () => {
 		["turn-complete", "LAST TURN", "COMPLETE", "last turn: complete"],
 		["session-ended", "SESSION", "ENDED", "session: ended"],
 		["error", "LAST EVENT", "ERROR", "last event: error"],
+		["starting", "STATUS", "STARTING", "status: starting"],
+		["cancelling", "STATUS", "CANCELLING", "status: cancelling"],
+		["offline", "STATUS", "OFFLINE", "status: offline"],
+		["unknown", "STATUS", "UNKNOWN", "status: unknown"],
 	] as const)("presents %s as %s / %s with an explicit temporal summary", (state, label, value, accessibleSummary) => {
 		expect(getAATaskFolderMetricPresentation(state)).toEqual({
 			accessibleSummary,

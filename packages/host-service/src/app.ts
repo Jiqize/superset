@@ -15,6 +15,10 @@ import type { ApiAuthProvider } from "./providers/auth";
 import type { HostAuthProvider } from "./providers/host-auth";
 import type { ModelProviderRuntimeResolver } from "./providers/model-providers";
 import {
+	AARuntimeRegistry,
+	syncPiRuntimeChangeToLegacy,
+} from "./runtime/aa-runtime";
+import {
 	AcpSessionManager,
 	registerAcpSessionStreamRoute,
 	SqliteAcpSessionPersistence,
@@ -70,6 +74,7 @@ export interface CreateAppOptions {
 	chatRuntime?: ChatRuntimeManager;
 	chatService?: ChatService;
 	acpSessions?: AcpSessionManager;
+	aaRuntime?: AARuntimeRegistry;
 }
 
 export interface CreateAppResult {
@@ -176,7 +181,9 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	// pane on the `chat-v3` PostHog flag.
 	const chatV3 = createChatV3Mount({ db, dbPath: config.dbPath });
 
+	const aaRuntime = options.aaRuntime ?? new AARuntimeRegistry();
 	const runtime = {
+		aaRuntime,
 		acpSessions,
 		acpSessionsEnabled,
 		auth: chatService,
@@ -221,6 +228,20 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 		);
 	}
 	const terminalAgentStore = new TerminalAgentStore(terminalAgentPersistence);
+	const removeAARuntimeSubscription = aaRuntime.subscribe((change) => {
+		syncPiRuntimeChangeToLegacy(change, { eventBus, terminalAgentStore });
+		eventBus.broadcastAARuntimeChanged({
+			workspaceId: change.snapshot.workspaceId,
+			snapshot: change.snapshot,
+			event: change.event,
+			occurredAt: change.event?.occurredAt ?? change.snapshot.observedAt,
+		});
+	});
+	const removeTerminalRuntimeSubscription = eventBus.onTerminalLifecycle(
+		(message) => {
+			aaRuntime.markTerminalOffline(message.terminalId, message.occurredAt);
+		},
+	);
 
 	// Startup sweeps run in the background so they don't block server
 	// startup. Ordering matters: the backfills fill identity fields on
@@ -313,6 +334,12 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 		// Each step is best-effort and isolated: a throw in one cleanup must
 		// not skip the others, otherwise a flaky `.stop()` could leak the
 		// open SQLite handle for the rest of the process lifetime.
+		try {
+			removeAARuntimeSubscription();
+			removeTerminalRuntimeSubscription();
+		} catch (err) {
+			console.warn("[host-service] AA runtime unsubscribe failed:", err);
+		}
 		try {
 			pullRequestRuntime.stop();
 		} catch (err) {

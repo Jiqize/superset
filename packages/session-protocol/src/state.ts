@@ -7,7 +7,7 @@ import type {
 	ToolCallUpdate,
 } from "./acp";
 
-export type HarnessKind = "claude-agent-acp"; // future: | "codex-acp"
+export type HarnessKind = "claude-agent-acp" | "grok-build-acp";
 
 export type SessionStatus =
 	| "starting"

@@ -79,6 +79,37 @@ describe("eventBus", () => {
 		expect(other.length).toBe(0);
 	});
 
+	it("routes AA runtime snapshot changes without dropping contract fields", async () => {
+		const host = makeHostServer();
+		const bus = getEventBus(host.hostUrl, () => "tok");
+		const received: unknown[] = [];
+		cleanups.push(
+			bus.on("aa-runtime:changed", "ws-1", (_id, payload) => {
+				received.push(payload);
+			}),
+		);
+		cleanups.push(() => host.server.stop(true));
+
+		await waitFor(() => host.clientCount() === 1);
+		const snapshot = {
+			contractVersion: "0.1",
+			sessionKey: "aa:pi:native-session",
+			runtime: "pi",
+			workspaceId: "ws-1",
+			state: "working",
+		};
+		host.push({
+			type: "aa-runtime:changed",
+			workspaceId: "ws-1",
+			snapshot,
+			event: null,
+			occurredAt: 100,
+		});
+
+		await waitFor(() => received.length === 1);
+		expect(received[0]).toEqual({ snapshot, event: null, occurredAt: 100 });
+	});
+
 	it("shares one connection per hostUrl across handles", async () => {
 		const host = makeHostServer();
 		const busA = getEventBus(host.hostUrl, () => "tok");
