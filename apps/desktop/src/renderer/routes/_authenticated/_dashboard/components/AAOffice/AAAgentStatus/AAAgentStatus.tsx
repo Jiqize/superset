@@ -14,6 +14,7 @@ import {
 
 interface AAAgentStatusValue {
 	binding?: TerminalAgentBinding;
+	bindings: Map<string, TerminalAgentBinding>;
 	state: AAAgentState;
 }
 
@@ -31,6 +32,7 @@ export function AAAgentStatusProvider({
 		const binding = selectLatestPiBinding(bindings.values());
 		return {
 			binding,
+			bindings,
 			state: mapLifecycleEventToAAState(binding?.lastEventType),
 		};
 	}, [bindings]);

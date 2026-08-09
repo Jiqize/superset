@@ -15,7 +15,13 @@ describe("AA manual assignment presentation", () => {
 		);
 	});
 
-	it("shows confirmation only for the assigned phase", () => {
+	it("describes a completed launch as dispatched, not assigned", () => {
+		expect(getAAAssignmentPresentation("dispatched", "Codex").detail).toBe(
+			"DISPATCHED TO CODEX",
+		);
+	});
+
+	it("reserves assigned language for a binding-confirmed phase", () => {
 		expect(getAAAssignmentPresentation("assigned", "Claude").detail).toBe(
 			"ASSIGNED TO CLAUDE",
 		);

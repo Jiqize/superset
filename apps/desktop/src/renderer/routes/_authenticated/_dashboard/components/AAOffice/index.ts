@@ -1,3 +1,10 @@
+export {
+	type AAActiveTerminalPresentationInput,
+	AAActiveWorkerCard,
+	type AAActiveWorkerPresentation,
+	type AAWorkerLaunchIdentity,
+	resolveAAActiveWorkerPresentation,
+} from "./AAActiveWorkerCard";
 export { AAAgentStatus, AAAgentStatusProvider } from "./AAAgentStatus";
 export {
 	AAAssignmentLabel,
@@ -21,7 +28,10 @@ export {
 	AA_TASK_FOLDER_STATES,
 	AATaskFolder,
 	type AATaskFolderState,
+	formatAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,
+	normalizeAATaskFolderTitleInput,
+	resolveAATaskFolderRename,
 	resolveAATaskFolderTitle,
 } from "./AATaskFolder";
 export { AATerminalFrame } from "./AATerminalFrame";

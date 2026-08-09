@@ -1,4 +1,8 @@
-export type AAAssignmentPhase = "idle" | "assigning" | "assigned";
+export type AAAssignmentPhase =
+	| "idle"
+	| "assigning"
+	| "dispatched"
+	| "assigned";
 
 export interface AAAssignmentPresentation {
 	detail: string;
@@ -14,6 +18,8 @@ export function getAAAssignmentPresentation(
 	switch (phase) {
 		case "assigning":
 			return { heading: "TASK FOLDER", detail: `HANDING TO ${employee}` };
+		case "dispatched":
+			return { heading: "TASK FOLDER", detail: `DISPATCHED TO ${employee}` };
 		case "assigned":
 			return { heading: "TASK FOLDER", detail: `ASSIGNED TO ${employee}` };
 		case "idle":

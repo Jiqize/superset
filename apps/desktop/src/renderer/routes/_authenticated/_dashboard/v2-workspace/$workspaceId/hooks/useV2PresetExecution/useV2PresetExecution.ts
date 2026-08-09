@@ -27,11 +27,12 @@ import type { TerminalLauncher } from "../useV2TerminalLauncher";
 function makeTerminalPane(
 	terminalId: string,
 	titleOverride?: string,
+	launchIdentity?: TerminalPaneData["launchIdentity"],
 ): CreatePaneInput<PaneViewerData> {
 	return {
 		kind: "terminal",
 		titleOverride,
-		data: { terminalId } as TerminalPaneData,
+		data: { launchIdentity, terminalId } as TerminalPaneData,
 	};
 }
 
@@ -58,6 +59,7 @@ function getActiveTerminalPane(state: WorkspaceStore<PaneViewerData>) {
 	return {
 		tabId: active.tabId,
 		paneId: active.pane.id,
+		data: active.pane.data,
 		terminalId: active.pane.data.terminalId,
 		titleOverride: active.pane.titleOverride,
 	};
@@ -164,6 +166,9 @@ export function useV2PresetExecution({
 			const activeTabId = state.activeTabId;
 			const target = options?.target ?? resolveTarget(preset.executionMode);
 			const title = preset.name || undefined;
+			const launchIdentity = title
+				? { agentId: preset.agentId, label: title }
+				: undefined;
 			const commands = resolvePresetCommands(preset);
 			const activeTerminal =
 				target === "active-tab" && preset.executionMode === "sequential"
@@ -213,6 +218,15 @@ export function useV2PresetExecution({
 							),
 						});
 						didExecute = true;
+						if (launchIdentity) {
+							state.setPaneData({
+								paneId: activeTerminal.paneId,
+								data: {
+									...activeTerminal.data,
+									launchIdentity,
+								},
+							});
+						}
 						if (title && !activeTerminal.titleOverride?.trim()) {
 							// Reused terminals keep their existing pane, so apply the
 							// first preset label explicitly instead of relying on creation
@@ -229,7 +243,9 @@ export function useV2PresetExecution({
 
 					case "new-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
-						state.addTab({ panes: [makeTerminalPane(terminalId, title)] });
+						state.addTab({
+							panes: [makeTerminalPane(terminalId, title, launchIdentity)],
+						});
 						didExecute = true;
 						break;
 					}
@@ -241,7 +257,9 @@ export function useV2PresetExecution({
 								: [createTerminal()],
 						);
 						state.addTab({
-							panes: ids.map((id) => makeTerminalPane(id, title)) as [
+							panes: ids.map((id) =>
+								makeTerminalPane(id, title, launchIdentity),
+							) as [
 								CreatePaneInput<PaneViewerData>,
 								...CreatePaneInput<PaneViewerData>[],
 							],
@@ -255,7 +273,9 @@ export function useV2PresetExecution({
 							launchCommands.map((command) => createTerminal(command)),
 						);
 						for (const terminalId of ids) {
-							state.addTab({ panes: [makeTerminalPane(terminalId, title)] });
+							state.addTab({
+								panes: [makeTerminalPane(terminalId, title, launchIdentity)],
+							});
 						}
 						didExecute = ids.length > 0;
 						break;
@@ -264,7 +284,7 @@ export function useV2PresetExecution({
 					case "active-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
 						didExecute = true;
-						const pane = makeTerminalPane(terminalId, title);
+						const pane = makeTerminalPane(terminalId, title, launchIdentity);
 						if (!activeTabId) {
 							state.addTab({ panes: [pane] });
 							break;
@@ -279,7 +299,9 @@ export function useV2PresetExecution({
 								? launchCommands.map((command) => createTerminal(command))
 								: [createTerminal()],
 						);
-						const panes = ids.map((id) => makeTerminalPane(id, title));
+						const panes = ids.map((id) =>
+							makeTerminalPane(id, title, launchIdentity),
+						);
 						didExecute = ids.length > 0;
 						if (!activeTabId) {
 							state.addTab({

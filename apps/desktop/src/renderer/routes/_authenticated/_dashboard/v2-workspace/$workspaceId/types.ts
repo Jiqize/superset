@@ -7,6 +7,13 @@ export interface FilePaneData {
 }
 
 export interface TerminalPaneData {
+	/** Renderer-only identity captured from the preset/agent launch path. */
+	launchIdentity?: {
+		agentId?: string;
+		label: string;
+	};
+	/** Prevents a user-edited task title from being reused as worker identity. */
+	taskTitleEdited?: boolean;
 	terminalId: string;
 }
 

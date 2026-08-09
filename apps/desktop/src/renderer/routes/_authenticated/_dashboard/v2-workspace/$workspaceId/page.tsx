@@ -12,6 +12,7 @@ import { useZoomFactor } from "renderer/hooks/useZoomFactor";
 import { useHotkey } from "renderer/hotkeys";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import {
+	type AAActiveTerminalPresentationInput,
 	AAAgentStatusProvider,
 	AABottomStatusBar,
 	AAWindowFrame,
@@ -28,6 +29,8 @@ import {
 	COLLAPSED_WORKSPACE_SIDEBAR_WIDTH,
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
+import { useStore } from "zustand";
+import { useShallow } from "zustand/react/shallow";
 import { StateScreenShell } from "../components/StateScreenShell";
 import { useWorkspace } from "../providers/WorkspaceProvider";
 import { AddTabMenu } from "./components/AddTabMenu";
@@ -59,7 +62,7 @@ import { useWorkspaceHotkeys } from "./hooks/useWorkspaceHotkeys";
 import { useWorkspacePaneOpeners } from "./hooks/useWorkspacePaneOpeners";
 import { WorkspaceGitStatusProvider } from "./providers/WorkspaceGitStatusProvider";
 import { FileDocumentStoreProvider } from "./state/fileDocumentStore";
-import type { PaneViewerData } from "./types";
+import type { PaneViewerData, TerminalPaneData } from "./types";
 import type { V2WorkspaceUrlOpenTarget } from "./utils/openUrlInV2Workspace";
 
 interface WorkspaceSearch {
@@ -156,6 +159,22 @@ function V2WorkspaceContent() {
 	const showPresetsBar = v2UserPreferences.showPresetsBar;
 	const sidebarOpen = v2UserPreferences.rightSidebarOpen;
 	const { store, isLayoutReady } = useV2WorkspacePaneLayout();
+	const activeTerminal = useStore(
+		store,
+		useShallow((state): AAActiveTerminalPresentationInput | null => {
+			const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+			if (!activeTab?.activePaneId) return null;
+			const activePane = activeTab.panes[activeTab.activePaneId];
+			if (activePane?.kind !== "terminal") return null;
+			const data = activePane.data as TerminalPaneData;
+			return {
+				launchIdentity: data.launchIdentity,
+				paneTitle: activePane.titleOverride ?? activeTab.titleOverride,
+				taskTitleEdited: data.taskTitleEdited,
+				terminalId: data.terminalId,
+			};
+		}),
+	);
 	useClearActivePaneAttention({ store });
 	const launcher = useV2TerminalLauncher();
 	const {
@@ -347,6 +366,7 @@ function V2WorkspaceContent() {
 							renderBelowTabBar={() => (
 								<>
 									<AAWorkspaceHeader
+										activeTerminal={activeTerminal}
 										branch={workspace.branch}
 										projectName={project?.name}
 										workspaceName={workspace.name}

@@ -76,7 +76,13 @@ export function TerminalAgentResumeBanner({
 			const state = ctx.store.getState();
 			state.setPaneData({
 				paneId: ctx.pane.id,
-				data: { terminalId: result.sessionId } satisfies TerminalPaneData,
+				data: {
+					launchIdentity: {
+						agentId: candidate.agent,
+						label: result.label,
+					},
+					terminalId: result.sessionId,
+				} satisfies TerminalPaneData,
 			});
 			state.setPaneTitleOverride({
 				tabId: ctx.tab.id,

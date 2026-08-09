@@ -194,7 +194,13 @@ export function usePaneRegistry({
 				const pane = {
 					kind: "terminal" as const,
 					titleOverride: result.label,
-					data: { terminalId } as TerminalPaneData,
+					data: {
+						launchIdentity: {
+							agentId: input.configId,
+							label: result.label,
+						},
+						terminalId,
+					} as TerminalPaneData,
 				};
 				if (input.placement === "split-pane" && state.activeTabId) {
 					state.addPane({ tabId: state.activeTabId, pane });
@@ -377,10 +383,31 @@ export function usePaneRegistry({
 					);
 				},
 				renderPane: (ctx: RendererContext<PaneViewerData>) => {
-					const { terminalId } = ctx.pane.data as TerminalPaneData;
+					const data = ctx.pane.data as TerminalPaneData;
+					const { terminalId } = data;
 					return (
 						<AATerminalFrame
-							sessionLabel={ctx.pane.titleOverride}
+							launchIdentity={data.launchIdentity}
+							onTaskTitleChange={(titleOverride) => {
+								const state = ctx.store.getState();
+								const currentPane = state.getPane(ctx.pane.id)?.pane;
+								const currentData =
+									currentPane?.kind === "terminal"
+										? (currentPane.data as TerminalPaneData)
+										: data;
+								state.setPaneData({
+									paneId: ctx.pane.id,
+									data: { ...currentData, taskTitleEdited: true },
+								});
+								state.setPaneTitleOverride({
+									paneId: ctx.pane.id,
+									tabId: ctx.tab.id,
+									titleOverride,
+								});
+							}}
+							sessionLabel={ctx.tab.titleOverride ?? data.launchIdentity?.label}
+							taskTitle={ctx.pane.titleOverride}
+							taskTitleEdited={data.taskTitleEdited}
 							terminalId={terminalId}
 						>
 							<TerminalPane

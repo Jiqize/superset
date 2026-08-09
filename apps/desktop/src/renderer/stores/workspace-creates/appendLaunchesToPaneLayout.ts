@@ -24,6 +24,7 @@ interface AppendArgs {
 
 interface PaneLaunch {
 	kind: "terminal" | "chat";
+	launchIdentity?: TerminalPaneData["launchIdentity"];
 	sessionId: string;
 	label?: string;
 }
@@ -42,18 +43,30 @@ export function appendLaunchesToPaneLayout({
 		.filter((entry): entry is Extract<typeof entry, { ok: true }> => entry.ok)
 		.map((entry) => ({
 			kind: entry.kind,
+			launchIdentity:
+				entry.kind === "terminal" ? { label: entry.label } : undefined,
 			sessionId: entry.sessionId,
 			label: entry.label,
 		}));
 	// A wait-for-setup chained agent reuses the setup terminal, so its result
 	// carries the same session id as the setup terminal descriptor — dedupe to
 	// one tab (first entry wins, keeping the setup terminal's label).
-	const seen = new Set<string>();
-	const launches = [...terminalLaunches, ...agentLaunches].filter((launch) => {
-		if (seen.has(launch.sessionId)) return false;
-		seen.add(launch.sessionId);
-		return true;
-	});
+	const launches: PaneLaunch[] = [];
+	const launchesBySessionId = new Map<string, PaneLaunch>();
+	for (const launch of [...terminalLaunches, ...agentLaunches]) {
+		const existingLaunch = launchesBySessionId.get(launch.sessionId);
+		if (existingLaunch) {
+			// A wait-for-setup agent reuses the setup terminal. Preserve the setup
+			// label while retaining the real agent launch identity separately.
+			if (!existingLaunch.launchIdentity && launch.launchIdentity) {
+				existingLaunch.launchIdentity = launch.launchIdentity;
+			}
+			continue;
+		}
+		const nextLaunch = { ...launch };
+		launchesBySessionId.set(launch.sessionId, nextLaunch);
+		launches.push(nextLaunch);
+	}
 
 	if (launches.length === 0) {
 		return existing ?? EMPTY_STATE;
@@ -75,6 +88,7 @@ export function appendLaunchesToPaneLayout({
 					: {
 							kind: "terminal",
 							data: {
+								launchIdentity: launch.launchIdentity,
 								terminalId: launch.sessionId,
 							} satisfies TerminalPaneData,
 						},

@@ -259,7 +259,7 @@ export function V2PresetsBar({
 				return false;
 			}
 
-			setAssignmentPhase("assigned");
+			setAssignmentPhase("dispatched");
 			assignmentResetTimerRef.current = setTimeout(() => {
 				if (attempt !== assignmentAttemptRef.current) return;
 				setAssignmentEmployee(null);

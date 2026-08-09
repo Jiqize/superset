@@ -1,7 +1,11 @@
-import { AAAgentStatus } from "../AAAgentStatus";
+import {
+	type AAActiveTerminalPresentationInput,
+	AAActiveWorkerCard,
+} from "../AAActiveWorkerCard";
 import { AAIcon } from "../AAIcon";
 
 interface AAWorkspaceHeaderProps {
+	activeTerminal?: AAActiveTerminalPresentationInput | null;
 	branch: string;
 	projectName?: string;
 	workspaceName: string;
@@ -9,6 +13,7 @@ interface AAWorkspaceHeaderProps {
 }
 
 export function AAWorkspaceHeader({
+	activeTerminal,
 	branch,
 	projectName,
 	workspaceName,
@@ -50,7 +55,7 @@ export function AAWorkspaceHeader({
 				</div>
 			</div>
 
-			<AAAgentStatus />
+			<AAActiveWorkerCard terminal={activeTerminal} />
 		</header>
 	);
 }
