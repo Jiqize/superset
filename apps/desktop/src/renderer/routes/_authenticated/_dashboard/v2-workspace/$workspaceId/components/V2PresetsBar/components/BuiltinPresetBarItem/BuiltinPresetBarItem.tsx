@@ -14,7 +14,7 @@ import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/provide
 interface BuiltinPresetBarItemProps {
 	preset: V2TerminalPresetRow;
 	isDark: boolean;
-	onExecutePreset: (preset: V2TerminalPresetRow) => void;
+	onAssignPreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
 	onHide: (presetId: string) => void;
 }
 
@@ -24,7 +24,7 @@ interface BuiltinPresetBarItemProps {
 export function BuiltinPresetBarItem({
 	preset,
 	isDark,
-	onExecutePreset,
+	onAssignPreset,
 	onHide,
 }: BuiltinPresetBarItemProps) {
 	const icon = getPresetIcon("superset", isDark);
@@ -36,11 +36,11 @@ export function BuiltinPresetBarItem({
 					<Tooltip delayDuration={700}>
 						<TooltipTrigger asChild>
 							<Button
-								aria-label={`Run employee preset: ${preset.name}`}
+								aria-label={`Assign current work to ${preset.name}`}
 								variant="ghost"
 								size="sm"
 								className="aa-employee-roster__button h-8 max-w-36 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-								onClick={() => onExecutePreset(preset)}
+								onClick={() => void onAssignPreset(preset)}
 							>
 								<AAEmployeeAvatar
 									agentId={preset.agentId}
@@ -59,8 +59,8 @@ export function BuiltinPresetBarItem({
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>
-				<ContextMenuItem onSelect={() => onExecutePreset(preset)}>
-					Run preset
+				<ContextMenuItem onSelect={() => void onAssignPreset(preset)}>
+					Assign current work
 				</ContextMenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuItem onSelect={() => onHide(preset.id)}>

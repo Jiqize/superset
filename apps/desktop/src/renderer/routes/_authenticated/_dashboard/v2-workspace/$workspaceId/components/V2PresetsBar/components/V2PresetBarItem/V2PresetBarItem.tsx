@@ -23,7 +23,7 @@ interface V2PresetBarItemProps {
 	hotkeyId?: HotkeyId;
 	isDark: boolean;
 	agents: HostAgentConfig[] | undefined;
-	onExecutePreset: (preset: V2TerminalPresetRow) => void;
+	onAssignPreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
 	onEdit: (preset: V2TerminalPresetRow) => void;
 	onLocalReorder: (fromIndex: number, toIndex: number) => void;
 	onPersistReorder: (presetId: string, targetVisibleIndex: number) => void;
@@ -35,7 +35,7 @@ export function V2PresetBarItem({
 	hotkeyId,
 	isDark,
 	agents,
-	onExecutePreset,
+	onAssignPreset,
 	onEdit,
 	onLocalReorder,
 	onPersistReorder,
@@ -91,11 +91,11 @@ export function V2PresetBarItem({
 				>
 					<HotkeyTooltip id={hotkeyId}>
 						<Button
-							aria-label={`Run employee preset: ${preset.name || "default"}`}
+							aria-label={`Assign current work to ${preset.name || "default"}`}
 							variant="ghost"
 							size="sm"
 							className="aa-employee-roster__button h-8 max-w-36 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-							onClick={() => onExecutePreset(preset)}
+							onClick={() => void onAssignPreset(preset)}
 						>
 							<AAEmployeeAvatar
 								agentId={preset.agentId}
@@ -110,8 +110,8 @@ export function V2PresetBarItem({
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>
-				<ContextMenuItem onSelect={() => onExecutePreset(preset)}>
-					Run preset
+				<ContextMenuItem onSelect={() => void onAssignPreset(preset)}>
+					Assign current work
 				</ContextMenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuItem onSelect={() => onEdit(preset)}>

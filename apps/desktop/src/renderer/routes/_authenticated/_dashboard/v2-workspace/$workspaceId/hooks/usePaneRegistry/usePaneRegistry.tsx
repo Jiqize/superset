@@ -379,7 +379,10 @@ export function usePaneRegistry({
 				renderPane: (ctx: RendererContext<PaneViewerData>) => {
 					const { terminalId } = ctx.pane.data as TerminalPaneData;
 					return (
-						<AATerminalFrame terminalId={terminalId}>
+						<AATerminalFrame
+							sessionLabel={ctx.pane.titleOverride}
+							terminalId={terminalId}
+						>
 							<TerminalPane
 								ctx={ctx}
 								workspaceId={workspaceId}

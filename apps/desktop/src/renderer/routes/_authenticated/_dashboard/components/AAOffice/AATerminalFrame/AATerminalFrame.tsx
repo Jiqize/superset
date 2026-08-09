@@ -2,14 +2,17 @@ import type { ReactNode } from "react";
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAIcon } from "../AAIcon";
 import { AAStatusLight } from "../AAStatusLight";
+import { AATaskFolder } from "../AATaskFolder";
 
 interface AATerminalFrameProps {
 	children: ReactNode;
+	sessionLabel?: string;
 	terminalId: string;
 }
 
 export function AATerminalFrame({
 	children,
+	sessionLabel,
 	terminalId,
 }: AATerminalFrameProps) {
 	const { binding, state } = useAAAgentStatus();
@@ -25,6 +28,11 @@ export function AATerminalFrame({
 					<AAIcon name="terminal" />
 					{isPiWorkstation ? "PI WORKSTATION" : "LOCAL TERMINAL"}
 				</span>
+				<AATaskFolder
+					binding={isPiWorkstation ? binding : undefined}
+					sessionLabel={sessionLabel}
+					terminalLabel={isPiWorkstation ? "Pi Workstation" : "Local Terminal"}
+				/>
 				<span className="aa-terminal-frame__signal">
 					<AAStatusLight
 						tone={isPiWorkstation ? toneForPiState(state) : "idle"}

@@ -1,17 +1,28 @@
 import { cn } from "@superset/ui/utils";
 import type { ReactNode } from "react";
 import type { AAAgentState } from "../AAAgentStatus/aaAgentState";
+import { AAHairState } from "../AAHairState";
+import { getAAReasoningPresentation } from "../AAReasoningIndicator/aaReasoningPresentation";
 
 interface AAAgentAvatarProps {
 	className?: string;
+	reasoningLevel?: string | null;
 	state: AAAgentState;
 }
 
-export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
+export function AAAgentAvatar({
+	className,
+	reasoningLevel,
+	state,
+}: AAAgentAvatarProps) {
+	const reasoning = getAAReasoningPresentation(reasoningLevel);
+
 	return (
 		<svg
 			aria-hidden="true"
 			className={cn("aa-agent-avatar", className)}
+			data-hair-state={reasoning?.hairState}
+			data-reasoning-level={reasoning?.level}
 			data-state={state}
 			shapeRendering="crispEdges"
 			viewBox="0 0 40 40"
@@ -59,27 +70,7 @@ export function AAAgentAvatar({ className, state }: AAAgentAvatarProps) {
 				width="3"
 				height="7"
 			/>
-			<rect
-				className="aa-agent-avatar__hair"
-				x="12"
-				y="4"
-				width="16"
-				height="6"
-			/>
-			<rect
-				className="aa-agent-avatar__hair"
-				x="10"
-				y="7"
-				width="4"
-				height="6"
-			/>
-			<rect
-				className="aa-agent-avatar__hair"
-				x="26"
-				y="7"
-				width="4"
-				height="5"
-			/>
+			<AAHairState state={reasoning?.hairState} />
 			<rect
 				className="aa-agent-avatar__skin"
 				x="13"

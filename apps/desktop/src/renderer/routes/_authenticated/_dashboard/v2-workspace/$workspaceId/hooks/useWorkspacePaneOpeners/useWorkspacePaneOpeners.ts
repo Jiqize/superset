@@ -26,7 +26,7 @@ export function useWorkspacePaneOpeners({
 	executePreset: (
 		preset: V2TerminalPresetRow,
 		options?: { target?: "new-tab" | "active-tab" },
-	) => void | Promise<void>;
+	) => Promise<boolean>;
 }): {
 	openDiffPane: (
 		filePath: string,

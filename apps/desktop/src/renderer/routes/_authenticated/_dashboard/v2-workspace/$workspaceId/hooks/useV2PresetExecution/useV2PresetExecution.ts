@@ -195,6 +195,7 @@ export function useV2PresetExecution({
 			// the last tab ever mounts) still get their PTY + initial command —
 			// host-service buffers PTY output until the user clicks the tab and
 			// the pane finally mounts and attaches the WS.
+			let didExecute = false;
 			try {
 				switch (plan) {
 					case "active-terminal": {
@@ -211,6 +212,7 @@ export function useV2PresetExecution({
 								}),
 							),
 						});
+						didExecute = true;
 						if (title && !activeTerminal.titleOverride?.trim()) {
 							// Reused terminals keep their existing pane, so apply the
 							// first preset label explicitly instead of relying on creation
@@ -228,6 +230,7 @@ export function useV2PresetExecution({
 					case "new-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
 						state.addTab({ panes: [makeTerminalPane(terminalId, title)] });
+						didExecute = true;
 						break;
 					}
 
@@ -243,6 +246,7 @@ export function useV2PresetExecution({
 								...CreatePaneInput<PaneViewerData>[],
 							],
 						});
+						didExecute = true;
 						break;
 					}
 
@@ -253,11 +257,13 @@ export function useV2PresetExecution({
 						for (const terminalId of ids) {
 							state.addTab({ panes: [makeTerminalPane(terminalId, title)] });
 						}
+						didExecute = ids.length > 0;
 						break;
 					}
 
 					case "active-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
+						didExecute = true;
 						const pane = makeTerminalPane(terminalId, title);
 						if (!activeTabId) {
 							state.addTab({ panes: [pane] });
@@ -274,6 +280,7 @@ export function useV2PresetExecution({
 								: [createTerminal()],
 						);
 						const panes = ids.map((id) => makeTerminalPane(id, title));
+						didExecute = ids.length > 0;
 						if (!activeTabId) {
 							state.addTab({
 								panes: panes as [
@@ -289,6 +296,7 @@ export function useV2PresetExecution({
 						break;
 					}
 				}
+				return didExecute;
 			} catch (err) {
 				console.error("[useV2PresetExecution] Failed to execute preset:", err);
 				toast.error("Failed to run preset", {
@@ -297,6 +305,7 @@ export function useV2PresetExecution({
 							? err.message
 							: "Terminal session creation failed.",
 				});
+				return false;
 			}
 		},
 		[

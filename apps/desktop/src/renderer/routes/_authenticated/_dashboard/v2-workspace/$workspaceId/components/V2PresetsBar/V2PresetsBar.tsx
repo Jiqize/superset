@@ -10,7 +10,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Settings } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HiMiniCommandLine } from "react-icons/hi2";
 import {
 	getPresetIcon,
@@ -23,7 +23,10 @@ import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import type { HotkeyId } from "renderer/hotkeys";
 import { posthog } from "renderer/lib/posthog";
 import { resolveV2PresetIcon } from "renderer/lib/preset-icon";
-import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import {
+	AAAssignmentLabel,
+	type AAAssignmentPhase,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
@@ -32,7 +35,7 @@ import { V2PresetBarItem } from "./components/V2PresetBarItem";
 
 interface V2PresetsBarProps {
 	matchedPresets: V2TerminalPresetRow[];
-	executePreset: (preset: V2TerminalPresetRow) => void | Promise<void>;
+	executePreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
 	showPresetsBar: boolean;
 	onToggleShowPresetsBar: (enabled: boolean) => void;
 }
@@ -87,6 +90,24 @@ export function V2PresetsBar({
 
 	const [localVisiblePresetIds, setLocalVisiblePresetIds] = useState<string[]>(
 		() => getVisiblePresetOrder(matchedPresets),
+	);
+	const [assignmentPhase, setAssignmentPhase] =
+		useState<AAAssignmentPhase>("idle");
+	const [assignmentEmployee, setAssignmentEmployee] = useState<string | null>(
+		null,
+	);
+	const assignmentAttemptRef = useRef(0);
+	const assignmentResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
+
+	useEffect(
+		() => () => {
+			if (assignmentResetTimerRef.current) {
+				clearTimeout(assignmentResetTimerRef.current);
+			}
+		},
+		[],
 	);
 
 	useEffect(() => {
@@ -220,12 +241,42 @@ export function V2PresetsBar({
 		[setBuiltinPresetHidden],
 	);
 
-	const handleExecuteBuiltinPreset = useCallback(
-		(preset: V2TerminalPresetRow) => {
-			posthog.capture("builtin_preset_launched", { presetId: preset.id });
-			void executePreset(preset);
+	const assignPreset = useCallback(
+		async (preset: V2TerminalPresetRow): Promise<boolean> => {
+			const attempt = ++assignmentAttemptRef.current;
+			if (assignmentResetTimerRef.current) {
+				clearTimeout(assignmentResetTimerRef.current);
+				assignmentResetTimerRef.current = null;
+			}
+			setAssignmentEmployee(preset.name || "default");
+			setAssignmentPhase("assigning");
+
+			const succeeded = await executePreset(preset);
+			if (attempt !== assignmentAttemptRef.current) return succeeded;
+			if (!succeeded) {
+				setAssignmentEmployee(null);
+				setAssignmentPhase("idle");
+				return false;
+			}
+
+			setAssignmentPhase("assigned");
+			assignmentResetTimerRef.current = setTimeout(() => {
+				if (attempt !== assignmentAttemptRef.current) return;
+				setAssignmentEmployee(null);
+				setAssignmentPhase("idle");
+				assignmentResetTimerRef.current = null;
+			}, 2600);
+			return true;
 		},
 		[executePreset],
+	);
+
+	const handleAssignBuiltinPreset = useCallback(
+		(preset: V2TerminalPresetRow): Promise<boolean> => {
+			posthog.capture("builtin_preset_launched", { presetId: preset.id });
+			return assignPreset(preset);
+		},
+		[assignPreset],
 	);
 
 	return (
@@ -233,13 +284,10 @@ export function V2PresetsBar({
 			className="aa-presets-bar flex h-11 min-w-0 shrink-0 items-center gap-1 overflow-x-auto overflow-y-hidden bg-background px-1.5"
 			style={{ scrollbarWidth: "none" }}
 		>
-			<div className="aa-employee-roster__label" title="Run an agent preset">
-				<AAIcon name="agents" />
-				<span>
-					<strong>EMPLOYEE ROSTER</strong>
-					<small>ASSIGN PRESET</small>
-				</span>
-			</div>
+			<AAAssignmentLabel
+				employeeName={assignmentEmployee}
+				phase={assignmentPhase}
+			/>
 			<DropdownMenu>
 				<Tooltip delayDuration={1000}>
 					<TooltipTrigger asChild>
@@ -355,7 +403,7 @@ export function V2PresetsBar({
 						hotkeyId={hotkeyId}
 						isDark={isDark}
 						agents={agents}
-						onExecutePreset={executePreset}
+						onAssignPreset={assignPreset}
 						onEdit={(presetToEdit) => handleEditPreset(presetToEdit.id)}
 						onLocalReorder={handleLocalVisibleReorder}
 						onPersistReorder={handlePersistVisibleReorder}
@@ -368,7 +416,7 @@ export function V2PresetsBar({
 					key={preset.id}
 					preset={preset}
 					isDark={isDark}
-					onExecutePreset={handleExecuteBuiltinPreset}
+					onAssignPreset={handleAssignBuiltinPreset}
 					onHide={(presetId) => handleToggleBuiltinVisibility(presetId, false)}
 				/>
 			))}
