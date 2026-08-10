@@ -18,6 +18,13 @@ export {
 export { AABottomStatusBar } from "./AABottomStatusBar";
 export { AAEmployeeAvatar } from "./AAEmployeeAvatar";
 export {
+	AAEmployeeProfile,
+	AAEmployeeProfileCard,
+	type AAEmployeeProfilePresentation,
+	resolveAAEmployeeProfilePresentation,
+	selectAAEmployeeRuntimeSnapshot,
+} from "./AAEmployeeProfile";
+export {
 	AAEmployeeRosterOverflow,
 	type AAEmployeeRosterOverflowInput,
 	type AAEmployeeRosterOverflowState,

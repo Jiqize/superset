@@ -46,11 +46,14 @@ describe("AA active Worker Card presentation", () => {
 		});
 
 		expect(presentation).toMatchObject({
+			authorityLabel: "RUNTIME VERIFIED",
 			displayName: "PI",
+			runtimeLabel: "PI",
 			source: "runtime",
 			status: "working",
 			statusLabel: "WORKING",
 			tracking: "tracked",
+			transportLabel: "TERMINAL",
 			model: { id: "claude-sonnet" },
 			reasoning: { value: "high" },
 		});
@@ -105,11 +108,15 @@ describe("AA active Worker Card presentation", () => {
 		});
 
 		expect(presentation).toMatchObject({
+			authorityLabel: "SAVED SESSION",
 			displayName: "PI",
+			resumeLabel: "AVAILABLE",
+			runtimeLabel: "PI",
 			source: "resume-candidate",
 			status: "offline",
 			statusLabel: "OFFLINE / RESUMABLE",
 			tracking: "tracked",
+			transportLabel: "TERMINAL",
 		});
 	});
 
@@ -139,10 +146,13 @@ describe("AA active Worker Card presentation", () => {
 		});
 
 		expect(presentation).toMatchObject({
+			authorityLabel: "UNTRACKED",
 			displayName: "CODEX",
+			runtimeLabel: "COMPATIBILITY CLI",
 			source: "launch",
 			status: "untracked",
 			tracking: "untracked",
+			transportLabel: "TERMINAL PRESET",
 		});
 	});
 

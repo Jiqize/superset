@@ -24,9 +24,26 @@ export function indexAARuntimeSnapshots(
 	return indexed;
 }
 
-export function useAARuntimeSnapshots(
-	workspaceId: string,
-): Map<string, AARuntimeSessionSnapshot> {
+export function indexAARuntimeSnapshotsByRuntime(
+	snapshots: readonly AARuntimeSessionSnapshot[],
+): Map<AARuntimeSessionSnapshot["runtime"], AARuntimeSessionSnapshot> {
+	const indexed = new Map<
+		AARuntimeSessionSnapshot["runtime"],
+		AARuntimeSessionSnapshot
+	>();
+	for (const snapshot of snapshots) {
+		const current = indexed.get(snapshot.runtime);
+		if (!current || snapshot.observedAt >= current.observedAt) {
+			indexed.set(snapshot.runtime, snapshot);
+		}
+	}
+	return indexed;
+}
+
+export function useAARuntimeSnapshotIndexes(workspaceId: string): {
+	byRuntime: Map<AARuntimeSessionSnapshot["runtime"], AARuntimeSessionSnapshot>;
+	byTerminal: Map<string, AARuntimeSessionSnapshot>;
+} {
 	const hostUrl = useWorkspaceHostUrl(workspaceId);
 	const queryClient = useQueryClient();
 	const queryKey = useMemo(
@@ -63,5 +80,17 @@ export function useAARuntimeSnapshots(
 
 	useWorkspaceEvent("aa-runtime:changed", workspaceId, handleChange, enabled);
 
-	return useMemo(() => indexAARuntimeSnapshots(data ?? []), [data]);
+	return useMemo(
+		() => ({
+			byRuntime: indexAARuntimeSnapshotsByRuntime(data ?? []),
+			byTerminal: indexAARuntimeSnapshots(data ?? []),
+		}),
+		[data],
+	);
+}
+
+export function useAARuntimeSnapshots(
+	workspaceId: string,
+): Map<string, AARuntimeSessionSnapshot> {
+	return useAARuntimeSnapshotIndexes(workspaceId).byTerminal;
 }

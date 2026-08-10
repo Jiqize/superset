@@ -53,6 +53,7 @@ export type AAWorkerIdentitySource =
 
 export interface AAActiveWorkerPresentation {
 	agentId?: string;
+	authorityLabel: string;
 	displayName: string;
 	heading: string;
 	healthCode?: AARuntimeHealthCode;
@@ -61,12 +62,15 @@ export interface AAActiveWorkerPresentation {
 	model?: AARuntimeModel;
 	personaId: AAEmployeePersonaId;
 	reasoning?: AARuntimeReasoning;
+	resumeLabel?: "AVAILABLE";
+	runtimeLabel: string;
 	runtimeState?: AARuntimeState;
 	source: AAWorkerIdentitySource;
 	stateReason?: string;
 	status: AAWorkerStatus;
 	statusLabel: string;
 	tracking: AAWorkerTracking;
+	transportLabel: string;
 }
 
 interface ResolveAAActiveWorkerPresentationInput {
@@ -99,13 +103,16 @@ export function resolveAAActiveWorkerPresentation({
 }: ResolveAAActiveWorkerPresentationInput): AAActiveWorkerPresentation {
 	if (!terminal) {
 		return {
+			authorityLabel: "NO ACTIVE EVIDENCE",
 			displayName: "NO ACTIVE",
 			heading: "NO ACTIVE WORKER",
 			personaId: "generic",
+			runtimeLabel: "NONE",
 			source: "none",
 			status: "unassigned",
 			statusLabel: "UNASSIGNED",
 			tracking: "unassigned",
+			transportLabel: "NONE",
 		};
 	}
 
@@ -134,6 +141,7 @@ export function resolveAAActiveWorkerPresentation({
 				: undefined;
 		return {
 			agentId: runtimeSnapshot.agentId,
+			authorityLabel: "RUNTIME VERIFIED",
 			displayName: identity.displayName,
 			heading: `${identity.displayName} WORKER`,
 			...(model ? { model } : {}),
@@ -141,6 +149,13 @@ export function resolveAAActiveWorkerPresentation({
 			healthDiagnostic: health.diagnostic,
 			personaId: identity.personaId,
 			...(reasoning ? { reasoning } : {}),
+			...(runtimeSnapshot.runtime === "pi" &&
+			runtimeSnapshot.state === "offline" &&
+			runtimeSnapshot.resume.canResume &&
+			runtimeSnapshot.resume.mechanism === "pi_session"
+				? { resumeLabel: "AVAILABLE" as const }
+				: {}),
+			runtimeLabel: runtimeSnapshot.runtime === "grok" ? "GROK BUILD" : "PI",
 			runtimeState: runtimeSnapshot.state,
 			source: "runtime",
 			...(runtimeSnapshot.stateReason
@@ -149,6 +164,7 @@ export function resolveAAActiveWorkerPresentation({
 			status: health.avatarState,
 			statusLabel: health.label,
 			tracking: "tracked",
+			transportLabel: runtimeSnapshot.transport.kind.toUpperCase(),
 		};
 	}
 
@@ -161,16 +177,22 @@ export function resolveAAActiveWorkerPresentation({
 		});
 		return {
 			agentId: "pi",
+			authorityLabel: "SAVED SESSION",
 			displayName: identity.displayName,
 			heading: `${identity.displayName} WORKER`,
 			healthCode: health.code,
 			healthDiagnostic: health.diagnostic,
 			lastEventType: resumeCandidate.lastEventType,
 			personaId: identity.personaId,
+			...(resumeCandidate.resumeSupported
+				? { resumeLabel: "AVAILABLE" as const }
+				: {}),
+			runtimeLabel: "PI",
 			source: "resume-candidate",
 			status: health.avatarState,
 			statusLabel: health.label,
 			tracking: "tracked",
+			transportLabel: "TERMINAL",
 		};
 	}
 
@@ -178,16 +200,19 @@ export function resolveAAActiveWorkerPresentation({
 		const identity = resolveIdentity(binding.agentId, binding.agentId);
 		return {
 			agentId: binding.agentId,
+			authorityLabel: "LIFECYCLE BINDING",
 			displayName: identity.displayName,
 			heading: `${identity.displayName} WORKER`,
 			lastEventType: binding.lastEventType,
 			personaId: identity.personaId,
+			runtimeLabel: identity.personaId === "pi" ? "PI" : "COMPATIBILITY CLI",
 			source: "binding",
 			status: mapLifecycleEventToAAState(binding.lastEventType),
 			statusLabel: mapLifecycleEventToAAState(
 				binding.lastEventType,
 			).toUpperCase(),
 			tracking: "tracked",
+			transportLabel: "TERMINAL",
 		};
 	}
 
@@ -198,13 +223,16 @@ export function resolveAAActiveWorkerPresentation({
 		);
 		return {
 			agentId: terminal.launchIdentity.agentId,
+			authorityLabel: "UNTRACKED",
 			displayName: identity.displayName,
 			heading: `${identity.displayName} WORKER`,
 			personaId: identity.personaId,
+			runtimeLabel: "COMPATIBILITY CLI",
 			source: "launch",
 			status: "untracked",
 			statusLabel: "UNTRACKED",
 			tracking: "untracked",
+			transportLabel: "TERMINAL PRESET",
 		};
 	}
 
@@ -212,25 +240,31 @@ export function resolveAAActiveWorkerPresentation({
 		const identity = resolveIdentity(undefined, terminal.paneTitle);
 		if (identity.personaId !== "generic") {
 			return {
+				authorityLabel: "UNTRACKED",
 				displayName: identity.displayName,
 				heading: `${identity.displayName} WORKER`,
 				personaId: identity.personaId,
+				runtimeLabel: "COMPATIBILITY CLI",
 				source: "pane-title",
 				status: "untracked",
 				statusLabel: "UNTRACKED",
 				tracking: "untracked",
+				transportLabel: "TERMINAL PRESET",
 			};
 		}
 	}
 
 	return {
+		authorityLabel: "UNASSIGNED",
 		displayName: "LOCAL",
 		heading: "LOCAL WORKER",
 		personaId: "generic",
+		runtimeLabel: "LOCAL SHELL",
 		source: "local",
 		status: "unassigned",
 		statusLabel: "UNASSIGNED",
 		tracking: "unassigned",
+		transportLabel: "TERMINAL",
 	};
 }
 

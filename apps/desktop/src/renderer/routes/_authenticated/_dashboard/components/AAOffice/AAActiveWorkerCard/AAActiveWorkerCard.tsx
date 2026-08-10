@@ -1,7 +1,10 @@
+import { Button } from "@superset/ui/button";
 import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
 import { AAAgentAvatar } from "../AAAgentAvatar";
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAEmployeeAvatar } from "../AAEmployeeAvatar";
+import { AAEmployeeProfile } from "../AAEmployeeProfile";
+import { AAIcon } from "../AAIcon";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import {
 	type AAActiveTerminalPresentationInput,
@@ -50,6 +53,7 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 			data-source={presentation.source}
 			data-state={presentation.status}
 			data-runtime-health={presentation.healthCode}
+			data-runtime-authority={presentation.authorityLabel}
 			title={getCardDetail(presentation)}
 		>
 			<span className="aa-agent-status__portrait">
@@ -69,25 +73,56 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 			<div className="aa-agent-status__copy">
 				<span className="aa-agent-status__eyebrow">
 					{presentation.heading}
-					<AAStatusLight
-						className="aa-agent-status__light"
-						tone={toneForPresentation(presentation)}
-					/>
+					<span className="aa-active-worker-card__actions">
+						<AAEmployeeProfile
+							agentId={presentation.agentId}
+							name={presentation.displayName}
+							resumeAvailable={presentation.resumeLabel === "AVAILABLE"}
+							runtimeSnapshot={runtimeSnapshot}
+							side="bottom"
+						>
+							<Button
+								aria-label={`View ${presentation.displayName} employee file`}
+								className="aa-active-worker-card__profile"
+								size="icon"
+								title={`View ${presentation.displayName} employee file`}
+								variant="ghost"
+							>
+								<AAIcon name="agents" />
+							</Button>
+						</AAEmployeeProfile>
+						<AAStatusLight
+							className="aa-agent-status__light"
+							tone={toneForPresentation(presentation)}
+						/>
+					</span>
 				</span>
 				<span className="aa-agent-status__state">
 					{presentation.statusLabel}
+				</span>
+				<span
+					className="aa-active-worker-card__authority"
+					title={presentation.authorityLabel}
+				>
+					{presentation.runtimeLabel} · {presentation.transportLabel} ·{" "}
+					{presentation.authorityLabel}
 				</span>
 				{presentation.model && (
 					<span
 						className="aa-active-worker-card__runtime"
 						title={formatModelDetail(presentation.model)}
 					>
-						MODEL: {presentation.model.id}
+						MODEL: {presentation.model.displayName ?? presentation.model.id}
 					</span>
 				)}
 				{presentation.reasoning && (
 					<span className="aa-active-worker-card__runtime">
 						REASONING: {presentation.reasoning.value}
+					</span>
+				)}
+				{presentation.resumeLabel && (
+					<span className="aa-active-worker-card__runtime aa-active-worker-card__resume">
+						RESUME: {presentation.resumeLabel}
 					</span>
 				)}
 			</div>

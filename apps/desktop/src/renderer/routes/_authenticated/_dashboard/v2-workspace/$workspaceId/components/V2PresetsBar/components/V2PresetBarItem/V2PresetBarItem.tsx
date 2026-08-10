@@ -1,4 +1,5 @@
 import type { HostAgentConfig } from "@superset/host-service/settings";
+import type { AARuntimeSessionSnapshot } from "@superset/session-protocol";
 import { Button } from "@superset/ui/button";
 import {
 	ContextMenu,
@@ -12,7 +13,11 @@ import { useDrag, useDrop } from "react-dnd";
 import type { HotkeyId } from "renderer/hotkeys";
 import { HotkeyTooltip } from "renderer/hotkeys";
 import { resolveV2PresetIcon } from "renderer/lib/preset-icon";
-import { AAEmployeeAvatar } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import {
+	AAEmployeeAvatar,
+	AAEmployeeProfile,
+	AAIcon,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 
 const V2_PRESET_BAR_ITEM_TYPE = "V2_PRESET_BAR_ITEM";
@@ -23,6 +28,7 @@ interface V2PresetBarItemProps {
 	hotkeyId?: HotkeyId;
 	isDark: boolean;
 	agents: HostAgentConfig[] | undefined;
+	runtimeSnapshot?: AARuntimeSessionSnapshot;
 	onAssignPreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
 	onEdit: (preset: V2TerminalPresetRow) => void;
 	onLocalReorder: (fromIndex: number, toIndex: number) => void;
@@ -35,6 +41,7 @@ export function V2PresetBarItem({
 	hotkeyId,
 	isDark,
 	agents,
+	runtimeSnapshot,
 	onAssignPreset,
 	onEdit,
 	onLocalReorder,
@@ -107,6 +114,21 @@ export function V2PresetBarItem({
 							</span>
 						</Button>
 					</HotkeyTooltip>
+					<AAEmployeeProfile
+						agentId={preset.agentId}
+						name={preset.name || "default"}
+						runtimeSnapshot={runtimeSnapshot}
+					>
+						<Button
+							aria-label={`View ${preset.name || "default"} employee file`}
+							className="aa-employee-roster__profile"
+							size="icon"
+							title={`View ${preset.name || "default"} employee file`}
+							variant="ghost"
+						>
+							<AAIcon name="agents" />
+						</Button>
+					</AAEmployeeProfile>
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>

@@ -16,12 +16,16 @@ import {
 	type AARuntimeHealthPresentation,
 	resolveAARuntimeHealth,
 } from "./aaRuntimeHealth";
-import { useAARuntimeSnapshots } from "./useAARuntimeSnapshots";
+import { useAARuntimeSnapshotIndexes } from "./useAARuntimeSnapshots";
 
 interface AAAgentStatusValue {
 	binding?: TerminalAgentBinding;
 	bindings: Map<string, TerminalAgentBinding>;
 	runtimeSnapshot?: AARuntimeSessionSnapshot;
+	runtimeSnapshotsByRuntime: Map<
+		AARuntimeSessionSnapshot["runtime"],
+		AARuntimeSessionSnapshot
+	>;
 	runtimeSnapshots: Map<string, AARuntimeSessionSnapshot>;
 	runtimeHealth?: AARuntimeHealthPresentation;
 	state: AAAgentState;
@@ -39,7 +43,8 @@ export function AAAgentStatusProvider({
 	workspaceId: string;
 }) {
 	const bindings = useTerminalAgentBindings(workspaceId);
-	const runtimeSnapshots = useAARuntimeSnapshots(workspaceId);
+	const { byRuntime: runtimeSnapshotsByRuntime, byTerminal: runtimeSnapshots } =
+		useAARuntimeSnapshotIndexes(workspaceId);
 	const value = useMemo<AAAgentStatusValue>(() => {
 		const binding = selectLatestPiBinding(bindings.values());
 		const runtimeSnapshot = selectLatestPiRuntimeSnapshot(
@@ -57,6 +62,7 @@ export function AAAgentStatusProvider({
 			bindings,
 			runtimeSnapshot,
 			runtimeSnapshots,
+			runtimeSnapshotsByRuntime,
 			...(runtimeHealth ? { runtimeHealth } : {}),
 			state: runtimeHealth
 				? runtimeHealth.avatarState
@@ -66,7 +72,7 @@ export function AAAgentStatusProvider({
 				: mapLifecycleEventToAAState(binding?.lastEventType).toUpperCase(),
 			workspaceId,
 		};
-	}, [bindings, runtimeSnapshots, workspaceId]);
+	}, [bindings, runtimeSnapshots, runtimeSnapshotsByRuntime, workspaceId]);
 
 	return (
 		<AAAgentStatusContext.Provider value={value}>

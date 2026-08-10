@@ -1,0 +1,85 @@
+{
+	"contract": "AA Runtime Contract v0.1",
+	"scenario": "Phase 3D exact Pi resume",
+	"before": {
+		"runtime": "pi",
+		"transport": "terminal",
+		"state": "idle",
+		"stateReason": "turn_settled",
+		"model": {
+			"provider": "google",
+			"id": "gemini-3.5-flash",
+			"displayName": "Gemini 3.5 Flash"
+		},
+		"reasoning": {
+			"value": "high",
+			"availableValues": null
+		},
+		"resume": {
+			"canResume": true,
+			"mechanism": "pi_session",
+			"lastConfirmedAt": 1786360061682
+		},
+		"capabilities": {
+			"sessionIdentity": "available",
+			"turnIdentity": "unavailable",
+			"lifecycle": "available",
+			"toolLifecycle": "available",
+			"permissionRequests": "conditional",
+			"userQuestions": "conditional",
+			"modelRead": "available",
+			"modelWrite": "unavailable",
+			"reasoningRead": "available",
+			"reasoningWrite": "unavailable",
+			"structuredMessages": "unavailable",
+			"cancellation": "unavailable",
+			"resume": "available",
+			"processRecovery": "conditional"
+		},
+		"nativeSessionFingerprint": "e641393c74df",
+		"epochFingerprint": "4c7701235bc9"
+	},
+	"after": {
+		"runtime": "pi",
+		"transport": "terminal",
+		"state": "idle",
+		"stateReason": "session_attach",
+		"model": {
+			"provider": "google",
+			"id": "gemini-3.5-flash",
+			"displayName": "Gemini 3.5 Flash"
+		},
+		"reasoning": {
+			"value": "high",
+			"availableValues": null
+		},
+		"resume": {
+			"canResume": true,
+			"mechanism": "pi_session",
+			"lastConfirmedAt": 1786360341282
+		},
+		"capabilities": {
+			"sessionIdentity": "available",
+			"turnIdentity": "unavailable",
+			"lifecycle": "available",
+			"toolLifecycle": "available",
+			"permissionRequests": "conditional",
+			"userQuestions": "conditional",
+			"modelRead": "available",
+			"modelWrite": "unavailable",
+			"reasoningRead": "available",
+			"reasoningWrite": "unavailable",
+			"structuredMessages": "unavailable",
+			"cancellation": "unavailable",
+			"resume": "available",
+			"processRecovery": "conditional"
+		},
+		"nativeSessionFingerprint": "e641393c74df",
+		"epochFingerprint": "39573e8cafb6"
+	},
+	"checks": {
+		"nativeSessionMatched": true,
+		"epochChanged": true,
+		"unsafePayloadRecorded": false
+	}
+}

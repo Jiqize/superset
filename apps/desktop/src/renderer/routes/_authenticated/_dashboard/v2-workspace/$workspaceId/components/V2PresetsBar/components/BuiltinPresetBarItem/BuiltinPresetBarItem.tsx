@@ -1,3 +1,4 @@
+import type { AARuntimeSessionSnapshot } from "@superset/session-protocol";
 import { Button } from "@superset/ui/button";
 import {
 	ContextMenu,
@@ -8,12 +9,17 @@ import {
 } from "@superset/ui/context-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { getPresetIcon } from "renderer/assets/app-icons/preset-icons";
-import { AAEmployeeAvatar } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import {
+	AAEmployeeAvatar,
+	AAEmployeeProfile,
+	AAIcon,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 
 interface BuiltinPresetBarItemProps {
 	preset: V2TerminalPresetRow;
 	isDark: boolean;
+	runtimeSnapshot?: AARuntimeSessionSnapshot;
 	onAssignPreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
 	onHide: (presetId: string) => void;
 }
@@ -24,6 +30,7 @@ interface BuiltinPresetBarItemProps {
 export function BuiltinPresetBarItem({
 	preset,
 	isDark,
+	runtimeSnapshot,
 	onAssignPreset,
 	onHide,
 }: BuiltinPresetBarItemProps) {
@@ -56,6 +63,21 @@ export function BuiltinPresetBarItem({
 							</TooltipContent>
 						) : null}
 					</Tooltip>
+					<AAEmployeeProfile
+						agentId={preset.agentId}
+						name={preset.name}
+						runtimeSnapshot={runtimeSnapshot}
+					>
+						<Button
+							aria-label={`View ${preset.name} employee file`}
+							className="aa-employee-roster__profile"
+							size="icon"
+							title={`View ${preset.name} employee file`}
+							variant="ghost"
+						>
+							<AAIcon name="agents" />
+						</Button>
+					</AAEmployeeProfile>
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>

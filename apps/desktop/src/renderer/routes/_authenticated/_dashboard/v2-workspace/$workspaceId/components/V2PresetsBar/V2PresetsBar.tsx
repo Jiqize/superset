@@ -27,6 +27,8 @@ import {
 	AAAssignmentLabel,
 	type AAAssignmentPhase,
 	AAEmployeeRosterOverflow,
+	selectAAEmployeeRuntimeSnapshot,
+	useAAAgentStatus,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
@@ -88,6 +90,11 @@ export function V2PresetsBar({
 	const { data: agents } = useV2AgentConfigs(activeHostUrl);
 	const builtinPresets = useBuiltinPresets();
 	const { setBuiltinPresetHidden } = useV2UserPreferences();
+	const { runtimeSnapshotsByRuntime } = useAAAgentStatus();
+	const runtimeSnapshots = useMemo(
+		() => Array.from(runtimeSnapshotsByRuntime.values()),
+		[runtimeSnapshotsByRuntime],
+	);
 
 	const [localVisiblePresetIds, setLocalVisiblePresetIds] = useState<string[]>(
 		() => getVisiblePresetOrder(matchedPresets),
@@ -402,6 +409,10 @@ export function V2PresetsBar({
 							hotkeyId={hotkeyId}
 							isDark={isDark}
 							agents={agents}
+							runtimeSnapshot={selectAAEmployeeRuntimeSnapshot(
+								runtimeSnapshots,
+								{ agentId: preset.agentId, name: preset.name || "default" },
+							)}
 							onAssignPreset={assignPreset}
 							onEdit={(presetToEdit) => handleEditPreset(presetToEdit.id)}
 							onLocalReorder={handleLocalVisibleReorder}
@@ -415,6 +426,10 @@ export function V2PresetsBar({
 						key={preset.id}
 						preset={preset}
 						isDark={isDark}
+						runtimeSnapshot={selectAAEmployeeRuntimeSnapshot(runtimeSnapshots, {
+							agentId: preset.agentId,
+							name: preset.name,
+						})}
 						onAssignPreset={handleAssignBuiltinPreset}
 						onHide={(presetId) =>
 							handleToggleBuiltinVisibility(presetId, false)
