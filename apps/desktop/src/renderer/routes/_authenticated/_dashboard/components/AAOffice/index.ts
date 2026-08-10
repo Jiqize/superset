@@ -33,6 +33,12 @@ export {
 } from "./AAEmployeeRosterOverflow";
 export { AAFileCabinetHeader } from "./AAFileCabinetHeader";
 export { AAHairState } from "./AAHairState";
+export {
+	type AAHandoffPanePresentation,
+	resolveAAHandoffPanePresentation,
+	resolveAAHandoffTaskTitle,
+	resolveAAHandoffTaskTitleFromPaneCandidates,
+} from "./AAHandoff";
 export { AAIcon, type AAIconName } from "./AAIcon";
 export { AANavigationRail } from "./AANavigationRail";
 export {
@@ -50,9 +56,13 @@ export {
 export {
 	AA_TASK_FOLDER_STATES,
 	AATaskFolder,
+	AATaskFolderContextCard,
+	type AATaskFolderContextPresentation,
 	type AATaskFolderMetricPresentation,
 	type AATaskFolderState,
 	formatAATaskFolderState,
+	getAATaskFolderContextPresentation,
+	getAATaskFolderLatestAction,
 	getAATaskFolderMetricPresentation,
 	mapAAWorkerToAATaskFolderState,
 	mapLifecycleEventToAATaskFolderState,

@@ -33,7 +33,7 @@ export function AAEmployeeProfile({
 			<PopoverTrigger asChild>{children}</PopoverTrigger>
 			<PopoverContent
 				align="end"
-				aria-label={`${presentation.employeeName} employee file`}
+				aria-label={`${presentation.employeeName} employee profile`}
 				className="aa-employee-profile"
 				side={side}
 				sideOffset={6}

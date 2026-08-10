@@ -9,6 +9,7 @@ import { useSettings } from "renderer/stores/settings";
 import type { CommentPaneData, DiffFocusSide } from "../../types";
 import { FilesTab } from "./components/FilesTab";
 import { PRActionHeader } from "./components/PRActionHeader";
+import { selectStatusBadge } from "./components/PRActionHeader/utils/getPRFlowState";
 import { SidebarHeader } from "./components/SidebarHeader";
 import { useChangesTab } from "./hooks/useChangesTab";
 import { type OpenChatFn, usePRFlowDispatch } from "./hooks/usePRFlowDispatch";
@@ -156,6 +157,7 @@ export function WorkspaceSidebar({
 			),
 		).size;
 	}, [gitStatus.data]);
+	const deliveryState = selectStatusBadge(flowState);
 
 	return (
 		<div
@@ -170,7 +172,10 @@ export function WorkspaceSidebar({
 				onRetry={onRetry}
 				createPREnabled={CREATE_PR_BUTTON_ENABLED}
 			/>
-			<AAFileCabinetHeader changedFileCount={changedFileCount} />
+			<AAFileCabinetHeader
+				changedFileCount={changedFileCount}
+				deliveryState={deliveryState}
+			/>
 			<SidebarHeader
 				tabs={tabs}
 				activeTab={activeTab}

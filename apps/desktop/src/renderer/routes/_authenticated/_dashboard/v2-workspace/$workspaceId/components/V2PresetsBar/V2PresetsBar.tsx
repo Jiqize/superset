@@ -38,7 +38,11 @@ import { V2PresetBarItem } from "./components/V2PresetBarItem";
 
 interface V2PresetsBarProps {
 	matchedPresets: V2TerminalPresetRow[];
-	executePreset: (preset: V2TerminalPresetRow) => Promise<boolean>;
+	executePreset: (
+		preset: V2TerminalPresetRow,
+		options?: { taskFolderTitle?: string },
+	) => Promise<boolean>;
+	taskFolderTitle?: string;
 	showPresetsBar: boolean;
 	onToggleShowPresetsBar: (enabled: boolean) => void;
 }
@@ -80,6 +84,7 @@ function getVisiblePresetOrder(
 export function V2PresetsBar({
 	matchedPresets,
 	executePreset,
+	taskFolderTitle,
 	showPresetsBar,
 	onToggleShowPresetsBar,
 }: V2PresetsBarProps) {
@@ -259,7 +264,7 @@ export function V2PresetsBar({
 			setAssignmentEmployee(preset.name || "default");
 			setAssignmentPhase("assigning");
 
-			const succeeded = await executePreset(preset);
+			const succeeded = await executePreset(preset, { taskFolderTitle });
 			if (attempt !== assignmentAttemptRef.current) return succeeded;
 			if (!succeeded) {
 				setAssignmentEmployee(null);
@@ -276,7 +281,7 @@ export function V2PresetsBar({
 			}, 2600);
 			return true;
 		},
-		[executePreset],
+		[executePreset, taskFolderTitle],
 	);
 
 	const handleAssignBuiltinPreset = useCallback(

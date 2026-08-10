@@ -133,12 +133,22 @@ describe("AA employee profile presentation", () => {
 		expect(presentation).toMatchObject({
 			authority: "authoritative",
 			authorityLabel: "RUNTIME VERIFIED",
-			capabilities: [],
 			employeeName: "GROK BUILD",
-			notice: "Capabilities unavailable until login.",
+			notice:
+				"Live Grok work requires authentication; negotiated capability status remains visible.",
 			runtimeLabel: "GROK BUILD",
 			statusLabel: "AUTHENTICATION REQUIRED",
 			transportLabel: "ACP",
+		});
+		expect(presentation.capabilities).toContainEqual({
+			label: "LIFECYCLE",
+			reason: "authentication_required",
+			support: "conditional",
+		});
+		expect(presentation.capabilities).toContainEqual({
+			label: "MODEL READ",
+			reason: null,
+			support: "available",
 		});
 	});
 

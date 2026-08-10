@@ -33,7 +33,7 @@ export function AAEmployeeProfileCard({
 					)}
 				</span>
 				<span className="aa-employee-profile-card__identity">
-					<small>EMPLOYEE FILE</small>
+					<small>EMPLOYEE PROFILE</small>
 					<strong>{presentation.employeeName}</strong>
 					<span>{presentation.authorityLabel}</span>
 				</span>
@@ -75,7 +75,7 @@ export function AAEmployeeProfileCard({
 
 			{presentation.capabilities.length > 0 ? (
 				<div className="aa-employee-profile-card__capabilities">
-					<strong>CAPABILITY FILE</strong>
+					<strong>CAPABILITY STATUS</strong>
 					<ul>
 						{presentation.capabilities.map((capability) => (
 							<li

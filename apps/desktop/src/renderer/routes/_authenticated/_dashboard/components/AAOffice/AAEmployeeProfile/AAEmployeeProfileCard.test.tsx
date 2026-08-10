@@ -14,6 +14,8 @@ const presentation: AAEmployeeProfilePresentation = {
 			reason: "optional_extension_not_detected",
 			support: "conditional",
 		},
+		{ label: "CANCELLATION", reason: null, support: "unavailable" },
+		{ label: "USER QUESTIONS", reason: null, support: "unknown" },
 	],
 	employeeName: "PI",
 	model: {
@@ -38,7 +40,7 @@ describe("AA employee profile card", () => {
 			<AAEmployeeProfileCard presentation={presentation} />,
 		);
 
-		expect(markup).toContain("EMPLOYEE FILE");
+		expect(markup).toContain("EMPLOYEE PROFILE");
 		expect(markup).toContain("RUNTIME VERIFIED");
 		expect(markup).toContain("Gemini 3.5 Flash");
 		expect(markup).toContain("gemini-3.5-flash");
@@ -48,6 +50,9 @@ describe("AA employee profile card", () => {
 		expect(markup).toContain("RESUME");
 		expect(markup).toContain("LIFECYCLE");
 		expect(markup).toContain("AVAILABLE");
+		expect(markup).toContain("CONDITIONAL");
+		expect(markup).toContain("UNAVAILABLE");
+		expect(markup).toContain("UNKNOWN");
 		expect(markup).not.toContain("native-session");
 		expect(markup).not.toContain("epoch-1");
 	});

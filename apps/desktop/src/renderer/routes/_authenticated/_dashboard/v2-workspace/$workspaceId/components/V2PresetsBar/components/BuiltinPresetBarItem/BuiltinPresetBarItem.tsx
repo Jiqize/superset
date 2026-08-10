@@ -43,7 +43,7 @@ export function BuiltinPresetBarItem({
 					<Tooltip delayDuration={700}>
 						<TooltipTrigger asChild>
 							<Button
-								aria-label={`Assign current work to ${preset.name}`}
+								aria-label={`Send Task Folder to ${preset.name}`}
 								variant="ghost"
 								size="sm"
 								className="aa-employee-roster__button h-8 max-w-36 min-w-0 shrink-0 gap-1.5 rounded-md px-1.5 text-xs font-normal text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
@@ -69,10 +69,10 @@ export function BuiltinPresetBarItem({
 						runtimeSnapshot={runtimeSnapshot}
 					>
 						<Button
-							aria-label={`View ${preset.name} employee file`}
+							aria-label={`View ${preset.name} employee profile`}
 							className="aa-employee-roster__profile"
 							size="icon"
-							title={`View ${preset.name} employee file`}
+							title={`View ${preset.name} employee profile`}
 							variant="ghost"
 						>
 							<AAIcon name="agents" />
@@ -82,7 +82,7 @@ export function BuiltinPresetBarItem({
 			</ContextMenuTrigger>
 			<ContextMenuContent>
 				<ContextMenuItem onSelect={() => void onAssignPreset(preset)}>
-					Assign current work
+					Send Task Folder
 				</ContextMenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuItem onSelect={() => onHide(preset.id)}>

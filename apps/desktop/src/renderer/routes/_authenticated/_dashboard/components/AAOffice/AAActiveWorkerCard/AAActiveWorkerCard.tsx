@@ -82,10 +82,10 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 							side="bottom"
 						>
 							<Button
-								aria-label={`View ${presentation.displayName} employee file`}
+								aria-label={`View ${presentation.displayName} employee profile`}
 								className="aa-active-worker-card__profile"
 								size="icon"
-								title={`View ${presentation.displayName} employee file`}
+								title={`View ${presentation.displayName} employee profile`}
 								variant="ghost"
 							>
 								<AAIcon name="agents" />

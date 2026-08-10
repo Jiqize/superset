@@ -73,6 +73,7 @@ export function AATerminalFrame({
 				<AATaskFolder
 					explicitTitle={taskTitle}
 					onTitleChange={onTaskTitleChange}
+					runtimeSnapshot={runtimeSnapshot}
 					sessionLabel={sessionLabel ?? launchIdentity?.label}
 					terminalLabel={workstationLabel}
 					worker={worker}

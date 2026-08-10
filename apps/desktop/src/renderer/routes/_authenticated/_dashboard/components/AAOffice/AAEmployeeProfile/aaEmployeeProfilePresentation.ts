@@ -179,16 +179,17 @@ export function resolveAAEmployeeProfilePresentation({
 		authority: "authoritative",
 		authorityLabel: "RUNTIME VERIFIED",
 		avatarState: health.avatarState,
-		capabilities: authenticationRequired
-			? []
-			: PROFILE_CAPABILITIES.map(({ key, label }) =>
-					formatCapability(label, runtimeSnapshot.capabilities[key]),
-				),
+		capabilities: PROFILE_CAPABILITIES.map(({ key, label }) =>
+			formatCapability(label, runtimeSnapshot.capabilities[key]),
+		),
 		employeeName:
 			PERSONA_LABELS[persona.id] ?? normalizeEmployeeName(name || agentId),
 		...(model ? { model } : {}),
 		...(authenticationRequired
-			? { notice: "Capabilities unavailable until login." }
+			? {
+					notice:
+						"Live Grok work requires authentication; negotiated capability status remains visible.",
+				}
 			: {}),
 		personaId: persona.id,
 		...(reasoning ? { reasoning } : {}),

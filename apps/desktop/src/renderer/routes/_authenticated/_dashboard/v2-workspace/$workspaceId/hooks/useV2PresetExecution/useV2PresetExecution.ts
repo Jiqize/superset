@@ -9,6 +9,7 @@ import {
 	buildTerminalCommand,
 	normalizeTerminalCommand,
 } from "renderer/lib/terminal/launch-command";
+import { resolveAAHandoffPanePresentation } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAHandoff";
 import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
@@ -26,13 +27,22 @@ import type { TerminalLauncher } from "../useV2TerminalLauncher";
 
 function makeTerminalPane(
 	terminalId: string,
-	titleOverride?: string,
+	employeeTitle?: string,
 	launchIdentity?: TerminalPaneData["launchIdentity"],
+	taskFolderTitle?: string,
 ): CreatePaneInput<PaneViewerData> {
+	const presentation = resolveAAHandoffPanePresentation({
+		employeeTitle,
+		taskFolderTitle,
+	});
 	return {
 		kind: "terminal",
-		titleOverride,
-		data: { launchIdentity, terminalId } as TerminalPaneData,
+		titleOverride: presentation.titleOverride,
+		data: {
+			launchIdentity,
+			terminalId,
+			...(presentation.taskTitleEdited ? { taskTitleEdited: true } : {}),
+		} as TerminalPaneData,
 	};
 }
 
@@ -160,7 +170,10 @@ export function useV2PresetExecution({
 	const executePreset = useCallback(
 		async (
 			preset: V2TerminalPresetRow,
-			options?: { target?: "new-tab" | "active-tab" },
+			options?: {
+				target?: "new-tab" | "active-tab";
+				taskFolderTitle?: string;
+			},
 		) => {
 			const state = store.getState();
 			const activeTabId = state.activeTabId;
@@ -244,7 +257,14 @@ export function useV2PresetExecution({
 					case "new-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
 						state.addTab({
-							panes: [makeTerminalPane(terminalId, title, launchIdentity)],
+							panes: [
+								makeTerminalPane(
+									terminalId,
+									title,
+									launchIdentity,
+									options?.taskFolderTitle,
+								),
+							],
 						});
 						didExecute = true;
 						break;
@@ -258,7 +278,12 @@ export function useV2PresetExecution({
 						);
 						state.addTab({
 							panes: ids.map((id) =>
-								makeTerminalPane(id, title, launchIdentity),
+								makeTerminalPane(
+									id,
+									title,
+									launchIdentity,
+									options?.taskFolderTitle,
+								),
 							) as [
 								CreatePaneInput<PaneViewerData>,
 								...CreatePaneInput<PaneViewerData>[],
@@ -274,7 +299,14 @@ export function useV2PresetExecution({
 						);
 						for (const terminalId of ids) {
 							state.addTab({
-								panes: [makeTerminalPane(terminalId, title, launchIdentity)],
+								panes: [
+									makeTerminalPane(
+										terminalId,
+										title,
+										launchIdentity,
+										options?.taskFolderTitle,
+									),
+								],
 							});
 						}
 						didExecute = ids.length > 0;
@@ -284,7 +316,12 @@ export function useV2PresetExecution({
 					case "active-tab-single": {
 						const terminalId = await createTerminal(launchCommands[0]);
 						didExecute = true;
-						const pane = makeTerminalPane(terminalId, title, launchIdentity);
+						const pane = makeTerminalPane(
+							terminalId,
+							title,
+							launchIdentity,
+							options?.taskFolderTitle,
+						);
 						if (!activeTabId) {
 							state.addTab({ panes: [pane] });
 							break;
@@ -300,7 +337,12 @@ export function useV2PresetExecution({
 								: [createTerminal()],
 						);
 						const panes = ids.map((id) =>
-							makeTerminalPane(id, title, launchIdentity),
+							makeTerminalPane(
+								id,
+								title,
+								launchIdentity,
+								options?.taskFolderTitle,
+							),
 						);
 						didExecute = ids.length > 0;
 						if (!activeTabId) {

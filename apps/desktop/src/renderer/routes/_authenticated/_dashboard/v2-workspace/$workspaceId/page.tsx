@@ -17,6 +17,7 @@ import {
 	AABottomStatusBar,
 	AAWindowFrame,
 	AAWorkspaceHeader,
+	resolveAAHandoffTaskTitleFromPaneCandidates,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { NavigationControls } from "renderer/routes/_authenticated/_dashboard/components/NavigationControls";
 import { SidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/SidebarToggle";
@@ -175,6 +176,29 @@ function V2WorkspaceContent() {
 			};
 		}),
 	);
+	const handoffTaskTitle = useStore(store, (state) => {
+		const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+		if (!activeTab) return undefined;
+		const panes = Object.values(activeTab.panes);
+		const activePane = activeTab.activePaneId
+			? activeTab.panes[activeTab.activePaneId]
+			: undefined;
+		const orderedPanes = activePane
+			? [activePane, ...panes.filter((pane) => pane.id !== activePane.id)]
+			: panes;
+		return resolveAAHandoffTaskTitleFromPaneCandidates(
+			orderedPanes.flatMap((pane) => {
+				if (pane.kind !== "terminal") return [];
+				const data = pane.data as TerminalPaneData;
+				return [
+					{
+						paneTitle: pane.titleOverride ?? activeTab.titleOverride,
+						taskTitleEdited: data.taskTitleEdited,
+					},
+				];
+			}),
+		);
+	});
 	useClearActivePaneAttention({ store });
 	const launcher = useV2TerminalLauncher();
 	const {
@@ -376,6 +400,7 @@ function V2WorkspaceContent() {
 										<V2PresetsBar
 											matchedPresets={matchedPresets}
 											executePreset={executePreset}
+											taskFolderTitle={handoffTaskTitle}
 											showPresetsBar={showPresetsBar}
 											onToggleShowPresetsBar={setShowPresetsBar}
 										/>

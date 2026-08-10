@@ -1,0 +1,62 @@
+{
+	"contract": "AA Runtime Contract v0.1",
+	"scenario": "Phase 3E Agent Workspace workflow",
+	"viewport": "1440x800 logical pixels",
+	"taskFolder": {
+		"title": "Review Phase 3E handoff",
+		"source": "explicit user edit",
+		"preservedAcrossManualHandoff": true,
+		"preservedAcrossPiExactResume": true
+	},
+	"workflow": {
+		"piImplementation": {
+			"authority": "runtime verified",
+			"runtime": "pi",
+			"transport": "terminal",
+			"model": "Gemini 3.5 Flash",
+			"reasoning": "high",
+			"statesObserved": ["working", "idle"]
+		},
+		"manualHandoff": {
+			"employee": "Codex",
+			"authority": "untracked compatibility runtime",
+			"transport": "terminal preset",
+			"dispatchedAcknowledgementObserved": true,
+			"taskFolderTitleCarried": true
+		},
+		"returnToPi": true,
+		"output": {
+			"changedFileCount": 2,
+			"files": ["aa-phase-3e-proof.txt", "aa-phase-3e-review.txt"],
+			"filesTabVerified": true,
+			"changesAndDiffVerified": true,
+			"reviewTabVerified": true,
+			"deliveryState": "no GitHub repository"
+		}
+	},
+	"exactResume": {
+		"before": {
+			"nativeSessionFingerprint": "f658c6a60b56",
+			"epochFingerprint": "7621759cd9b7",
+			"state": "idle",
+			"stateReason": "turn_settled",
+			"canResume": true
+		},
+		"after": {
+			"nativeSessionFingerprint": "f658c6a60b56",
+			"epochFingerprint": "e78018d587ef",
+			"state": "idle",
+			"stateReason": "session_attach",
+			"canResume": true
+		},
+		"nativeSessionMatched": true,
+		"epochChanged": true,
+		"conversationContextConfirmed": true
+	},
+	"safety": {
+		"rawRuntimeIdentityRecorded": false,
+		"terminalTranscriptStoredInJson": false,
+		"credentialRecorded": false,
+		"productionRepositoryDataUsed": false
+	}
+}

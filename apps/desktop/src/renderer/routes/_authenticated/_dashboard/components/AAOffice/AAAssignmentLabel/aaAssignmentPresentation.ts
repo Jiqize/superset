@@ -23,7 +23,7 @@ export function getAAAssignmentPresentation(
 		case "assigned":
 			return { heading: "TASK FOLDER", detail: `ASSIGNED TO ${employee}` };
 		case "idle":
-			return { heading: "EMPLOYEE ROSTER", detail: "ASSIGN CURRENT WORK" };
+			return { heading: "EMPLOYEE ROSTER", detail: "SEND TASK FOLDER" };
 	}
 }
 

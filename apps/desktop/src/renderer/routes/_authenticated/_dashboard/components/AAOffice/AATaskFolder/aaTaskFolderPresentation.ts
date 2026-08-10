@@ -1,5 +1,8 @@
 import type { AARuntimeState } from "@superset/session-protocol";
-import type { AAWorkerTracking } from "../AAActiveWorkerCard";
+import type {
+	AAActiveWorkerPresentation,
+	AAWorkerTracking,
+} from "../AAActiveWorkerCard";
 import type { AARuntimeHealthCode } from "../AAAgentStatus/aaRuntimeHealth";
 
 export const AA_TASK_FOLDER_STATES = [
@@ -25,6 +28,19 @@ export interface AATaskFolderMetricPresentation {
 	value: string;
 }
 
+export interface AATaskFolderContextPresentation {
+	authority: string;
+	changedFiles?: string;
+	employee: string;
+	latestAction?: string;
+	model?: string;
+	reasoning?: string;
+	resume?: string;
+	runtime: string;
+	status: string;
+	transport: string;
+}
+
 interface AATaskTitleSources {
 	explicitTitle?: string | null;
 	sessionLabel?: string | null;
@@ -43,6 +59,75 @@ export interface AATaskFolderRenameResult {
 }
 
 const TASK_TITLE_LIMIT = 48;
+
+const RUNTIME_ACTION_LABELS: Readonly<Record<string, string>> = {
+	authentication_required: "AUTHENTICATION REQUIRED",
+	cancel_requested: "CANCELLATION REQUESTED",
+	permission_requested: "PERMISSION REQUESTED",
+	resume_identity_mismatch: "RESUME FAILED",
+	resume_identity_not_confirmed: "RESUME FAILED",
+	runtime_failed: "RUNTIME ERROR",
+	session_attach: "SESSION ATTACHED",
+	session_started: "SESSION STARTED",
+	terminal_process_lost: "SESSION INTERRUPTED",
+	turn_settled: "TURN SETTLED",
+	turn_started: "TURN STARTED",
+	user_input_requested: "USER INPUT REQUESTED",
+};
+
+const LEGACY_ACTION_LABELS: Readonly<Record<string, string>> = {
+	Attached: "SESSION ATTACHED",
+	Detached: "SESSION ENDED",
+	Failed: "RUNTIME ERROR",
+	PendingQuestion: "USER INPUT REQUESTED",
+	PermissionRequest: "PERMISSION REQUESTED",
+	PostToolUse: "TOOL FINISHED",
+	PostToolUseFailure: "TOOL FAILED",
+	Start: "TURN STARTED",
+	Stop: "TURN COMPLETE",
+	UserPromptSubmit: "TURN STARTED",
+};
+
+export function getAATaskFolderLatestAction({
+	lastEventType,
+	stateReason,
+}: {
+	lastEventType?: string;
+	stateReason?: string;
+}): string | undefined {
+	if (stateReason) {
+		return RUNTIME_ACTION_LABELS[stateReason];
+	}
+	return lastEventType ? LEGACY_ACTION_LABELS[lastEventType] : undefined;
+}
+
+export function getAATaskFolderContextPresentation({
+	changedFileCount,
+	worker,
+}: {
+	changedFileCount: number | null;
+	worker: AAActiveWorkerPresentation;
+}): AATaskFolderContextPresentation {
+	const model = worker.model?.displayName ?? worker.model?.id;
+	const latestAction = getAATaskFolderLatestAction({
+		lastEventType: worker.lastEventType,
+		stateReason: worker.stateReason,
+	});
+	return {
+		authority: worker.authorityLabel,
+		...(changedFileCount === null
+			? {}
+			: { changedFiles: `${changedFileCount} CHANGED` }),
+		employee: worker.tracking === "unassigned" ? "—" : worker.displayName,
+		...(latestAction ? { latestAction } : {}),
+		...(model ? { model } : {}),
+		...(worker.reasoning ? { reasoning: worker.reasoning.value } : {}),
+		...(worker.resumeLabel ? { resume: worker.resumeLabel } : {}),
+		runtime: worker.runtimeLabel,
+		status: worker.statusLabel,
+		transport: worker.transportLabel,
+	};
+}
 
 export function resolveAATaskFolderTitle({
 	explicitTitle,

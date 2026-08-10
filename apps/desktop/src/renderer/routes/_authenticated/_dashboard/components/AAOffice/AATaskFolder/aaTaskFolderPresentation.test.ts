@@ -1,5 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import {
+	getAATaskFolderContextPresentation,
+	getAATaskFolderLatestAction,
 	getAATaskFolderMetricPresentation,
 	mapAARuntimeSnapshotToAATaskFolderState,
 	mapAAWorkerToAATaskFolderState,
@@ -10,6 +12,64 @@ import {
 } from "./aaTaskFolderPresentation";
 
 describe("AA Task Folder presentation", () => {
+	it("builds the work context only from authoritative worker and Git evidence", () => {
+		expect(
+			getAATaskFolderContextPresentation({
+				changedFileCount: 3,
+				worker: {
+					agentId: "pi",
+					authorityLabel: "RUNTIME VERIFIED",
+					displayName: "PI",
+					heading: "PI WORKER",
+					model: {
+						displayName: "Gemini 3.5 Flash",
+						id: "gemini-3.5-flash",
+						provider: "google",
+					},
+					personaId: "pi",
+					reasoning: { availableValues: null, value: "high" },
+					runtimeLabel: "PI",
+					runtimeState: "working",
+					source: "runtime",
+					stateReason: "turn_started",
+					status: "working",
+					statusLabel: "WORKING",
+					tracking: "tracked",
+					transportLabel: "TERMINAL",
+				},
+			}),
+		).toEqual({
+			authority: "RUNTIME VERIFIED",
+			changedFiles: "3 CHANGED",
+			employee: "PI",
+			latestAction: "TURN STARTED",
+			model: "Gemini 3.5 Flash",
+			reasoning: "high",
+			runtime: "PI",
+			status: "WORKING",
+			transport: "TERMINAL",
+		});
+	});
+
+	it("uses a fixed lifecycle vocabulary for latest action and omits unknown reasons", () => {
+		expect(
+			getAATaskFolderLatestAction({
+				lastEventType: "PostToolUse",
+				stateReason: "turn_settled",
+			}),
+		).toBe("TURN SETTLED");
+		expect(
+			getAATaskFolderLatestAction({
+				lastEventType: "PermissionRequest",
+			}),
+		).toBe("PERMISSION REQUESTED");
+		expect(
+			getAATaskFolderLatestAction({
+				stateReason: "vendor_detail_not_in_contract",
+			}),
+		).toBeUndefined();
+	});
+
 	it("keeps an exact saved Pi candidate visibly offline instead of inferring idle", () => {
 		expect(
 			mapAAWorkerToAATaskFolderState({

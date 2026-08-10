@@ -8,6 +8,8 @@ import type { ConnectionState } from "renderer/lib/terminal/terminal-runtime-reg
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
 import {
 	AAIcon,
+	resolveAAHandoffPanePresentation,
+	resolveAAHandoffTaskTitle,
 	resolveAAResumeSessionPresentation,
 	useAAAgentStatus,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
@@ -84,20 +86,31 @@ export function TerminalAgentResumeBanner({
 				return;
 			}
 			const state = ctx.store.getState();
+			const currentData = ctx.pane.data as TerminalPaneData;
+			const panePresentation = resolveAAHandoffPanePresentation({
+				employeeTitle: result.label,
+				taskFolderTitle: resolveAAHandoffTaskTitle({
+					paneTitle: ctx.pane.titleOverride,
+					taskTitleEdited: currentData.taskTitleEdited,
+				}),
+			});
 			state.setPaneData({
 				paneId: ctx.pane.id,
 				data: {
 					launchIdentity: {
 						agentId: candidate.agent,
-						label: result.label,
+						label: panePresentation.launchLabel ?? result.label,
 					},
+					...(panePresentation.taskTitleEdited
+						? { taskTitleEdited: true as const }
+						: {}),
 					terminalId: result.sessionId,
 				} satisfies TerminalPaneData,
 			});
 			state.setPaneTitleOverride({
 				tabId: ctx.tab.id,
 				paneId: ctx.pane.id,
-				titleOverride: result.label,
+				titleOverride: panePresentation.titleOverride ?? result.label,
 			});
 			killReplacedSession.mutate({ workspaceId, terminalId });
 			terminalRuntimeRegistry.dispose(terminalId);

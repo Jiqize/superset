@@ -2,10 +2,10 @@ import { describe, expect, it } from "bun:test";
 import { getAAAssignmentPresentation } from "./aaAssignmentPresentation";
 
 describe("AA manual assignment presentation", () => {
-	it("uses explicit assignment language while idle", () => {
+	it("uses explicit manual Task Folder handoff language while idle", () => {
 		expect(getAAAssignmentPresentation("idle")).toEqual({
 			heading: "EMPLOYEE ROSTER",
-			detail: "ASSIGN CURRENT WORK",
+			detail: "SEND TASK FOLDER",
 		});
 	});
 
