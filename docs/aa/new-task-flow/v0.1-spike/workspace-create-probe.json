@@ -1,0 +1,59 @@
+{
+	"schemaVersion": 1,
+	"baselineCommit": "5341e7be1b64fa5454f85ec756681efc16bc8eeb",
+	"method": "Disposable local Git repository plus isolated Bun SQLite Host database through workspacesRouter.create",
+	"environment": {
+		"platform": "macOS arm64",
+		"bun": "1.3.14",
+		"pi": "0.82.1"
+	},
+	"observations": {
+		"sameTitleFirstCreate": {
+			"workspaceName": "Fix restart status",
+			"branch": "fix-restart-status",
+			"workspaceType": "worktree",
+			"alreadyExists": false,
+			"terminalCount": 0,
+			"agentCount": 0,
+			"durationMs": 334
+		},
+		"sameTitleSecondCreate": {
+			"workspaceName": "Fix restart status",
+			"branch": "fix-restart-status-2",
+			"workspaceType": "worktree",
+			"alreadyExists": false,
+			"terminalCount": 0,
+			"agentCount": 0,
+			"durationMs": 305
+		},
+		"longUnicodeTitle": {
+			"normalizedCodepoints": 48,
+			"workspaceNamePreserved": true,
+			"proposedStableBranchShape": "task-<compact-workspace-uuid>",
+			"proposedBranchLength": 37,
+			"workspaceType": "worktree",
+			"rowPersisted": true
+		},
+		"pathTraversalRejection": {
+			"inputClass": "parent-directory branch path",
+			"errorType": "TRPCError",
+			"error": "Invalid branch name: path traversal detected",
+			"workspaceRowsBefore": 3,
+			"workspaceRowsAfter": 3,
+			"worktreesBefore": 3,
+			"worktreesAfter": 3
+		}
+	},
+	"cleanup": {
+		"temporaryRepositoryRemoved": true,
+		"temporaryHostDatabaseRemoved": true,
+		"temporaryWorktreesRemoved": 3,
+		"userProjectsTouched": false,
+		"userProfilesTouched": false
+	},
+	"interpretation": [
+		"The Host owns real worktree creation and records the Workspace only after the fresh worktree exists.",
+		"Existing auto-naming safely de-duplicates equal ASCII titles, but Unicode-only titles produce an empty Host slug and therefore need the implementation plan's stable UUID branch fallback if deterministic naming is required.",
+		"The invalid branch path failed before any Workspace row or worktree was added."
+	]
+}

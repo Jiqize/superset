@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"baselineCommit": "5341e7be1b64fa5454f85ec756681efc16bc8eeb",
+	"focusedTests": {
+		"commandClass": "bun test over Workspace creation helpers, pane launch persistence, AA Task Folder/handoff/worker presentation, Host agent launch, Runtime registry/router, and notification ingestion",
+		"files": 14,
+		"passed": 129,
+		"failed": 0,
+		"expectations": 245
+	},
+	"realWorkspaceProbe": {
+		"passed": true,
+		"resourceScope": "disposable local Git and isolated Host DB",
+		"productionStateTouched": false
+	},
+	"acceptedRealPiEvidence": {
+		"source": "docs/aa/runtime-foundation/phase-3g/",
+		"report": "docs/aa/PHASE-3G-PI-FIRST-DAILY-WORKFLOW-REPORT.md",
+		"factsReused": [
+			"real Pi launch and WORKING to IDLE transition",
+			"explicit Task Folder title across Renderer reload and full app restart",
+			"exact native Pi resume with a new epoch",
+			"Tier 2 DISPATCHED plus UNTRACKED boundary",
+			"xterm focus restoration"
+		],
+		"rawRuntimeIdsRetainedHere": false
+	},
+	"productCodeModified": false,
+	"redAreaModified": false
+}
