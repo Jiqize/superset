@@ -1,0 +1,125 @@
+{
+	"phase": "3L — Archive Intent v0.1",
+	"capturedOn": "2026-08-11",
+	"baselineCommit": "7bf637be484769ad5f39612c13b8c52c33eb994d",
+	"implementationCommit": "48fc579ae6e8202478ed7d5bcfeea227d33d4100",
+	"environment": {
+		"platform": "macOS 26.4 (25E246), arm64",
+		"bun": "1.3.14",
+		"git": "2.50.1 (Apple Git-155)",
+		"pi": "0.82.1",
+		"profile": "isolated disposable desktop profile",
+		"project": "disposable one-commit local Git fixture without a remote"
+	},
+	"migration": {
+		"column": "active_tasks_archived",
+		"storageType": "INTEGER",
+		"notNull": true,
+		"default": false,
+		"existingRowMigrationDefault": false,
+		"restartCycles": 2,
+		"postRestartWorkspaceCounts": {
+			"archivedFalse": 2,
+			"archivedTrue": 8,
+			"total": 10
+		}
+	},
+	"archiveWhileWorking": {
+		"realChangedFiles": 1,
+		"before": {
+			"archived": false,
+			"state": "working",
+			"nativeSessionFingerprint": "9942a484bd86",
+			"epochFingerprint": "1b236f67d6f4"
+		},
+		"after": {
+			"archived": true,
+			"state": "working",
+			"nativeSessionFingerprint": "9942a484bd86",
+			"epochFingerprint": "1b236f67d6f4"
+		},
+		"sameNativeSession": true,
+		"sameEpoch": true
+	},
+	"exactResumeWhileArchived": {
+		"beforeRestart": {
+			"archived": true,
+			"state": "idle",
+			"nativeSessionFingerprint": "9dad8e20be26",
+			"epochFingerprint": "8d67684baaf7"
+		},
+		"afterRestartCandidate": {
+			"archived": true,
+			"agent": "pi",
+			"resumeSupported": true,
+			"nativeSessionFingerprint": "9dad8e20be26"
+		},
+		"afterExplicitResume": {
+			"archived": true,
+			"state": "idle",
+			"nativeSessionFingerprint": "9dad8e20be26",
+			"epochFingerprint": "5914b4b71995"
+		},
+		"sameNativeSession": true,
+		"epochChanged": true,
+		"rendererReloadPreservedState": true
+	},
+	"evidenceCategories": {
+		"liveIdle": "archived row preserved PI · LIVE · IDLE",
+		"liveWorking": "archived row preserved PI · LIVE · WORKING",
+		"resumable": "archived row preserved PI · RESUMABLE",
+		"unavailable": "a Pi Work Folder absent before archive rendered PI · SESSION UNAVAILABLE after archive",
+		"tier2": "archived Superset CLI row preserved UNTRACKED",
+		"changedFiles": "archived unavailable Pi row retained the real count of 1",
+		"duplicates": ["#8711", "#6704"]
+	},
+	"tier2TerminalInvariant": {
+		"terminalCountBefore": 1,
+		"terminalCountAfter": 1,
+		"sameVisibleSessionLabel": true,
+		"archivedEvidence": "SUPERSET CLI · UNTRACKED"
+	},
+	"interactions": {
+		"newTask": "passed through production New Task UI",
+		"archiveFromActiveTasks": "passed",
+		"archiveFromTaskFolder": "passed",
+		"keyboardArchive": "passed with focus plus Enter",
+		"undo": "passed through existing toast action",
+		"unarchive": "passed and reclassified from current evidence",
+		"archivedRowNavigationOnly": "passed without implicit unarchive, launch, or resume",
+		"files": "passed",
+		"changes": "passed with one real file",
+		"diff": "passed with expected harmless content",
+		"review": "passed with truthful no-pull-request state",
+		"routeNavigation": "passed",
+		"removeFromSidebarDistinct": true,
+		"cleanupPreflight": {
+			"mainWorkspaceBlocked": true,
+			"dirtyWorktreeDetected": true,
+			"unpushedWorkDetected": true
+		}
+	},
+	"viewports": {
+		"1440x800": {
+			"documentHorizontalScroll": false,
+			"documentVerticalScroll": false,
+			"archivedRows": 8,
+			"workFolders": 10,
+			"reducedMotionEmulated": true
+		},
+		"1920x976": {
+			"documentHorizontalScroll": false,
+			"documentVerticalScroll": false,
+			"archivedRows": 8,
+			"workFolders": 10
+		}
+	},
+	"runtimeBoundary": {
+		"runtimeContractModified": false,
+		"piBridgeModified": false,
+		"terminalOrPtyModified": false,
+		"gitOrWorktreeBehaviorModified": false,
+		"cleanupBehaviorModified": false,
+		"pollingAdded": false
+	}
+}
