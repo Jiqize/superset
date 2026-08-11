@@ -6,6 +6,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import { createPortal } from "react-dom";
+import { AAActiveTasksProjectShell } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAActiveTasks";
 import { useSidebarDnd } from "../../../../hooks/useSidebarDnd";
 import { parseId } from "../../../../hooks/useSidebarDnd/useSidebarDnd";
 import { useDashboardSidebarSelection } from "../../../../providers/DashboardSidebarSelectionProvider";
@@ -16,6 +17,7 @@ import { SortableSectionHeader } from "../../../SortableSectionHeader";
 import { SortableWorkspaceItem } from "../../../SortableWorkspaceItem";
 
 interface DashboardSidebarExpandedProjectContentProps {
+	aaOffice?: boolean;
 	projectId: string;
 	isCollapsed: boolean;
 	projectChildren: DashboardSidebarProjectChild[];
@@ -27,6 +29,7 @@ interface DashboardSidebarExpandedProjectContentProps {
 }
 
 export function DashboardSidebarExpandedProjectContent({
+	aaOffice = false,
 	projectId,
 	isCollapsed,
 	projectChildren,
@@ -86,112 +89,120 @@ export function DashboardSidebarExpandedProjectContent({
 					className="overflow-hidden"
 				>
 					<div className="pb-1">
-						<WorkspaceBulkMenuScope
+						<AAActiveTasksProjectShell
+							enabled={aaOffice}
 							projectId={projectId}
-							workspacesById={workspacesById}
-							groupInfo={groupInfo}
+							workFolderCount={workspacesById.size}
 						>
-							<DndContext
-								sensors={sensors}
-								collisionDetection={collisionDetection}
-								measuring={measuring}
-								{...handlers}
+							<WorkspaceBulkMenuScope
+								projectId={projectId}
+								workspacesById={workspacesById}
+								groupInfo={groupInfo}
 							>
-								<SortableContext
-									items={sortableItems}
-									strategy={verticalListSortingStrategy}
+								<DndContext
+									sensors={sensors}
+									collisionDetection={collisionDetection}
+									measuring={measuring}
+									{...handlers}
 								>
-									{flatItems.map((id) => {
-										const parsed = parseId(id);
-										if (!parsed) return null;
+									<SortableContext
+										items={sortableItems}
+										strategy={verticalListSortingStrategy}
+									>
+										{flatItems.map((id) => {
+											const parsed = parseId(id);
+											if (!parsed) return null;
 
-										if (parsed.type === "section") {
-											const section = sectionsById.get(parsed.realId);
-											if (!section) return null;
+											if (parsed.type === "section") {
+												const section = sectionsById.get(parsed.realId);
+												if (!section) return null;
+												return (
+													<SortableSectionHeader
+														key={String(id)}
+														sortableId={String(id)}
+														section={section}
+														onDelete={onDeleteSection}
+														onRename={onRenameSection}
+														onToggleCollapse={onToggleSectionCollapse}
+													/>
+												);
+											}
+
+											const workspace = workspacesById.get(parsed.realId);
+											if (!workspace) return null;
+											const group = groupInfo.get(parsed.realId);
+											const isInSection = !!group;
+											const isInCollapsedSection =
+												isInSection && collapsedSectionIds.has(group.sectionId);
+											const hidden =
+												isInCollapsedSection ||
+												(activeType === "section" && isInSection);
+											const canBulkSelect =
+												workspace.type === "worktree" &&
+												workspace.pendingTransaction?.type !== "insert";
+
 											return (
-												<SortableSectionHeader
-													key={String(id)}
-													sortableId={String(id)}
-													section={section}
-													onDelete={onDeleteSection}
-													onRename={onRenameSection}
-													onToggleCollapse={onToggleSectionCollapse}
-												/>
+												<AnimatePresence key={String(id)} initial={false}>
+													{!hidden && (
+														<motion.div
+															initial={{ height: 0, opacity: 0 }}
+															animate={{ height: "auto", opacity: 1 }}
+															exit={{ height: 0, opacity: 0 }}
+															transition={{ duration: 0.15, ease: "easeOut" }}
+														>
+															<SortableWorkspaceItem
+																sortableId={String(id)}
+																workspace={workspace}
+																accentColor={
+																	activeId === id
+																		? predictedColor
+																		: group?.color
+																}
+																isInSection={groupInfo.has(parsed.realId)}
+																onHoverCardOpen={() =>
+																	onWorkspaceHover(parsed.realId)
+																}
+																shortcutLabel={workspaceShortcutLabels.get(
+																	parsed.realId,
+																)}
+																isSelected={
+																	canBulkSelect &&
+																	isWorkspaceSelected(parsed.realId)
+																}
+																onSelectionClick={
+																	canBulkSelect
+																		? (event) =>
+																				selectWorkspaceFromEvent(event, {
+																					workspaceId: parsed.realId,
+																					projectId,
+																					orderedWorkspaceIds:
+																						selectableWorkspaceIds,
+																				})
+																		: undefined
+																}
+																disabled={
+																	workspace.type === "main" &&
+																	workspace.hostType === "local-device"
+																}
+															/>
+														</motion.div>
+													)}
+												</AnimatePresence>
 											);
-										}
+										})}
+									</SortableContext>
 
-										const workspace = workspacesById.get(parsed.realId);
-										if (!workspace) return null;
-										const group = groupInfo.get(parsed.realId);
-										const isInSection = !!group;
-										const isInCollapsedSection =
-											isInSection && collapsedSectionIds.has(group.sectionId);
-										const hidden =
-											isInCollapsedSection ||
-											(activeType === "section" && isInSection);
-										const canBulkSelect =
-											workspace.type === "worktree" &&
-											workspace.pendingTransaction?.type !== "insert";
-
-										return (
-											<AnimatePresence key={String(id)} initial={false}>
-												{!hidden && (
-													<motion.div
-														initial={{ height: 0, opacity: 0 }}
-														animate={{ height: "auto", opacity: 1 }}
-														exit={{ height: 0, opacity: 0 }}
-														transition={{ duration: 0.15, ease: "easeOut" }}
-													>
-														<SortableWorkspaceItem
-															sortableId={String(id)}
-															workspace={workspace}
-															accentColor={
-																activeId === id ? predictedColor : group?.color
-															}
-															isInSection={groupInfo.has(parsed.realId)}
-															onHoverCardOpen={() =>
-																onWorkspaceHover(parsed.realId)
-															}
-															shortcutLabel={workspaceShortcutLabels.get(
-																parsed.realId,
-															)}
-															isSelected={
-																canBulkSelect &&
-																isWorkspaceSelected(parsed.realId)
-															}
-															onSelectionClick={
-																canBulkSelect
-																	? (event) =>
-																			selectWorkspaceFromEvent(event, {
-																				workspaceId: parsed.realId,
-																				projectId,
-																				orderedWorkspaceIds:
-																					selectableWorkspaceIds,
-																			})
-																	: undefined
-															}
-															disabled={
-																workspace.type === "main" &&
-																workspace.hostType === "local-device"
-															}
-														/>
-													</motion.div>
-												)}
-											</AnimatePresence>
-										);
-									})}
-								</SortableContext>
-
-								{createPortal(
-									<DragOverlay dropAnimation={null}>
-										{activeId ? (
-											<SidebarDragOverlay activeItem={activeItem} />
-										) : null}
-									</DragOverlay>,
-									document.body,
-								)}
-							</DndContext>
-						</WorkspaceBulkMenuScope>
+									{createPortal(
+										<DragOverlay dropAnimation={null}>
+											{activeId ? (
+												<SidebarDragOverlay activeItem={activeItem} />
+											) : null}
+										</DragOverlay>,
+										document.body,
+									)}
+								</DndContext>
+							</WorkspaceBulkMenuScope>
+						</AAActiveTasksProjectShell>
 					</div>
 				</motion.div>
 			)}

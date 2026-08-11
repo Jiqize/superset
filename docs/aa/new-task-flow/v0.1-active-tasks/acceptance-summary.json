@@ -1,0 +1,48 @@
+{
+	"schemaVersion": 1,
+	"baselineCommit": "c9471bec910ac11bf9a19495aa10c6d0d05922d2",
+	"environment": {
+		"platform": "macOS 26.4 arm64",
+		"bun": "1.3.14",
+		"pi": "0.82.1",
+		"profile": "isolated disposable QA profile",
+		"viewports": ["1440x800", "1920x976"]
+	},
+	"fiveTaskAcceptance": {
+		"tasksCreatedThroughProductionFlow": 5,
+		"uniqueNormalizedTitles": 4,
+		"duplicateTitleRows": 2,
+		"rowsProjectedAtMeasurement": 5,
+		"tasksWithRealChangedFiles": 2,
+		"livePiTaskPresent": true,
+		"settledPiTaskPresentBeforeRestart": true,
+		"allRowsOpenedCorrectWorkFolder": true,
+		"keyboardActivationPassed": true,
+		"filesChangesAndDiffPassed": true
+	},
+	"restartAcceptance": {
+		"exactSavedPiCandidates": 3,
+		"resumableRowsBeforeResume": 3,
+		"staleLiveRowsBeforeResume": 0,
+		"piRowsWithoutSufficientEvidenceOmitted": 2,
+		"duplicateDiscriminatorsStable": true,
+		"changedCountsRecomputed": true
+	},
+	"exactResumeAcceptance": {
+		"matchingRowsTransitionedToLive": 1,
+		"otherResumableRowsRemaining": 2,
+		"crossRowStateLeakObserved": false
+	},
+	"compatibilityAcceptance": {
+		"supersetCli": "UNTRACKED",
+		"grok": "authentication-gated / UNTRACKED",
+		"grokLiveRuntimeClaimed": false
+	},
+	"screenshots": [
+		"five-task-1440x800.png",
+		"five-task-1920x976.png",
+		"restart-resumable-1440x800.png",
+		"exact-resume-1440x800.png",
+		"tier2-untracked-1440x800.png"
+	]
+}

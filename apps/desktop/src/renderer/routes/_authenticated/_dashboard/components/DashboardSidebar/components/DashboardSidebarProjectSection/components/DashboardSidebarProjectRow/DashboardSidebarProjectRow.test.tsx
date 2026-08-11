@@ -31,6 +31,7 @@ describe("DashboardSidebarProjectRow AA New Task entry", () => {
 		expect(markup).toContain("NEW TASK");
 		expect(markup).toContain('aria-label="New task in aa-fixture"');
 		expect(markup).toContain('aria-label="New workspace"');
+		expect(markup).toContain("aa-legacy-new-workspace");
 	});
 
 	it("disables New Task when the serving Host is unavailable", () => {

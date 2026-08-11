@@ -1,66 +1,66 @@
 {
-  "name": "AA Office Asset Manifest",
-  "version": "0.1.0",
-  "status": "reference-assets-for-phase-1-poc",
-  "rules": {
-    "pixelGrid": 4,
-    "preferredIconSizes": [16, 20, 24, 32],
-    "preferredAvatarSizes": [24, 32, 48],
-    "shapeRendering": "crispEdges",
-    "maxUiRadiusPx": 2,
-    "animationFps": [4, 6, 8],
-    "reducedMotionRequired": true
-  },
-  "assets": [
-    {
-      "id": "aa-office-icon-sheet",
-      "path": "docs/aa/design/aa-office-icon-sheet.svg",
-      "type": "svg-reference-sheet",
-      "contains": [
-        "home",
-        "briefcase",
-        "filing-cabinet",
-        "speech-bubble",
-        "agent-head",
-        "gear",
-        "folder",
-        "crt-monitor",
-        "paper-stack",
-        "status-lights"
-      ],
-      "implementation": "Split into production components only when Phase 1 begins."
-    },
-    {
-      "id": "aa-agent-state-sheet",
-      "path": "docs/aa/design/aa-agent-state-sheet.svg",
-      "type": "svg-reference-sheet",
-      "contains": [
-        "idle",
-        "thinking",
-        "working-frame-1",
-        "working-frame-2",
-        "waiting",
-        "error",
-        "reasoning-hair-low",
-        "reasoning-hair-medium",
-        "reasoning-hair-high",
-        "reasoning-hair-max"
-      ],
-      "implementation": "Use composable body/hair/state layers rather than one asset per full combination."
-    }
-  ],
-  "productionComponentTargets": [
-    "AAWindowFrame",
-    "AAPanel",
-    "AAButton",
-    "AAIconButton",
-    "AATabs",
-    "AAStatusLight",
-    "AABriefcaseIcon",
-    "AAFolderIcon",
-    "AAAgentAvatar",
-    "AAAgentStatus",
-    "AATerminalFrame",
-    "AABottomStatusBar"
-  ]
+	"name": "AA Office Asset Manifest",
+	"version": "0.1.0",
+	"status": "reference-assets-for-phase-1-poc",
+	"rules": {
+		"pixelGrid": 4,
+		"preferredIconSizes": [16, 20, 24, 32],
+		"preferredAvatarSizes": [24, 32, 48],
+		"shapeRendering": "crispEdges",
+		"maxUiRadiusPx": 2,
+		"animationFps": [4, 6, 8],
+		"reducedMotionRequired": true
+	},
+	"assets": [
+		{
+			"id": "aa-office-icon-sheet",
+			"path": "docs/aa/design/aa-office-icon-sheet.svg",
+			"type": "svg-reference-sheet",
+			"contains": [
+				"home",
+				"briefcase",
+				"filing-cabinet",
+				"speech-bubble",
+				"agent-head",
+				"gear",
+				"folder",
+				"crt-monitor",
+				"paper-stack",
+				"status-lights"
+			],
+			"implementation": "Split into production components only when Phase 1 begins."
+		},
+		{
+			"id": "aa-agent-state-sheet",
+			"path": "docs/aa/design/aa-agent-state-sheet.svg",
+			"type": "svg-reference-sheet",
+			"contains": [
+				"idle",
+				"thinking",
+				"working-frame-1",
+				"working-frame-2",
+				"waiting",
+				"error",
+				"reasoning-hair-low",
+				"reasoning-hair-medium",
+				"reasoning-hair-high",
+				"reasoning-hair-max"
+			],
+			"implementation": "Use composable body/hair/state layers rather than one asset per full combination."
+		}
+	],
+	"productionComponentTargets": [
+		"AAWindowFrame",
+		"AAPanel",
+		"AAButton",
+		"AAIconButton",
+		"AATabs",
+		"AAStatusLight",
+		"AABriefcaseIcon",
+		"AAFolderIcon",
+		"AAAgentAvatar",
+		"AAAgentStatus",
+		"AATerminalFrame",
+		"AABottomStatusBar"
+	]
 }
