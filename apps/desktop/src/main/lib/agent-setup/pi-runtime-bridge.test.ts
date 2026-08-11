@@ -227,4 +227,26 @@ describe("Pi runtime bridge v2", () => {
 			loaded.restoreEnv();
 		}
 	});
+
+	it("distinguishes an explicit quit from a replaceable native session", async () => {
+		const loaded = await loadExtension();
+		try {
+			await loaded.handlers.get("session_shutdown")?.(
+				{ type: "session_shutdown", reason: "quit" },
+				context(),
+			);
+			await loaded.handlers.get("session_shutdown")?.(
+				{ type: "session_shutdown", reason: "reload" },
+				context(),
+			);
+
+			const events = await waitForEvents(loaded.capturePath, 2);
+			expect(events).toMatchObject([
+				{ kind: "session.ended", payload: { reason: "pi_quit" } },
+				{ kind: "session.offline", payload: { resumable: true } },
+			]);
+		} finally {
+			loaded.restoreEnv();
+		}
+	});
 });

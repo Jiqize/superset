@@ -54,7 +54,11 @@ export function AAAgentStatusProvider({
 			? resolveAARuntimeHealth({
 					state: runtimeSnapshot.state,
 					stateReason: runtimeSnapshot.stateReason,
-					canResume: runtimeSnapshot.resume.canResume,
+					// An offline snapshot alone is not durable resume evidence. The
+					// active terminal surfaces add the exact Host resume candidate.
+					canResume:
+						runtimeSnapshot.state !== "offline" &&
+						runtimeSnapshot.resume.canResume,
 				})
 			: undefined;
 		return {

@@ -1925,6 +1925,9 @@ describe("agent-wrappers pi", () => {
 		expect(content).not.toContain("{{MARKER}}");
 		expect(content).toContain('pi.on("agent_settled"');
 		expect(content).not.toContain('pi.on("agent_end"');
+		expect(content).toContain('event.reason === "quit"');
+		expect(content).toContain('emit(ctx, "session.ended"');
+		expect(content).toContain('emit(ctx, "session.offline"');
 	});
 
 	it("renders pi extension content as a valid extension default-export shape", () => {

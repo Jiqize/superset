@@ -303,6 +303,7 @@ export function V2PresetsBar({
 					<TooltipTrigger asChild>
 						<DropdownMenuTrigger asChild>
 							<Button
+								aria-label="Manage Employee Roster presets"
 								variant="ghost"
 								size="icon"
 								className="aa-employee-roster__settings size-7 shrink-0 text-muted-foreground hover:text-foreground"
@@ -311,7 +312,9 @@ export function V2PresetsBar({
 							</Button>
 						</DropdownMenuTrigger>
 					</TooltipTrigger>
-					<TooltipContent side="bottom">Manage Presets</TooltipContent>
+					<TooltipContent side="bottom">
+						Manage Employee Roster presets
+					</TooltipContent>
 				</Tooltip>
 				<DropdownMenuContent align="end" className="w-56">
 					{matchedPresets.map((preset) => {

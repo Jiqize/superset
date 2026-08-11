@@ -39,6 +39,7 @@ export function AAActiveTasksSection({
 	}
 
 	const archived = projection.rows.filter((row) => row.isArchived);
+	const selectedArchived = archived.some((row) => row.isSelected);
 	const current = projection.rows.filter((row) => !row.isArchived);
 	const selected = current.filter((row) => row.isSelected);
 	const remaining = current.filter((row) => !row.isSelected);
@@ -84,9 +85,13 @@ export function AAActiveTasksSection({
 				</div>
 			))}
 			{archived.length > 0 ? (
-				<details className="aa-active-tasks__archive">
+				<details
+					className="aa-active-tasks__archive"
+					data-current={selectedArchived || undefined}
+					open={selectedArchived ? true : undefined}
+				>
 					<summary className="aa-active-tasks__heading">
-						<span>ARCHIVED</span>
+						<span>{selectedArchived ? "ARCHIVED · CURRENT" : "ARCHIVED"}</span>
 						<small>{archived.length}</small>
 					</summary>
 					<div className="aa-active-tasks__rows">
@@ -166,16 +171,16 @@ function AAActiveTaskRow({
 			</button>
 			{onArchiveChange ? (
 				<button
-					aria-label={`${row.isArchived ? "Unarchive" : "Archive"} task: ${row.title}`}
+					aria-label={`${row.isArchived ? "Unarchive" : "Archive"} Task Folder: ${row.title}`}
 					aria-busy={pending || undefined}
 					className="aa-active-task-row__archive-action"
 					disabled={!archiveAvailable || pending}
 					title={
 						archiveAvailable
 							? row.isArchived
-								? "Unarchive task"
-								: "Archive task"
-							: "Archive unavailable while the Workspace host is offline"
+								? "Unarchive Task Folder"
+								: "Archive Task Folder"
+							: "Archive unavailable while the Work Folder host is offline"
 					}
 					type="button"
 					onClick={() => onArchiveChange(row.workspaceId, !row.isArchived)}

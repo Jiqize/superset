@@ -21,10 +21,12 @@ describe("AATaskFolderArchiveAction", () => {
 			/>,
 		);
 
-		expect(archiveHtml).toContain('aria-label="Archive task: Ended Pi task"');
+		expect(archiveHtml).toContain(
+			'aria-label="Archive Task Folder: Ended Pi task"',
+		);
 		expect(archiveHtml).toContain("ARCHIVE");
 		expect(unarchiveHtml).toContain(
-			'aria-label="Unarchive task: Ended Pi task"',
+			'aria-label="Unarchive Task Folder: Ended Pi task"',
 		);
 		expect(unarchiveHtml).toContain("UNARCHIVE");
 	});

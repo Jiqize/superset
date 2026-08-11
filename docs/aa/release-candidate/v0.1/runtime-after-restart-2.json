@@ -1,0 +1,153 @@
+{
+	"generatedAt": "2026-08-11T22:34:32.530Z",
+	"host": {
+		"pid": 46874,
+		"port": 48961
+	},
+	"project": "65a69ea27cd7",
+	"workFolderCount": 11,
+	"workFolders": [
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "98e7c3767bbc",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "0a130845c182"
+				}
+			],
+			"name": "Check reduced motion state",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "0320fe165a19"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "Clean end RC proof",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "33f687e2ff30"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "Create rc-alpha.txt containing alpha.",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "4345b8b05a22"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "Create rc-beta.txt containing beta.",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "c58316f06d8f"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "336027bef0ba",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "821c5de9d5ab"
+				}
+			],
+			"name": "End this session after saying ready",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "b634b29f6988"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "cda2f99a0641",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "97357a96f5fb"
+				}
+			],
+			"name": "Inspect duplicate identity",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "337f772584dc"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "494c5bf7aeef",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "61269f20722f"
+				}
+			],
+			"name": "Inspect duplicate identity",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "ff329d1befde"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "Inspect sidebar performance",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "dc86350b790f"
+		},
+		{
+			"archived": true,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "e268f16dd29f",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "992c7ecf3db2"
+				}
+			],
+			"name": "Keep archived resume ready",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "579b940fc2ba"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "main",
+			"runtime": [],
+			"type": "main",
+			"workspace": "c5098e7b1e32"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "35456e2f475f",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "62e5b3d1e08d"
+				}
+			],
+			"name": "Verify archive undo flow",
+			"runtime": [],
+			"type": "worktree",
+			"workspace": "f87b29b437ef"
+		}
+	]
+}

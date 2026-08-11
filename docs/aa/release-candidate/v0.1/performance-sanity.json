@@ -1,0 +1,26 @@
+{
+	"environment": "development-build-isolated-profile",
+	"workFolderCount": 11,
+	"coldStart": {
+		"cdpAvailableMsFromProbe": 2715,
+		"domContentLoadedMs": 3520,
+		"loadEventMs": 3544,
+		"sidebarUsableMsFromRendererNavigation": 10053,
+		"runtimeEvidenceSettledMsFromRendererNavigation": 10677
+	},
+	"interaction": {
+		"taskRowSwitchMs": 297,
+		"filesTabSwitchMs": 98,
+		"changesTabSwitchMs": 65,
+		"coldAttachResumeProjectionMs": 571
+	},
+	"viewport1440x800": {
+		"documentOverflow": false,
+		"terminalViewportWidth": 744,
+		"terminalViewportHeight": 548,
+		"xtermWidth": 720,
+		"xtermHeight": 528,
+		"terminalFocusVerifiedSeparately": true
+	},
+	"batchingGateCrossed": false
+}

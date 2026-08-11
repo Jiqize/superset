@@ -278,9 +278,14 @@ export default function (pi: ExtensionAPI) {
 		},
 	);
 
-	pi.on("session_shutdown", (_event: SessionShutdownEvent, ctx) => {
-		// Pi's native session remains loadable after quit/reload/replacement, so
-		// shutdown is offline/resumable rather than an authoritative end.
+	pi.on("session_shutdown", (event: SessionShutdownEvent, ctx) => {
+		if (event.reason === "quit") {
+			// Interactive /quit and Ctrl+D are authoritative clean ends. The
+			// Runtime-to-legacy bridge also records Detached, while the existing
+			// terminal death-gasp rule still upgrades signal/PTY loss to resumable.
+			return emit(ctx, "session.ended", () => ({ reason: "pi_quit" }));
+		}
+		// Replacing the active Pi session does not destroy the native conversation.
 		return emit(ctx, "session.offline", () => ({ resumable: true }));
 	});
 }

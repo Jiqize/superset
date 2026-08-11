@@ -456,6 +456,11 @@
 	content: "▼";
 }
 
+.aa-active-tasks__archive[data-current="true"] > summary {
+	background: var(--aa-selection);
+	box-shadow: inset 3px 0 0 var(--aa-working);
+}
+
 .aa-active-tasks__archive > summary:focus-visible {
 	outline: 2px solid var(--aa-working);
 	outline-offset: -2px;
@@ -3535,6 +3540,8 @@
 	.aa-agent-avatar[data-state="thinking"] .aa-agent-avatar__thought,
 	.aa-employee-roster__label[data-assignment-phase="dispatched"] > svg,
 	.aa-employee-roster__label[data-assignment-phase="assigned"] > svg,
+	.aa-office-shell .animate-ping,
+	.aa-office-shell .animate-spin,
 	.aa-status-light--working {
 		animation-duration: 0.01ms;
 		animation-iteration-count: 1;

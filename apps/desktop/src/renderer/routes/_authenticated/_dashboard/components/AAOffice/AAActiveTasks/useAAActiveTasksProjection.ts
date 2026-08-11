@@ -133,6 +133,14 @@ export function useAAActiveTasksProjection(
 			networkMode: "always" as const,
 			staleTime: 15_000,
 		})),
+		// Read the two fields that drive this projection inside `combine`. This
+		// gives the QueriesObserver an explicit subscription to each result even
+		// when its outer result array remains stable during cold terminal attach.
+		combine: (results) =>
+			results.map((result) => ({
+				data: result.data,
+				isPending: result.isPending,
+			})),
 	});
 	const gitStatusQueries = useQueries({
 		queries: targets.map((target) => ({

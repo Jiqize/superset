@@ -51,7 +51,7 @@ export function AABottomStatusBar({
 			)}
 			<span className="aa-bottom-status-bar__spacer" />
 			<span className="aa-bottom-status-bar__item aa-bottom-status-bar__kind">
-				{workspaceType === "main" ? "MAIN CHECKOUT" : "WORKTREE COPY"}
+				{workspaceType === "main" ? "MAIN FOLDER" : "WORK FOLDER"}
 			</span>
 		</footer>
 	);

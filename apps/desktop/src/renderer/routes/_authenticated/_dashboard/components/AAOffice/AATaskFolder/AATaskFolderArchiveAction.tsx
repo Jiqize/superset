@@ -22,14 +22,14 @@ export function AATaskFolderArchiveAction({
 			<span>ORGANIZATION</span>
 			<Button
 				aria-busy={pending || undefined}
-				aria-label={`${action} task: ${title}`}
+				aria-label={`${action} Task Folder: ${title}`}
 				className="aa-task-folder-card__archive-action"
 				disabled={!available || pending}
 				size="sm"
 				title={
 					available
-						? `${action} task`
-						: "Archive unavailable while the Workspace host is offline"
+						? `${action} Task Folder`
+						: "Archive unavailable while the Work Folder host is offline"
 				}
 				variant="ghost"
 				onClick={() => onArchiveChange(!archived)}

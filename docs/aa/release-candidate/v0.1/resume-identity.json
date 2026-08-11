@@ -1,0 +1,20 @@
+{
+	"beforeRestart": {
+		"nativeSessionFingerprint": "e268f16dd29f",
+		"epochFingerprint": "03720f0727c6",
+		"archived": true
+	},
+	"resumeCandidate": {
+		"nativeSessionFingerprint": "e268f16dd29f",
+		"resumeSupported": true
+	},
+	"afterResume": {
+		"nativeSessionFingerprint": "e268f16dd29f",
+		"epochFingerprint": "c41535471c0c",
+		"archived": true,
+		"state": "idle"
+	},
+	"nativeIdentityPreserved": true,
+	"epochChanged": true,
+	"archiveIntentPreserved": true
+}

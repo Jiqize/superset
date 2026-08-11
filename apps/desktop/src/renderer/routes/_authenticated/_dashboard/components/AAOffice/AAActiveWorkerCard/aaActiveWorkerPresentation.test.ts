@@ -120,6 +120,45 @@ describe("AA active Worker Card presentation", () => {
 		});
 	});
 
+	it("does not claim an offline snapshot is resumable without an exact Host candidate", () => {
+		const presentation = resolveAAActiveWorkerPresentation({
+			runtimeSnapshot: runtimeSnapshot({
+				state: "offline",
+				stateReason: "session_offline",
+			}),
+			terminal,
+		});
+
+		expect(presentation).toMatchObject({
+			healthCode: "offline",
+			source: "runtime",
+			statusLabel: "OFFLINE",
+		});
+		expect(presentation.resumeLabel).toBeUndefined();
+	});
+
+	it("requires the exact Host candidate before an offline snapshot is resumable", () => {
+		const presentation = resolveAAActiveWorkerPresentation({
+			runtimeSnapshot: runtimeSnapshot({
+				state: "offline",
+				stateReason: "saved_session_interrupted",
+			}),
+			resumeCandidate: {
+				agentId: "pi",
+				lastEventType: "Detached",
+				resumeSupported: true,
+			},
+			terminal,
+		});
+
+		expect(presentation).toMatchObject({
+			healthCode: "offline_resumable",
+			resumeLabel: "AVAILABLE",
+			source: "runtime",
+			statusLabel: "OFFLINE / RESUMABLE",
+		});
+	});
+
 	it("uses an authoritative binding ahead of launch metadata", () => {
 		const presentation = resolveAAActiveWorkerPresentation({
 			binding: { agentId: "pi", lastEventType: "Start" },

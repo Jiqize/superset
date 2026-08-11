@@ -37,7 +37,7 @@ export function useAAWorkspaceArchiveIntent(): UseAAWorkspaceArchiveIntentResult
 			const hostUrl = cache.resolveHostUrl(workspace.hostId);
 			if (!hostUrl) {
 				toast.error(
-					"Archive unavailable while this Workspace host is offline.",
+					"Archive unavailable while this Work Folder host is offline.",
 				);
 				return false;
 			}

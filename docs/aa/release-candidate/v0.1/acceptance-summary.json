@@ -1,0 +1,32 @@
+{
+	"profile": "isolated-phase-3m",
+	"briefcase": "disposable-local-git-repository",
+	"workFolderCount": 11,
+	"productionNewTaskFlowUsed": true,
+	"concurrentLivePiTasks": 2,
+	"savedResumablePiTasksAfterRestart": 3,
+	"archivedPiTasks": 1,
+	"tier2UntrackedTasks": 1,
+	"duplicateTitleTasks": 2,
+	"tasksWithRealChangedFiles": 2,
+	"cleanEndedPiTasks": 1,
+	"completeElectronHostRestarts": 3,
+	"rendererReloadAfterResume": true,
+	"viewports": ["1920x976", "1440x800"],
+	"productionSurfacesVerified": [
+		"New Task",
+		"Active Tasks",
+		"Work Folders",
+		"Task Folder",
+		"Employee Profile",
+		"Employee Roster",
+		"Files",
+		"Changes",
+		"Diff",
+		"Review",
+		"Archive",
+		"Undo",
+		"Unarchive",
+		"Resume"
+	]
+}

@@ -87,15 +87,45 @@ describe("AAActiveTasksSection", () => {
 			/>,
 		);
 
-		expect(html).toContain('aria-label="Archive task: Compatibility task"');
+		expect(html).toContain(
+			'aria-label="Archive Task Folder: Compatibility task"',
+		);
 		expect(html).toContain("ARCHIVED");
 		expect(html).toContain("Ended Pi task");
 		expect(html).toContain("SESSION UNAVAILABLE");
-		expect(html).toContain('aria-label="Unarchive task: Ended Pi task"');
+		expect(html).toContain('aria-label="Unarchive Task Folder: Ended Pi task"');
 		expect(html).toContain('<details class="aa-active-tasks__archive"');
 		expect(html).not.toContain(
 			'<details class="aa-active-tasks__archive" open',
 		);
+	});
+
+	it("keeps a selected archived Task Folder visible as the current context", () => {
+		const projection: AAActiveTaskProjection = {
+			rows: [
+				{
+					changedFileCount: 0,
+					employee: "PI",
+					evidenceClass: "resumable",
+					isArchived: true,
+					isSelected: true,
+					personaId: "pi",
+					stableOrder: 0,
+					title: "Archived current work",
+					workspaceId: "workspace-archived-current",
+				},
+			],
+		};
+
+		const html = renderToStaticMarkup(
+			<AAActiveTasksSection projection={projection} onSelect={() => {}} />,
+		);
+
+		expect(html).toContain("ARCHIVED · CURRENT");
+		expect(html).toContain(
+			'<details class="aa-active-tasks__archive" data-current="true" open="">',
+		);
+		expect(html).toContain('data-active="true" data-archived="true"');
 	});
 
 	it("does not manufacture a task row while evidence is loading", () => {

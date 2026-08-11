@@ -1,0 +1,271 @@
+{
+	"generatedAt": "2026-08-11T22:09:44.391Z",
+	"host": {
+		"pid": 53461,
+		"port": 48961
+	},
+	"project": "65a69ea27cd7",
+	"workFolderCount": 10,
+	"workFolders": [
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "98e7c3767bbc",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "0a130845c182"
+				}
+			],
+			"name": "Check reduced motion state",
+			"runtime": [
+				{
+					"epoch": "b5da78035ca6",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "98e7c3767bbc",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "offline",
+					"stateReason": "session_offline"
+				}
+			],
+			"type": "worktree",
+			"workspace": "0320fe165a19"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "e262de018195",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "204d1178d5f2"
+				}
+			],
+			"name": "Create rc-alpha.txt containing alpha.",
+			"runtime": [
+				{
+					"epoch": "bff24ba48a1c",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "e262de018195",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "idle",
+					"stateReason": "turn_settled"
+				}
+			],
+			"type": "worktree",
+			"workspace": "4345b8b05a22"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "0eeea4af8af5",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "8910447a8c56"
+				}
+			],
+			"name": "Create rc-beta.txt containing beta.",
+			"runtime": [
+				{
+					"epoch": "dd373b562ac0",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "0eeea4af8af5",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "idle",
+					"stateReason": "turn_settled"
+				}
+			],
+			"type": "worktree",
+			"workspace": "c58316f06d8f"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "336027bef0ba",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "821c5de9d5ab"
+				}
+			],
+			"name": "End this session after saying ready",
+			"runtime": [
+				{
+					"epoch": "33b831c84776",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "336027bef0ba",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "offline",
+					"stateReason": "session_offline"
+				}
+			],
+			"type": "worktree",
+			"workspace": "b634b29f6988"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "cda2f99a0641",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "97357a96f5fb"
+				}
+			],
+			"name": "Inspect duplicate identity",
+			"runtime": [
+				{
+					"epoch": "7c9af30a2d2c",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "cda2f99a0641",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "idle",
+					"stateReason": "turn_settled"
+				}
+			],
+			"type": "worktree",
+			"workspace": "337f772584dc"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "494c5bf7aeef",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "61269f20722f"
+				}
+			],
+			"name": "Inspect duplicate identity",
+			"runtime": [
+				{
+					"epoch": "ba9f84395dcc",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "494c5bf7aeef",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "idle",
+					"stateReason": "turn_settled"
+				}
+			],
+			"type": "worktree",
+			"workspace": "ff329d1befde"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "8f63a4d24705",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "13dba420745d"
+				}
+			],
+			"name": "Inspect sidebar performance",
+			"runtime": [
+				{
+					"epoch": "bd26bf69ac92",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "8f63a4d24705",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "offline",
+					"stateReason": "session_offline"
+				}
+			],
+			"type": "worktree",
+			"workspace": "dc86350b790f"
+		},
+		{
+			"archived": true,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "e268f16dd29f",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "1b75c0797f71"
+				}
+			],
+			"name": "Keep archived resume ready",
+			"runtime": [
+				{
+					"epoch": "03720f0727c6",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "e268f16dd29f",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "idle",
+					"stateReason": "turn_settled"
+				}
+			],
+			"type": "worktree",
+			"workspace": "579b940fc2ba"
+		},
+		{
+			"archived": false,
+			"bindings": [],
+			"name": "main",
+			"runtime": [],
+			"type": "main",
+			"workspace": "c5098e7b1e32"
+		},
+		{
+			"archived": false,
+			"bindings": [
+				{
+					"agent": "pi",
+					"agentSession": "35456e2f475f",
+					"definition": null,
+					"endedAt": null,
+					"resumeCandidate": null,
+					"terminal": "62e5b3d1e08d"
+				}
+			],
+			"name": "Verify archive undo flow",
+			"runtime": [
+				{
+					"epoch": "784286d66a27",
+					"model": "Gemini 3.5 Flash",
+					"nativeSession": "35456e2f475f",
+					"reasoning": "high",
+					"resume": true,
+					"runtime": "pi",
+					"state": "working",
+					"stateReason": "turn_started"
+				}
+			],
+			"type": "worktree",
+			"workspace": "f87b29b437ef"
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+	"domContentLoadedMs": 3520,
+	"loadEventMs": 3544,
+	"performanceNowMs": 10685,
+	"terminalFocus": null,
+	"viewport": {
+		"width": 1920,
+		"height": 976
+	},
+	"cdpAvailableMs": 2715,
+	"evidenceSettledMs": 10677,
+	"sidebarUsableMs": 10053
+}

@@ -21,7 +21,7 @@ export function AAFileCabinetHeader({
 				<AAIcon name="archive" />
 				<span>
 					<strong>FILE CABINET</strong>
-					<small>WORKSPACE RECORDS</small>
+					<small>WORK FOLDER RECORDS</small>
 				</span>
 			</span>
 			<div className="aa-file-cabinet__records">

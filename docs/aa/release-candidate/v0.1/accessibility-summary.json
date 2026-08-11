@@ -1,0 +1,22 @@
+{
+	"keyboardFlows": [
+		"New Task dialog focus and Enter submission",
+		"task row Enter activation",
+		"Task Folder open and rename",
+		"Employee Profile open and Escape close",
+		"Files and Changes access",
+		"terminal focus restoration and input",
+		"Archive and Unarchive",
+		"Archived disclosure",
+		"Resume"
+	],
+	"duplicateAccessibleIdentity": true,
+	"employeeRosterSettingsNamed": true,
+	"reducedMotion": {
+		"animationsInspected": 10,
+		"infiniteAnimations": 0,
+		"durationSeconds": 0.00001,
+		"iterationCount": 1
+	},
+	"aaOwnedUncaughtErrors": 0
+}

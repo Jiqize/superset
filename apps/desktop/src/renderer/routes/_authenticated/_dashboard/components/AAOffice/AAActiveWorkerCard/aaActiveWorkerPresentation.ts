@@ -120,10 +120,22 @@ export function resolveAAActiveWorkerPresentation({
 		runtimeSnapshot &&
 		runtimeSnapshot.transport.terminalId === terminal.terminalId
 	) {
+		// A runtime snapshot describes the last observed session. Once it is
+		// offline, only the Host's exact terminal resume candidate is durable
+		// evidence that the session can still be resumed. This prevents a clean
+		// Pi /quit from retaining the snapshot's capability-level canResume flag.
+		const hasExactPiResumeCandidate =
+			runtimeSnapshot.runtime === "pi" &&
+			resumeCandidate?.agentId === "pi" &&
+			resumeCandidate.resumeSupported;
+		const canResume =
+			runtimeSnapshot.state === "offline"
+				? hasExactPiResumeCandidate
+				: runtimeSnapshot.resume.canResume;
 		const health = resolveAARuntimeHealth({
 			state: runtimeSnapshot.state,
 			stateReason: runtimeSnapshot.stateReason,
-			canResume: runtimeSnapshot.resume.canResume,
+			canResume,
 		});
 		const identity = resolveIdentity(
 			runtimeSnapshot.agentId,
@@ -151,7 +163,7 @@ export function resolveAAActiveWorkerPresentation({
 			...(reasoning ? { reasoning } : {}),
 			...(runtimeSnapshot.runtime === "pi" &&
 			runtimeSnapshot.state === "offline" &&
-			runtimeSnapshot.resume.canResume &&
+			canResume &&
 			runtimeSnapshot.resume.mechanism === "pi_session"
 				? { resumeLabel: "AVAILABLE" as const }
 				: {}),
