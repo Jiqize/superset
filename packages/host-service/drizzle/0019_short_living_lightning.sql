@@ -1,0 +1,1 @@
+ALTER TABLE `workspaces` ADD `active_tasks_archived` integer DEFAULT false NOT NULL;

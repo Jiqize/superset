@@ -428,12 +428,37 @@
 	margin: 5px 4px 4px;
 }
 
-.aa-active-tasks__group {
+.aa-active-tasks__group,
+.aa-active-tasks__archive {
 	background: color-mix(in srgb, var(--aa-surface) 70%, var(--aa-inset));
 	border: 1px solid var(--aa-border-soft);
 	box-shadow:
 		inset 1px 1px 0 var(--aa-highlight),
 		inset -1px -1px 0 color-mix(in srgb, var(--aa-border) 18%, transparent);
+}
+
+.aa-active-tasks__archive > summary {
+	cursor: pointer;
+	list-style: none;
+}
+
+.aa-active-tasks__archive > summary::-webkit-details-marker {
+	display: none;
+}
+
+.aa-active-tasks__archive > summary > span::before {
+	margin-right: 4px;
+	content: "▶";
+	font-size: 6px;
+}
+
+.aa-active-tasks__archive[open] > summary > span::before {
+	content: "▼";
+}
+
+.aa-active-tasks__archive > summary:focus-visible {
+	outline: 2px solid var(--aa-working);
+	outline-offset: -2px;
 }
 
 .aa-active-tasks__heading {
@@ -476,9 +501,9 @@
 	display: flex;
 	width: 100%;
 	min-height: 39px;
-	align-items: center;
-	gap: 5px;
-	padding: 3px 4px;
+	align-items: stretch;
+	gap: 0;
+	padding: 0;
 	background: var(--aa-raised);
 	border: 1px solid var(--aa-border-soft);
 	border-radius: 0;
@@ -487,14 +512,31 @@
 	text-align: left;
 }
 
+.aa-active-task-row__select {
+	display: flex;
+	min-width: 0;
+	flex: 1;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 4px;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	color: inherit;
+	text-align: left;
+}
+
 .aa-project-sidebar .aa-active-task-row:hover {
 	background: var(--aa-highlight);
 	border-color: var(--aa-border);
 }
 
-.aa-project-sidebar .aa-active-task-row:focus-visible {
+.aa-project-sidebar .aa-active-task-row__select:focus-visible,
+.aa-project-sidebar .aa-active-task-row__archive-action:focus-visible {
+	position: relative;
+	z-index: 1;
 	outline: 2px solid var(--aa-working);
-	outline-offset: 1px;
+	outline-offset: -2px;
 }
 
 .aa-project-sidebar .aa-active-task-row[data-active="true"] {
@@ -503,6 +545,60 @@
 	box-shadow:
 		inset 3px 0 0 var(--aa-working),
 		inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
+	color: var(--aa-selection-text);
+}
+
+.aa-project-sidebar .aa-active-task-row[data-archived="true"] {
+	background: color-mix(in srgb, var(--aa-raised) 72%, var(--aa-inset));
+}
+
+.aa-project-sidebar
+	.aa-active-task-row[data-archived="true"][data-active="true"] {
+	background: var(--aa-selection);
+}
+
+.aa-active-task-row__archive-action {
+	display: flex;
+	width: 34px;
+	min-width: 34px;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 1px;
+	padding: 2px;
+	background: color-mix(in srgb, var(--aa-inset) 62%, transparent);
+	border: 0;
+	border-left: 1px solid var(--aa-border-soft);
+	border-radius: 0;
+	color: var(--aa-muted);
+	font-family: var(--aa-font-mono);
+	font-size: 5px;
+	font-weight: 900;
+	letter-spacing: -0.15px;
+}
+
+.aa-active-task-row__archive-action svg {
+	width: 12px;
+	height: 12px;
+}
+
+.aa-active-task-row__archive-action:hover:not(:disabled) {
+	background: color-mix(in srgb, var(--aa-working) 24%, var(--aa-raised));
+	color: var(--aa-text);
+}
+
+.aa-active-task-row__archive-action:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+.aa-active-task-row[data-active="true"] .aa-active-task-row__archive-action {
+	background: color-mix(in srgb, var(--aa-selection-text) 12%, transparent);
+	border-left-color: color-mix(
+		in srgb,
+		var(--aa-selection-text) 35%,
+		transparent
+	);
 	color: var(--aa-selection-text);
 }
 
@@ -1811,6 +1907,36 @@
 .aa-task-folder-card__employee-action svg {
 	width: 12px;
 	height: 12px;
+}
+
+.aa-task-folder-card__archive {
+	background: var(--aa-paper);
+}
+
+.aa-task-folder-card__archive-action {
+	height: 22px;
+	padding: 0 6px;
+	background: var(--aa-raised);
+	border: 1px solid var(--aa-border);
+	border-radius: 0;
+	box-shadow: inset 1px 1px 0 var(--aa-highlight);
+	font-family: var(--aa-font-mono);
+	font-size: 7px;
+	font-weight: 900;
+}
+
+.aa-task-folder-card__archive-action svg {
+	width: 12px;
+	height: 12px;
+}
+
+.aa-task-folder-card__archive-action:hover:not(:disabled) {
+	background: color-mix(in srgb, var(--aa-working) 24%, var(--aa-raised));
+}
+
+.aa-task-folder-card__archive-action:focus-visible {
+	outline: 2px solid var(--aa-selection);
+	outline-offset: -2px;
 }
 
 .aa-bottom-status-bar {

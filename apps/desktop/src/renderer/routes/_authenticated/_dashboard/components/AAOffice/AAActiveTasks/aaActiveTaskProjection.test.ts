@@ -51,6 +51,7 @@ function input({
 	state = "idle",
 	evidence = "live",
 	agentId = "pi",
+	activeTasksArchived = false,
 }: {
 	workspaceId: string;
 	title?: string;
@@ -59,9 +60,11 @@ function input({
 	state?: AARuntimeSessionSnapshot["state"];
 	evidence?: "live" | "resumable" | "untracked" | "insufficient";
 	agentId?: string;
+	activeTasksArchived?: boolean;
 }): AAActiveTaskProjectionInput {
 	const terminalId = `terminal-${workspaceId}`;
 	return {
+		activeTasksArchived,
 		changedFileCount: stableOrder,
 		isSelected,
 		stableOrder,
@@ -106,6 +109,73 @@ describe("projectAAActiveTasks", () => {
 				lifecycle: "WAITING",
 				workspaceId: "workspace-live",
 			}),
+		]);
+	});
+
+	it("preserves live lifecycle evidence on an archived task", () => {
+		const projection = projectAAActiveTasks([
+			input({
+				workspaceId: "workspace-archived-live",
+				state: "working",
+				activeTasksArchived: true,
+			}),
+		]);
+
+		expect(projection.rows).toEqual([
+			expect.objectContaining({
+				evidenceClass: "live",
+				isArchived: true,
+				lifecycle: "WORKING",
+				workspaceId: "workspace-archived-live",
+			}),
+		]);
+	});
+
+	it("keeps resumable, unavailable Pi, and compatibility evidence truthful when archived", () => {
+		const projection = projectAAActiveTasks([
+			input({
+				workspaceId: "workspace-archived-resumable",
+				evidence: "resumable",
+				activeTasksArchived: true,
+				stableOrder: 2,
+			}),
+			input({
+				workspaceId: "workspace-archived-unavailable",
+				evidence: "insufficient",
+				activeTasksArchived: true,
+				stableOrder: 1,
+			}),
+			input({
+				workspaceId: "workspace-archived-untracked",
+				evidence: "untracked",
+				agentId: "superset",
+				activeTasksArchived: true,
+				stableOrder: 3,
+			}),
+		]);
+
+		expect(
+			projection.rows.map((row) => ({
+				employee: row.employee,
+				evidenceClass: row.evidenceClass,
+				workspaceId: row.workspaceId,
+			})),
+		).toEqual([
+			{
+				employee: "PI",
+				evidenceClass: "unavailable",
+				workspaceId: "workspace-archived-unavailable",
+			},
+			{
+				employee: "PI",
+				evidenceClass: "resumable",
+				workspaceId: "workspace-archived-resumable",
+			},
+			{
+				employee: "SUPERSET CLI",
+				evidenceClass: "untracked",
+				workspaceId: "workspace-archived-untracked",
+			},
 		]);
 	});
 
@@ -197,6 +267,31 @@ describe("projectAAActiveTasks", () => {
 		);
 		expect(duplicateSuffixes.get("workspace-gamma")).toBeUndefined();
 		expect(restartedSuffixes).toEqual(duplicateSuffixes);
+	});
+
+	it("keeps duplicate-title discriminators stable across archive and unarchive", () => {
+		const before = projectAAActiveTasks([
+			input({ workspaceId: "workspace-alpha", title: "Same task" }),
+			input({
+				workspaceId: "workspace-beta",
+				title: "Same task",
+				activeTasksArchived: true,
+			}),
+		]);
+		const after = projectAAActiveTasks([
+			input({
+				workspaceId: "workspace-alpha",
+				title: "Same task",
+				activeTasksArchived: true,
+			}),
+			input({ workspaceId: "workspace-beta", title: "Same task" }),
+		]);
+
+		expect(
+			new Map(before.rows.map((row) => [row.workspaceId, row.discriminator])),
+		).toEqual(
+			new Map(after.rows.map((row) => [row.workspaceId, row.discriminator])),
+		);
 	});
 
 	it("orders selected first, then live, resumable, untracked, and stable workspace order", () => {

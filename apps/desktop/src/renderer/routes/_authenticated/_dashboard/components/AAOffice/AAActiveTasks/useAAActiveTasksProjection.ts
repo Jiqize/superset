@@ -28,6 +28,7 @@ interface AAActiveTaskGitStatus {
 }
 
 interface AAActiveTaskTarget {
+	activeTasksArchived: boolean;
 	hostUrl: string | null;
 	isSelected: boolean;
 	stableOrder: number;
@@ -88,6 +89,7 @@ export function useAAActiveTasksProjection(
 				if (!terminal) return [];
 				return [
 					{
+						activeTasksArchived: workspace.activeTasksArchived,
 						hostUrl: cache.resolveHostUrl(workspace.hostId),
 						isSelected: selectedWorkspaceId === workspace.id,
 						stableOrder,
@@ -224,6 +226,7 @@ export function useAAActiveTasksProjection(
 				)
 				.sort((left, right) => right.observedAt - left.observedAt)[0];
 			return {
+				activeTasksArchived: target.activeTasksArchived,
 				changedFileCount: countAAActiveTaskChangedFiles(
 					gitStatusQueries[index]?.data,
 				),

@@ -12,6 +12,7 @@ import {
 	captureAATerminalFocus,
 	restoreAAWorkflowFocus,
 } from "../aaDailyWorkflowFocus";
+import { AATaskFolderArchiveAction } from "./AATaskFolderArchiveAction";
 import { AATaskFolderContextCard } from "./AATaskFolderContextCard";
 import {
 	type AATaskFolderState,
@@ -23,7 +24,11 @@ import {
 } from "./aaTaskFolderPresentation";
 
 interface AATaskFolderProps {
+	archiveAvailable?: boolean;
+	archivePending?: boolean;
+	archived?: boolean;
 	explicitTitle?: string;
+	onArchiveChange?: (archived: boolean) => void;
 	onTitleChange?: (titleOverride?: string) => void;
 	runtimeSnapshot?: AARuntimeSessionSnapshot;
 	sessionLabel?: string;
@@ -33,7 +38,11 @@ interface AATaskFolderProps {
 }
 
 export function AATaskFolder({
+	archiveAvailable = false,
+	archivePending = false,
+	archived = false,
 	explicitTitle,
+	onArchiveChange,
 	onTitleChange,
 	runtimeSnapshot,
 	sessionLabel,
@@ -233,6 +242,15 @@ export function AATaskFolder({
 					state={state}
 					title={title}
 				/>
+				{onArchiveChange ? (
+					<AATaskFolderArchiveAction
+						archived={archived}
+						available={archiveAvailable}
+						onArchiveChange={onArchiveChange}
+						pending={archivePending}
+						title={title}
+					/>
+				) : null}
 				{worker.tracking !== "unassigned" ? (
 					<div className="aa-task-folder-card__actions">
 						<span>MANUAL WORKFLOW</span>

@@ -224,6 +224,11 @@ export const workspaces = sqliteTable(
 		name: text().notNull().default(""),
 		type: text().$type<"main" | "worktree">().notNull().default("worktree"),
 		taskId: text("task_id"),
+		activeTasksArchived: integer("active_tasks_archived", {
+			mode: "boolean",
+		})
+			.notNull()
+			.default(false),
 		createdByUserId: text("created_by_user_id"),
 		createdAt: integer("created_at")
 			.notNull()

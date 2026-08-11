@@ -32,6 +32,12 @@ export interface HostWorkspacesCacheOps {
 	 * cache onto the real row.
 	 */
 	upsertWorkspace: (row: HostWorkspaceRow) => void;
+	/** Optimistically patch one row already present in a host's cached list. */
+	patchWorkspace: (
+		hostId: string,
+		workspaceId: string,
+		patch: Partial<HostWorkspaceRow>,
+	) => void;
 	/** Optimistically drop a row from a host's cached list. */
 	removeWorkspace: (hostId: string, workspaceId: string) => void;
 	/** Rollback hammer: refetch a host's list after a failed write. */
@@ -269,6 +275,17 @@ export function useHostWorkspacesSource(
 								)
 							: [...rows, row];
 					},
+				);
+			},
+			patchWorkspace: (hostId, workspaceId, patch) => {
+				const target = targetFor(hostId);
+				if (!target) return;
+				queryClient.setQueryData<HostWorkspaceRow[] | undefined>(
+					getHostWorkspacesQueryKey(target),
+					(rows) =>
+						rows?.map((row) =>
+							row.id === workspaceId ? { ...row, ...patch } : row,
+						),
 				);
 			},
 			removeWorkspace: (hostId, workspaceId) => {

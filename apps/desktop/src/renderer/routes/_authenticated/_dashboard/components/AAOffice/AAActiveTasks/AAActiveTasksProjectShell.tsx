@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { AAIcon } from "../AAIcon";
 import { AAActiveTasksSection } from "./AAActiveTasksSection";
 import { useAAActiveTasksProjection } from "./useAAActiveTasksProjection";
+import { useAAWorkspaceArchiveIntent } from "./useAAWorkspaceArchiveIntent";
 
 interface AAActiveTasksProjectShellProps {
 	children: ReactNode;
@@ -35,11 +36,17 @@ function EnabledAAActiveTasksProjectShell({
 }: Omit<AAActiveTasksProjectShellProps, "enabled">) {
 	const navigate = useNavigate();
 	const activeTasks = useAAActiveTasksProjection(projectId);
+	const archiveIntent = useAAWorkspaceArchiveIntent();
 
 	return (
 		<>
 			<AAActiveTasksSection
+				canArchiveChange={archiveIntent.canSetWorkspaceArchived}
 				isLoading={activeTasks.isLoading}
+				onArchiveChange={(workspaceId, archived) => {
+					void archiveIntent.setWorkspaceArchived(workspaceId, archived);
+				}}
+				pendingWorkspaceIds={archiveIntent.pendingWorkspaceIds}
 				projection={activeTasks.projection}
 				onSelect={(workspaceId) => {
 					void navigate({

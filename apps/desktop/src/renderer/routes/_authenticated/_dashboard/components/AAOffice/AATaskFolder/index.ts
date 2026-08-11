@@ -1,4 +1,5 @@
 export { AATaskFolder } from "./AATaskFolder";
+export { AATaskFolderArchiveAction } from "./AATaskFolderArchiveAction";
 export { AATaskFolderContextCard } from "./AATaskFolderContextCard";
 export {
 	AA_TASK_FOLDER_STATES,

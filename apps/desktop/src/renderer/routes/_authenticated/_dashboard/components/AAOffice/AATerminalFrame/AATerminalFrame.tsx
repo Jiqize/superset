@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
 import { useHotkeyDisplay } from "renderer/hotkeys";
+import { useAAWorkspaceArchiveIntent } from "../AAActiveTasks/useAAWorkspaceArchiveIntent";
 import {
 	type AAWorkerLaunchIdentity,
 	resolveAAActiveWorkerPresentation,
@@ -33,6 +34,7 @@ export function AATerminalFrame({
 }: AATerminalFrameProps) {
 	const focusShortcut = useHotkeyDisplay("AA_FOCUS_WORKSTATION");
 	const { bindings, runtimeSnapshots, workspaceId } = useAAAgentStatus();
+	const archiveIntent = useAAWorkspaceArchiveIntent();
 	const { candidate: resumeCandidate } = useTerminalResumeCandidate(
 		workspaceId,
 		terminalId,
@@ -66,6 +68,7 @@ export function AATerminalFrame({
 		taskFolderState === "error" ||
 		taskFolderState === "session-ended" ||
 		taskFolderState === "turn-complete";
+	const archived = archiveIntent.getWorkspaceArchived(workspaceId) === true;
 
 	return (
 		<div
@@ -82,7 +85,13 @@ export function AATerminalFrame({
 					{workstationLabel}
 				</span>
 				<AATaskFolder
+					archiveAvailable={archiveIntent.canSetWorkspaceArchived(workspaceId)}
+					archivePending={archiveIntent.pendingWorkspaceIds.has(workspaceId)}
+					archived={archived}
 					explicitTitle={taskTitle}
+					onArchiveChange={(nextArchived) => {
+						void archiveIntent.setWorkspaceArchived(workspaceId, nextArchived);
+					}}
 					onTitleChange={onTaskTitleChange}
 					runtimeSnapshot={runtimeSnapshot}
 					sessionLabel={sessionLabel ?? launchIdentity?.label}

@@ -12,7 +12,11 @@ import {
 	resolveAAEmployeePersona,
 } from "../AAEmployeeAvatar/aaEmployeePersonas";
 
-export type AAActiveTaskEvidenceClass = "live" | "resumable" | "untracked";
+export type AAActiveTaskEvidenceClass =
+	| "live"
+	| "resumable"
+	| "untracked"
+	| "unavailable";
 
 export interface AAActiveTaskTerminalEvidence {
 	launchIdentity?: TerminalPaneData["launchIdentity"];
@@ -28,6 +32,7 @@ export interface AAActiveTaskResumeEvidence {
 }
 
 export interface AAActiveTaskProjectionInput {
+	activeTasksArchived: boolean;
 	changedFileCount: number | null;
 	isSelected: boolean;
 	resumeCandidate?: AAActiveTaskResumeEvidence | null;
@@ -42,6 +47,7 @@ export interface AAActiveTaskProjectionRow {
 	discriminator?: string;
 	employee: string;
 	evidenceClass: AAActiveTaskEvidenceClass;
+	isArchived: boolean;
 	isSelected: boolean;
 	lifecycle?: string;
 	personaId: AAEmployeePersonaId;
@@ -86,6 +92,7 @@ const EVIDENCE_ORDER: Record<AAActiveTaskEvidenceClass, number> = {
 	live: 0,
 	resumable: 1,
 	untracked: 2,
+	unavailable: 3,
 };
 
 export function projectAAActiveTasks(
@@ -97,14 +104,22 @@ export function projectAAActiveTasks(
 	});
 
 	assignDuplicateDiscriminators(rows);
-	rows.sort(
-		(left, right) =>
+	rows.sort((left, right) => {
+		if (left.isArchived && right.isArchived) {
+			return (
+				left.stableOrder - right.stableOrder ||
+				left.workspaceId.localeCompare(right.workspaceId)
+			);
+		}
+		return (
+			Number(left.isArchived) - Number(right.isArchived) ||
 			Number(right.isSelected) - Number(left.isSelected) ||
 			EVIDENCE_ORDER[left.evidenceClass] -
 				EVIDENCE_ORDER[right.evidenceClass] ||
 			left.stableOrder - right.stableOrder ||
-			left.workspaceId.localeCompare(right.workspaceId),
-	);
+			left.workspaceId.localeCompare(right.workspaceId)
+		);
+	});
 
 	return { rows };
 }
@@ -181,6 +196,7 @@ function projectAAActiveTask(
 			changedFileCount: normalizeChangedFileCount(input.changedFileCount),
 			employee: identity.label,
 			evidenceClass: "live",
+			isArchived: input.activeTasksArchived,
 			isSelected: input.isSelected,
 			lifecycle: formatLiveLifecycle(runtimeSnapshot.state),
 			personaId: identity.personaId,
@@ -195,6 +211,7 @@ function projectAAActiveTask(
 			changedFileCount: normalizeChangedFileCount(input.changedFileCount),
 			employee: "PI",
 			evidenceClass: "resumable",
+			isArchived: input.activeTasksArchived,
 			isSelected: input.isSelected,
 			personaId: "pi",
 			stableOrder: input.stableOrder,
@@ -204,7 +221,20 @@ function projectAAActiveTask(
 	}
 
 	const launchIdentity = input.terminal.launchIdentity;
-	if (!launchIdentity) return null;
+	if (!launchIdentity) {
+		if (!input.activeTasksArchived) return null;
+		return {
+			changedFileCount: normalizeChangedFileCount(input.changedFileCount),
+			employee: "EMPLOYEE",
+			evidenceClass: "unavailable",
+			isArchived: true,
+			isSelected: input.isSelected,
+			personaId: "generic",
+			stableOrder: input.stableOrder,
+			title,
+			workspaceId: input.workspaceId,
+		};
+	}
 	const identity = resolveEmployee(
 		launchIdentity.agentId,
 		launchIdentity.label,
@@ -212,12 +242,26 @@ function projectAAActiveTask(
 	// A Pi launch without Runtime Contract or an exact resume candidate lacks
 	// enough evidence to promote. Other explicit launch identities remain a
 	// truthful compatibility/deferred-runtime row marked UNTRACKED.
-	if (identity.personaId === "pi") return null;
+	if (identity.personaId === "pi") {
+		if (!input.activeTasksArchived) return null;
+		return {
+			changedFileCount: normalizeChangedFileCount(input.changedFileCount),
+			employee: identity.label,
+			evidenceClass: "unavailable",
+			isArchived: true,
+			isSelected: input.isSelected,
+			personaId: identity.personaId,
+			stableOrder: input.stableOrder,
+			title,
+			workspaceId: input.workspaceId,
+		};
+	}
 
 	return {
 		changedFileCount: normalizeChangedFileCount(input.changedFileCount),
 		employee: identity.label,
 		evidenceClass: "untracked",
+		isArchived: input.activeTasksArchived,
 		isSelected: input.isSelected,
 		personaId: identity.personaId,
 		stableOrder: input.stableOrder,

@@ -79,6 +79,7 @@ export interface WorkspaceSnapshot {
 	type: "main" | "worktree";
 	worktreePath: string;
 	taskId: string | null;
+	activeTasksArchived: boolean;
 	createdByUserId: string | null;
 	createdAt: number;
 	updatedAt: number;

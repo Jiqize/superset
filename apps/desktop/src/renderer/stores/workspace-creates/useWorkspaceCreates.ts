@@ -121,6 +121,7 @@ export function useWorkspaceCreates(): UseWorkspaceCreatesApi {
 				type: "worktree",
 				createdByUserId: userId,
 				taskId: snapshot.taskId ?? null,
+				activeTasksArchived: false,
 				createdAt: now,
 				updatedAt: now,
 				worktreePath: "",

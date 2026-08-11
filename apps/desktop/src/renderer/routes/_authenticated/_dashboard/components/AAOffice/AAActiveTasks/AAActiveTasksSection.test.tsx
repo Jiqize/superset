@@ -12,6 +12,7 @@ describe("AAActiveTasksSection", () => {
 					discriminator: "#A3F2",
 					employee: "PI",
 					evidenceClass: "live",
+					isArchived: false,
 					isSelected: true,
 					lifecycle: "WORKING",
 					personaId: "pi",
@@ -23,6 +24,7 @@ describe("AAActiveTasksSection", () => {
 					changedFileCount: 0,
 					employee: "PI",
 					evidenceClass: "resumable",
+					isArchived: false,
 					isSelected: false,
 					personaId: "pi",
 					stableOrder: 1,
@@ -47,6 +49,53 @@ describe("AAActiveTasksSection", () => {
 			'aria-label="Fix restart status #A3F2, PI, LIVE WORKING, 3 changed files"',
 		);
 		expect(html).not.toContain("workspace-secret-id");
+	});
+
+	it("renders Archive actions and a collapsed Archived group with Unarchive", () => {
+		const projection: AAActiveTaskProjection = {
+			rows: [
+				{
+					changedFileCount: 1,
+					employee: "CODEX",
+					evidenceClass: "untracked",
+					isArchived: false,
+					isSelected: false,
+					personaId: "codex",
+					stableOrder: 0,
+					title: "Compatibility task",
+					workspaceId: "workspace-codex",
+				},
+				{
+					changedFileCount: 3,
+					employee: "PI",
+					evidenceClass: "unavailable",
+					isArchived: true,
+					isSelected: false,
+					personaId: "pi",
+					stableOrder: 1,
+					title: "Ended Pi task",
+					workspaceId: "workspace-pi-ended",
+				},
+			],
+		};
+
+		const html = renderToStaticMarkup(
+			<AAActiveTasksSection
+				projection={projection}
+				onSelect={() => {}}
+				onArchiveChange={() => {}}
+			/>,
+		);
+
+		expect(html).toContain('aria-label="Archive task: Compatibility task"');
+		expect(html).toContain("ARCHIVED");
+		expect(html).toContain("Ended Pi task");
+		expect(html).toContain("SESSION UNAVAILABLE");
+		expect(html).toContain('aria-label="Unarchive task: Ended Pi task"');
+		expect(html).toContain('<details class="aa-active-tasks__archive"');
+		expect(html).not.toContain(
+			'<details class="aa-active-tasks__archive" open',
+		);
 	});
 
 	it("does not manufacture a task row while evidence is loading", () => {

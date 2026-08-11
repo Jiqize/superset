@@ -17,3 +17,4 @@ export {
 	type UseAAActiveTasksProjectionResult,
 	useAAActiveTasksProjection,
 } from "./useAAActiveTasksProjection";
+export { useAAWorkspaceArchiveIntent } from "./useAAWorkspaceArchiveIntent";

@@ -8,12 +8,14 @@ import { del as idbDel, get as idbGet, set as idbSet } from "idb-keyval";
  * shape plus the host-only extras.
  */
 export interface HostWorkspaceRow extends SelectV2Workspace {
+	activeTasksArchived: boolean;
 	worktreePath: string;
 	worktreeExists: boolean;
 }
 
 /** Merged item returned by useHostWorkspaces. */
 export interface HostWorkspaceItem extends SelectV2Workspace {
+	activeTasksArchived: boolean;
 	worktreePath?: string;
 	worktreeExists?: boolean;
 	/** False when the row came from a snapshot/cloud and the host didn't answer. */
@@ -178,6 +180,7 @@ export function applyWorkspaceChangedEvent(
 		type: snapshot.type,
 		createdByUserId: snapshot.createdByUserId,
 		taskId: snapshot.taskId,
+		activeTasksArchived: snapshot.activeTasksArchived,
 		createdAt: new Date(snapshot.createdAt),
 		updatedAt: new Date(snapshot.updatedAt),
 		worktreePath: snapshot.worktreePath,
@@ -221,6 +224,7 @@ export function mergeHostWorkspaces({
 			seenIds.add(row.id);
 			items.push({
 				...row,
+				activeTasksArchived: row.activeTasksArchived ?? false,
 				hostReachable: result.reachable,
 				source: "host",
 			});
@@ -232,6 +236,7 @@ export function mergeHostWorkspaces({
 		seenIds.add(row.id);
 		items.push({
 			...row,
+			activeTasksArchived: false,
 			hostReachable: false,
 			source: "cloud",
 		});

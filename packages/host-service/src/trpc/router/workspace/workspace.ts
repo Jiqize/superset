@@ -116,6 +116,40 @@ export const workspaceRouter = router({
 			return toCloudShape(updated, ctx.organizationId);
 		}),
 
+	setActiveTasksArchived: protectedProcedure
+		.input(
+			z.object({
+				id: z.string().uuid(),
+				archived: z.boolean(),
+			}),
+		)
+		.mutation(({ ctx, input }) => {
+			const current = ctx.db.query.workspaces
+				.findFirst({ where: eq(workspaces.id, input.id) })
+				.sync();
+			if (!current) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Workspace not found",
+				});
+			}
+			if (current.activeTasksArchived === input.archived) {
+				return toCloudShape(current, ctx.organizationId);
+			}
+			const updated = updateLocalWorkspace(
+				{ db: ctx.db, eventBus: ctx.eventBus },
+				input.id,
+				{ activeTasksArchived: input.archived },
+			);
+			if (!updated) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Workspace not found",
+				});
+			}
+			return toCloudShape(updated, ctx.organizationId);
+		}),
+
 	cloudList: protectedProcedure.query(async ({ ctx }) => {
 		const rows = await ctx.api.v2Workspace.list.query({
 			organizationId: ctx.organizationId,

@@ -1,4 +1,5 @@
 import { AAEmployeeAvatar } from "../AAEmployeeAvatar";
+import { AAIcon } from "../AAIcon";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
 import type {
 	AAActiveTaskEvidenceClass,
@@ -7,8 +8,11 @@ import type {
 } from "./aaActiveTaskProjection";
 
 interface AAActiveTasksSectionProps {
+	canArchiveChange?: (workspaceId: string) => boolean;
 	isLoading?: boolean;
+	onArchiveChange?: (workspaceId: string, archived: boolean) => void;
 	onSelect: (workspaceId: string) => void;
+	pendingWorkspaceIds?: ReadonlySet<string>;
 	projection: AAActiveTaskProjection;
 }
 
@@ -19,8 +23,11 @@ interface AAActiveTaskGroup {
 }
 
 export function AAActiveTasksSection({
+	canArchiveChange,
 	isLoading = false,
+	onArchiveChange,
 	onSelect,
+	pendingWorkspaceIds,
 	projection,
 }: AAActiveTasksSectionProps) {
 	if (projection.rows.length === 0) {
@@ -31,8 +38,10 @@ export function AAActiveTasksSection({
 		) : null;
 	}
 
-	const selected = projection.rows.filter((row) => row.isSelected);
-	const remaining = projection.rows.filter((row) => !row.isSelected);
+	const archived = projection.rows.filter((row) => row.isArchived);
+	const current = projection.rows.filter((row) => !row.isArchived);
+	const selected = current.filter((row) => row.isSelected);
+	const remaining = current.filter((row) => !row.isSelected);
 	const groups: AAActiveTaskGroup[] = [
 		{ key: "current", label: "ACTIVE TASKS · CURRENT", rows: selected },
 		{
@@ -63,7 +72,10 @@ export function AAActiveTasksSection({
 					<div className="aa-active-tasks__rows">
 						{group.rows.map((row) => (
 							<AAActiveTaskRow
+								canArchiveChange={canArchiveChange}
 								key={row.workspaceId}
+								onArchiveChange={onArchiveChange}
+								pending={pendingWorkspaceIds?.has(row.workspaceId)}
 								row={row}
 								onSelect={onSelect}
 							/>
@@ -71,56 +83,110 @@ export function AAActiveTasksSection({
 					</div>
 				</div>
 			))}
+			{archived.length > 0 ? (
+				<details className="aa-active-tasks__archive">
+					<summary className="aa-active-tasks__heading">
+						<span>ARCHIVED</span>
+						<small>{archived.length}</small>
+					</summary>
+					<div className="aa-active-tasks__rows">
+						{archived.map((row) => (
+							<AAActiveTaskRow
+								canArchiveChange={canArchiveChange}
+								key={row.workspaceId}
+								onArchiveChange={onArchiveChange}
+								onSelect={onSelect}
+								pending={pendingWorkspaceIds?.has(row.workspaceId)}
+								row={row}
+							/>
+						))}
+					</div>
+				</details>
+			) : null}
 		</section>
 	);
 }
 
 function AAActiveTaskRow({
 	row,
+	canArchiveChange,
+	onArchiveChange,
 	onSelect,
+	pending = false,
 }: {
 	row: AAActiveTaskProjectionRow;
+	canArchiveChange?: (workspaceId: string) => boolean;
+	onArchiveChange?: (workspaceId: string, archived: boolean) => void;
 	onSelect: (workspaceId: string) => void;
+	pending?: boolean;
 }) {
+	const archiveAvailable = canArchiveChange?.(row.workspaceId) ?? true;
 	return (
-		<button
-			type="button"
-			aria-label={getAAActiveTaskAriaLabel(row)}
+		<div
 			className="aa-active-task-row"
 			data-active={row.isSelected || undefined}
+			data-archived={row.isArchived || undefined}
 			data-evidence={row.evidenceClass}
-			onClick={() => onSelect(row.workspaceId)}
 		>
-			<AAEmployeeAvatar
-				agentId={row.personaId === "generic" ? undefined : row.personaId}
-				className="aa-active-task-row__avatar"
-				label={row.employee}
-			/>
-			<span className="aa-active-task-row__body">
-				<span className="aa-active-task-row__title">
-					<span>{row.title}</span>
-					{row.discriminator && <small>{row.discriminator}</small>}
+			<button
+				type="button"
+				aria-label={getAAActiveTaskAriaLabel(row)}
+				className="aa-active-task-row__select"
+				onClick={() => onSelect(row.workspaceId)}
+			>
+				<AAEmployeeAvatar
+					agentId={row.personaId === "generic" ? undefined : row.personaId}
+					className="aa-active-task-row__avatar"
+					label={row.employee}
+				/>
+				<span className="aa-active-task-row__body">
+					<span className="aa-active-task-row__title">
+						<span>{row.title}</span>
+						{row.discriminator && <small>{row.discriminator}</small>}
+					</span>
+					<span className="aa-active-task-row__evidence" aria-hidden="true">
+						<AAStatusLight tone={getAAActiveTaskTone(row)} />
+						<span>{row.employee}</span>
+						<span>·</span>
+						<span>{getEvidenceLabel(row.evidenceClass)}</span>
+						{row.lifecycle && (
+							<>
+								<span>·</span>
+								<span>{row.lifecycle}</span>
+							</>
+						)}
+					</span>
 				</span>
-				<span className="aa-active-task-row__evidence" aria-hidden="true">
-					<AAStatusLight tone={getAAActiveTaskTone(row)} />
-					<span>{row.employee}</span>
-					<span>·</span>
-					<span>{getEvidenceLabel(row.evidenceClass)}</span>
-					{row.lifecycle && (
-						<>
-							<span>·</span>
-							<span>{row.lifecycle}</span>
-						</>
-					)}
-				</span>
-			</span>
-			{row.changedFileCount !== null && (
-				<span className="aa-active-task-row__changed">
-					<strong>{row.changedFileCount}</strong>
-					<small>CHANGED</small>
-				</span>
-			)}
-		</button>
+				{row.changedFileCount !== null && (
+					<span className="aa-active-task-row__changed">
+						<strong>{row.changedFileCount}</strong>
+						<small>CHANGED</small>
+					</span>
+				)}
+			</button>
+			{onArchiveChange ? (
+				<button
+					aria-label={`${row.isArchived ? "Unarchive" : "Archive"} task: ${row.title}`}
+					aria-busy={pending || undefined}
+					className="aa-active-task-row__archive-action"
+					disabled={!archiveAvailable || pending}
+					title={
+						archiveAvailable
+							? row.isArchived
+								? "Unarchive task"
+								: "Archive task"
+							: "Archive unavailable while the Workspace host is offline"
+					}
+					type="button"
+					onClick={() => onArchiveChange(row.workspaceId, !row.isArchived)}
+				>
+					<AAIcon name={row.isArchived ? "folder" : "archive"} />
+					<span>
+						{pending ? "SAVING" : row.isArchived ? "UNARCHIVE" : "ARCHIVE"}
+					</span>
+				</button>
+			) : null}
+		</div>
 	);
 }
 
@@ -135,7 +201,8 @@ export function getAAActiveTaskAriaLabel(
 		row.changedFileCount === null
 			? ""
 			: `, ${row.changedFileCount} changed ${row.changedFileCount === 1 ? "file" : "files"}`;
-	return `${identity}, ${row.employee}, ${evidence}${changed}`;
+	const archived = row.isArchived ? "ARCHIVED, " : "";
+	return `${identity}, ${archived}${row.employee}, ${evidence}${changed}`;
 }
 
 function getEvidenceLabel(evidenceClass: AAActiveTaskEvidenceClass): string {
@@ -146,12 +213,15 @@ function getEvidenceLabel(evidenceClass: AAActiveTaskEvidenceClass): string {
 			return "RESUMABLE";
 		case "untracked":
 			return "UNTRACKED";
+		case "unavailable":
+			return "SESSION UNAVAILABLE";
 	}
 }
 
 function getAAActiveTaskTone(row: AAActiveTaskProjectionRow): AAStatusTone {
 	if (row.evidenceClass === "resumable") return "offline";
 	if (row.evidenceClass === "untracked") return "attention";
+	if (row.evidenceClass === "unavailable") return "offline";
 	switch (row.lifecycle) {
 		case "ERROR":
 			return "error";
