@@ -1,0 +1,91 @@
+{
+	"schemaVersion": 1,
+	"phase": "3I",
+	"baselineCommit": "5676220ea37dba20d1487586e14cd2efc1eee758",
+	"decision": "PROCEED TO ACTIVE TASKS PROJECTION",
+	"reconstructableAfterFullRestart": true,
+	"sourcePolicy": {
+		"allowed": [
+			"project/workspace ownership",
+			"persisted Task Folder title",
+			"terminal launch identity",
+			"authoritative Runtime Contract snapshot",
+			"authoritative Pi resume candidate",
+			"Git changed-file count"
+		],
+		"excluded": [
+			"terminal text",
+			"prompt or transcript parsing",
+			"elapsed-time guesses",
+			"process-title semantics",
+			"invented completion state"
+		]
+	},
+	"afterRestartBeforeResume": [
+		{
+			"taskTitle": "Add greeting helper file",
+			"duplicateOccurrence": "newer",
+			"employee": "PI",
+			"classification": "SAVED / RESUMABLE",
+			"changedFileCount": 0,
+			"nativeIdentityFingerprint": "f68afc1fa1e2"
+		},
+		{
+			"taskTitle": "Create summary.txt",
+			"employee": "PI",
+			"classification": "SAVED / RESUMABLE",
+			"changedFileCount": 0,
+			"nativeIdentityFingerprint": "07de7c98de1d"
+		},
+		{
+			"taskTitle": "Create date_label.txt",
+			"employee": "PI",
+			"classification": "SAVED / RESUMABLE",
+			"changedFileCount": 1,
+			"nativeIdentityFingerprint": "e04d7814eb1c"
+		},
+		{
+			"taskTitle": "Add number formatter file",
+			"employee": "PI",
+			"classification": "SAVED / RESUMABLE",
+			"changedFileCount": 1,
+			"nativeIdentityFingerprint": "bf33032c5859"
+		},
+		{
+			"taskTitle": "Add greeting helper file",
+			"duplicateOccurrence": "older",
+			"employee": "PI",
+			"classification": "SAVED / RESUMABLE",
+			"changedFileCount": 5,
+			"nativeIdentityFingerprint": "6a3a383377fa"
+		}
+	],
+	"afterExactResume": [
+		{
+			"taskTitle": "Add greeting helper file",
+			"duplicateOccurrence": "older",
+			"employee": "PI",
+			"classification": "LIVE",
+			"runtimeState": "IDLE",
+			"changedFileCount": 4,
+			"nativeIdentityFingerprint": "6a3a383377fa",
+			"epochFingerprint": "3b5b06aa634f"
+		}
+	],
+	"exactResumeProof": {
+		"nativeIdentityFingerprintBefore": "6a3a383377fa",
+		"nativeIdentityFingerprintAfter": "6a3a383377fa",
+		"epochFingerprintBefore": "4ab01022d9de",
+		"epochFingerprintAfter": "3b5b06aa634f",
+		"taskTitlePreserved": true,
+		"contextContinuityConfirmed": true
+	},
+	"minimumTruthfulRow": [
+		"task title",
+		"employee",
+		"LIVE, SAVED / RESUMABLE, UNTRACKED, or INSUFFICIENT EVIDENCE",
+		"authoritative live lifecycle state when LIVE",
+		"real changed-file count",
+		"stable non-semantic duplicate discriminator only when titles collide"
+	]
+}
