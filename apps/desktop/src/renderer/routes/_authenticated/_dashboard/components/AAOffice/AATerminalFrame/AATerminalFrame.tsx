@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
+import { useHotkeyDisplay } from "renderer/hotkeys";
 import {
 	type AAWorkerLaunchIdentity,
 	resolveAAActiveWorkerPresentation,
@@ -11,6 +12,7 @@ import { AATaskFolder, mapAAWorkerToAATaskFolderState } from "../AATaskFolder";
 
 interface AATerminalFrameProps {
 	children: ReactNode;
+	isActive?: boolean;
 	launchIdentity?: AAWorkerLaunchIdentity;
 	onTaskTitleChange?: (titleOverride?: string) => void;
 	sessionLabel?: string;
@@ -21,6 +23,7 @@ interface AATerminalFrameProps {
 
 export function AATerminalFrame({
 	children,
+	isActive = false,
 	launchIdentity,
 	onTaskTitleChange,
 	sessionLabel,
@@ -28,6 +31,7 @@ export function AATerminalFrame({
 	taskTitleEdited,
 	terminalId,
 }: AATerminalFrameProps) {
+	const focusShortcut = useHotkeyDisplay("AA_FOCUS_WORKSTATION");
 	const { bindings, runtimeSnapshots, workspaceId } = useAAAgentStatus();
 	const { candidate: resumeCandidate } = useTerminalResumeCandidate(
 		workspaceId,
@@ -64,9 +68,16 @@ export function AATerminalFrame({
 		taskFolderState === "turn-complete";
 
 	return (
-		<div className="aa-terminal-frame" data-agent-state={worker.status}>
+		<div
+			className="aa-terminal-frame"
+			data-agent-state={worker.status}
+			data-pane-active={isActive}
+		>
 			<div className="aa-terminal-frame__console">
-				<span className="aa-terminal-frame__label">
+				<span
+					className="aa-terminal-frame__label"
+					title={`Focus active workstation · ${focusShortcut.text}`}
+				>
 					<AAIcon name="terminal" />
 					{workstationLabel}
 				</span>
@@ -77,6 +88,7 @@ export function AATerminalFrame({
 					sessionLabel={sessionLabel ?? launchIdentity?.label}
 					terminalLabel={workstationLabel}
 					worker={worker}
+					isActive={isActive}
 				/>
 				<span
 					className="aa-terminal-frame__signal"

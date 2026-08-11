@@ -1,5 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
+import { useHotkeyDisplay } from "renderer/hotkeys";
 import {
 	AAIcon,
 	type AAIconName,
@@ -23,6 +24,8 @@ export function SidebarHeader({
 	aaOffice = false,
 }: SidebarHeaderProps) {
 	const actions = tabs.find((t) => t.id === activeTab)?.actions;
+	const filesShortcut = useHotkeyDisplay("AA_OPEN_FILES");
+	const changesShortcut = useHotkeyDisplay("TOGGLE_SIDEBAR");
 
 	return (
 		<div
@@ -39,13 +42,21 @@ export function SidebarHeader({
 							? formatBadgeCount(tab.badge)
 							: null;
 					const label = badge ? `${tab.label} (${badge})` : tab.label;
+					const shortcut =
+						tab.id === "files"
+							? filesShortcut.text
+							: tab.id === "changes"
+								? changesShortcut.text
+								: "";
+					const accessibleLabel = shortcut ? `${label} · ${shortcut}` : label;
 					const aaIconName = aaOffice ? getAAIconName(tab.id) : null;
 					const btn = (
 						<button
 							key={tab.id}
 							type="button"
 							onClick={() => onTabChange(tab.id)}
-							aria-label={label}
+							aria-label={accessibleLabel}
+							title={accessibleLabel}
 							className={cn(
 								getSidebarHeaderTabButtonClassName({
 									isActive,
@@ -85,7 +96,7 @@ export function SidebarHeader({
 						return (
 							<Tooltip key={tab.id}>
 								<TooltipTrigger asChild>{btn}</TooltipTrigger>
-								<TooltipContent side="bottom">{label}</TooltipContent>
+								<TooltipContent side="bottom">{accessibleLabel}</TooltipContent>
 							</Tooltip>
 						);
 					}

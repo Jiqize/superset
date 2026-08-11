@@ -39,33 +39,31 @@ export function AATaskFolderContextCard({
 
 			<dl className="aa-task-folder-card__facts">
 				<TaskFact label="EMPLOYEE" value={presentation.employee} />
-				<TaskFact label="RUNTIME" value={presentation.runtime} />
-				<TaskFact label="TRANSPORT" value={presentation.transport} />
-				{presentation.model ? (
-					<TaskFact label="MODEL" value={presentation.model} />
-				) : null}
-				{presentation.reasoning ? (
-					<TaskFact label="REASONING" value={presentation.reasoning} />
-				) : null}
 				<TaskFact label="STATUS" value={presentation.status} />
 				{presentation.changedFiles ? (
-					<TaskFact label="FILES" value={presentation.changedFiles} />
+					<TaskFact label="OUTPUT" value={presentation.changedFiles} />
 				) : null}
 				{presentation.resume ? (
 					<TaskFact label="RESUME" value={presentation.resume} />
 				) : null}
-				{presentation.latestAction ? (
-					<TaskFact label="LATEST ACTION" value={presentation.latestAction} />
-				) : null}
 			</dl>
 
-			{presentation.changedFiles ? (
-				<footer className="aa-task-folder-card__output">
-					<AAIcon name="changes" />
-					<span>OUTPUT · FILE CABINET</span>
-					<strong>{presentation.changedFiles}</strong>
-				</footer>
-			) : null}
+			<details className="aa-task-folder-card__runtime-details">
+				<summary>RUNTIME DETAILS</summary>
+				<dl className="aa-task-folder-card__facts aa-task-folder-card__facts--secondary">
+					<TaskFact label="RUNTIME" value={presentation.runtime} />
+					<TaskFact label="TRANSPORT" value={presentation.transport} />
+					{presentation.model ? (
+						<TaskFact label="MODEL" value={presentation.model} />
+					) : null}
+					{presentation.reasoning ? (
+						<TaskFact label="REASONING" value={presentation.reasoning} />
+					) : null}
+					{presentation.latestAction ? (
+						<TaskFact label="LATEST ACTION" value={presentation.latestAction} />
+					) : null}
+				</dl>
+			</details>
 		</section>
 	);
 }

@@ -73,3 +73,8 @@ export {
 export { AATerminalFrame } from "./AATerminalFrame";
 export { AAWindowFrame } from "./AAWindowFrame";
 export { AAWorkspaceHeader } from "./AAWorkspaceHeader";
+export {
+	captureAATerminalFocus,
+	focusAAActiveWorkstation,
+	restoreAAWorkflowFocus,
+} from "./aaDailyWorkflowFocus";

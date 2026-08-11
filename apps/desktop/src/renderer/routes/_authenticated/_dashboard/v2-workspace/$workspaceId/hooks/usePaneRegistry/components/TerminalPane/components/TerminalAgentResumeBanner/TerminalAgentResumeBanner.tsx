@@ -70,6 +70,11 @@ export function TerminalAgentResumeBanner({
 		candidate,
 		runtimeSnapshot: runtimeSnapshots.get(terminalId),
 	});
+	const paneData = ctx.pane.data as TerminalPaneData;
+	const taskFolderTitle = resolveAAHandoffTaskTitle({
+		paneTitle: ctx.pane.titleOverride,
+		taskTitleEdited: paneData.taskTitleEdited,
+	});
 	if (!candidate || presentation.availability !== "available" || dismissed)
 		return null;
 
@@ -86,12 +91,11 @@ export function TerminalAgentResumeBanner({
 				return;
 			}
 			const state = ctx.store.getState();
-			const currentData = ctx.pane.data as TerminalPaneData;
 			const panePresentation = resolveAAHandoffPanePresentation({
 				employeeTitle: result.label,
 				taskFolderTitle: resolveAAHandoffTaskTitle({
 					paneTitle: ctx.pane.titleOverride,
-					taskTitleEdited: currentData.taskTitleEdited,
+					taskTitleEdited: paneData.taskTitleEdited,
 				}),
 			});
 			state.setPaneData({
@@ -127,15 +131,9 @@ export function TerminalAgentResumeBanner({
 				<AAIcon name="folder" />
 			</span>
 			<span className="aa-resume-session__copy">
-				<strong>{presentation.contextLabel}</strong>
+				<strong>{taskFolderTitle ?? presentation.contextLabel}</strong>
 				<small>
-					{candidate.agentLabel.toUpperCase()} INTERRUPTED
-					{presentation.endedAt ? (
-						<time dateTime={new Date(presentation.endedAt).toISOString()}>
-							{" · "}
-							{formatResumeTime(presentation.endedAt)}
-						</time>
-					) : null}
+					{candidate.agentLabel.toUpperCase()} · RESUMABLE · SAVED CONVERSATION
 				</small>
 			</span>
 			<button
@@ -158,11 +156,4 @@ export function TerminalAgentResumeBanner({
 			</button>
 		</output>
 	);
-}
-
-function formatResumeTime(timestamp: number): string {
-	return new Intl.DateTimeFormat(undefined, {
-		hour: "2-digit",
-		minute: "2-digit",
-	}).format(timestamp);
 }

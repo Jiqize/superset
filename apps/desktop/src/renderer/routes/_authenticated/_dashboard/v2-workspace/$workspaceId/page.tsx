@@ -318,6 +318,7 @@ function V2WorkspaceContent() {
 	const sidebarSlotEl = useSlotElement("workspace-right-sidebar-slot");
 
 	useWorkspaceHotkeys({
+		activeTerminalId: activeTerminal?.terminalId,
 		store,
 		matchedPresets,
 		executePreset,
@@ -325,6 +326,7 @@ function V2WorkspaceContent() {
 		paneRegistry,
 		launcher,
 		onBeforeCloseTab,
+		workspaceId,
 	});
 	useHotkey("QUICK_OPEN", handleQuickOpen);
 	useHotkey("RUN_WORKSPACE_COMMAND", () => {

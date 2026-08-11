@@ -248,6 +248,59 @@ export const HOTKEYS_REGISTRY = {
 		description: "Open existing PR or create a new one on GitHub",
 	},
 
+	// AA Office daily workflow (macOS-first v0.1)
+	AA_FOCUS_WORKSTATION: {
+		key: {
+			mac: L("meta+shift+a"),
+			windows: null,
+			linux: null,
+		},
+		label: "Focus AA Workstation",
+		category: "Workspace",
+		description:
+			"Return focus to the most recently active terminal workstation",
+	},
+	AA_OPEN_TASK_FOLDER: {
+		key: {
+			mac: L("meta+alt+t"),
+			windows: null,
+			linux: null,
+		},
+		label: "Open AA Task Folder",
+		category: "Workspace",
+		description: "Open the active workstation's Task Folder context",
+	},
+	AA_RENAME_TASK_FOLDER: {
+		key: {
+			mac: L("meta+alt+r"),
+			windows: null,
+			linux: null,
+		},
+		label: "Rename AA Task Folder",
+		category: "Workspace",
+		description: "Rename the active workstation's Task Folder",
+	},
+	AA_OPEN_EMPLOYEE_PROFILE: {
+		key: {
+			mac: L("meta+alt+e"),
+			windows: null,
+			linux: null,
+		},
+		label: "Open AA Employee Profile",
+		category: "Workspace",
+		description: "Inspect the active employee's verified runtime profile",
+	},
+	AA_OPEN_FILES: {
+		key: {
+			mac: L("meta+alt+f"),
+			windows: null,
+			linux: null,
+		},
+		label: "Open AA Files",
+		category: "Layout",
+		description: "Open the File Cabinet's Files tab",
+	},
+
 	// Layout
 	TOGGLE_SIDEBAR: {
 		key: {

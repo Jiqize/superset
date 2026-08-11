@@ -25,12 +25,64 @@ export function findTerminalPaneLocation(
 	return null;
 }
 
+/**
+ * Finds the terminal that best represents the user's current workstation.
+ * Explicit recent history wins, followed by the active pane, another terminal
+ * in the active tab, and finally the first terminal in the workspace.
+ */
+export function findPreferredTerminalPaneLocation(
+	state: WorkspaceState<PaneViewerData>,
+	lastTerminalId?: string | null,
+): TerminalPaneLocation | null {
+	if (lastTerminalId) {
+		const previous = findTerminalPaneLocation(state, lastTerminalId);
+		if (previous) return previous;
+	}
+
+	const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+	if (activeTab?.activePaneId) {
+		const activePane = activeTab.panes[activeTab.activePaneId];
+		if (activePane?.kind === "terminal") {
+			return { tabId: activeTab.id, paneId: activePane.id };
+		}
+	}
+
+	if (activeTab) {
+		const terminal = Object.values(activeTab.panes).find(
+			(pane) => pane.kind === "terminal",
+		);
+		if (terminal) return { tabId: activeTab.id, paneId: terminal.id };
+	}
+
+	for (const tab of state.tabs) {
+		const terminal = Object.values(tab.panes).find(
+			(pane) => pane.kind === "terminal",
+		);
+		if (terminal) return { tabId: tab.id, paneId: terminal.id };
+	}
+
+	return null;
+}
+
 export function focusTerminalPane(
 	store: StoreApi<WorkspaceStore<PaneViewerData>>,
 	terminalId: string,
 ): boolean {
 	const state = store.getState();
 	const location = findTerminalPaneLocation(state, terminalId);
+	if (!location) return false;
+
+	state.setActiveTab(location.tabId);
+	state.setActivePane(location);
+	return true;
+}
+
+export function focusPreferredTerminalPane(
+	store: StoreApi<WorkspaceStore<PaneViewerData>>,
+	lastTerminalId?: string | null,
+): boolean {
+	const state = store.getState();
+	const location = findPreferredTerminalPaneLocation(state, lastTerminalId);
 	if (!location) return false;
 
 	state.setActiveTab(location.tabId);

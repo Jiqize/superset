@@ -6,8 +6,10 @@ import {
 } from "@superset/panes";
 import type { PaneViewerData } from "../../types";
 import {
+	findPreferredTerminalPaneLocation,
 	findTerminalPaneLocation,
 	focusOrAddTerminalPane,
+	focusPreferredTerminalPane,
 	focusTerminalPane,
 } from "./focusTerminalPane";
 
@@ -81,6 +83,54 @@ describe("focusTerminalPane", () => {
 		});
 
 		expect(focusTerminalPane(store, "missing")).toBe(false);
+		expect(store.getState().activeTabId).toBe("tab-1");
+		expect(store.getState().getTab("tab-1")?.activePaneId).toBe("pane-1");
+		expect(store.getState().tabs).toHaveLength(2);
+	});
+});
+
+describe("daily-workstation terminal focus", () => {
+	it("returns to the last active terminal after a Diff pane takes focus", () => {
+		const state = workspaceState();
+		state.tabs[0].panes["diff-1"] = {
+			id: "diff-1",
+			kind: "diff",
+			data: { path: "audit-output.txt", collapsedFiles: [] } as PaneViewerData,
+		};
+		state.tabs[0].activePaneId = "diff-1";
+
+		expect(findPreferredTerminalPaneLocation(state, "terminal-1")).toEqual({
+			tabId: "tab-1",
+			paneId: "pane-1",
+		});
+	});
+
+	it("falls back to a terminal in the active tab when no history is available", () => {
+		const state = workspaceState();
+		state.tabs[0].panes["diff-1"] = {
+			id: "diff-1",
+			kind: "diff",
+			data: { path: "audit-output.txt", collapsedFiles: [] } as PaneViewerData,
+		};
+		state.tabs[0].activePaneId = "diff-1";
+
+		expect(findPreferredTerminalPaneLocation(state)).toEqual({
+			tabId: "tab-1",
+			paneId: "pane-1",
+		});
+	});
+
+	it("focuses the selected workstation without creating a duplicate", () => {
+		const state = workspaceState();
+		state.tabs[0].panes["diff-1"] = {
+			id: "diff-1",
+			kind: "diff",
+			data: { path: "audit-output.txt", collapsedFiles: [] } as PaneViewerData,
+		};
+		state.tabs[0].activePaneId = "diff-1";
+		const store = createWorkspaceStore<PaneViewerData>({ initialState: state });
+
+		expect(focusPreferredTerminalPane(store, "terminal-1")).toBe(true);
 		expect(store.getState().activeTabId).toBe("tab-1");
 		expect(store.getState().getTab("tab-1")?.activePaneId).toBe("pane-1");
 		expect(store.getState().tabs).toHaveLength(2);

@@ -387,6 +387,7 @@ export function usePaneRegistry({
 					const { terminalId } = data;
 					return (
 						<AATerminalFrame
+							isActive={ctx.isActive}
 							launchIdentity={data.launchIdentity}
 							onTaskTitleChange={(titleOverride) => {
 								const state = ctx.store.getState();

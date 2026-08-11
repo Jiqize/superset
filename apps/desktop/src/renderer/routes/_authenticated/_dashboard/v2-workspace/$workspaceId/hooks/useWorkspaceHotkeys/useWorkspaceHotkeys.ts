@@ -9,6 +9,8 @@ import {
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { useHotkey } from "renderer/hotkeys";
+import { focusAAActiveWorkstation } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 import { useRightSidebarToggleIntent } from "renderer/stores/right-sidebar-toggle-intent";
 import type { StoreApi } from "zustand";
@@ -19,6 +21,7 @@ import type {
 	PaneViewerData,
 	TerminalPaneData,
 } from "../../types";
+import { focusPreferredTerminalPane } from "../../utils/focusTerminalPane";
 import type { TerminalLauncher } from "../useV2TerminalLauncher";
 
 export function useWorkspaceHotkeys({
@@ -29,6 +32,8 @@ export function useWorkspaceHotkeys({
 	paneRegistry,
 	launcher,
 	onBeforeCloseTab,
+	workspaceId,
+	activeTerminalId,
 }: {
 	store: StoreApi<WorkspaceStore<PaneViewerData>>;
 	matchedPresets: V2TerminalPresetRow[];
@@ -37,15 +42,55 @@ export function useWorkspaceHotkeys({
 	paneRegistry: PaneRegistry<PaneViewerData>;
 	launcher: TerminalLauncher;
 	onBeforeCloseTab?: WorkspaceProps<PaneViewerData>["onBeforeCloseTab"];
+	workspaceId: string;
+	activeTerminalId?: string | null;
 }) {
-	const { setRightSidebarOpen, setRightSidebarTab } = useV2UserPreferences();
+	const collections = useCollections();
+	const { preferences, setRightSidebarOpen, setRightSidebarTab } =
+		useV2UserPreferences();
+	const lastTerminalIdRef = useRef<string | null>(activeTerminalId ?? null);
+	useEffect(() => {
+		if (activeTerminalId) lastTerminalIdRef.current = activeTerminalId;
+	}, [activeTerminalId]);
 	const visiblePresets = useMemo(
 		() => matchedPresets.filter((preset) => preset.pinnedToBar !== false),
 		[matchedPresets],
 	);
 
+	const openWorkspaceSidebarTab = useCallback(
+		(tab: "changes" | "files") => {
+			if (collections.v2WorkspaceLocalState.get(workspaceId)) {
+				collections.v2WorkspaceLocalState.update(workspaceId, (draft) => {
+					draft.sidebarState.activeTab = tab;
+				});
+			}
+			setRightSidebarTab(tab);
+			setRightSidebarOpen(true);
+		},
+		[collections, setRightSidebarOpen, setRightSidebarTab, workspaceId],
+	);
+
 	useHotkey("TOGGLE_SIDEBAR", () => {
-		setRightSidebarOpen((prev) => !prev);
+		const activeTab =
+			collections.v2WorkspaceLocalState.get(workspaceId)?.sidebarState
+				.activeTab;
+		if (preferences.rightSidebarOpen && activeTab === "changes") {
+			setRightSidebarOpen(false);
+			return;
+		}
+		openWorkspaceSidebarTab("changes");
+	});
+
+	useHotkey("AA_OPEN_FILES", () => {
+		openWorkspaceSidebarTab("files");
+	});
+
+	useHotkey("AA_FOCUS_WORKSTATION", () => {
+		if (!focusPreferredTerminalPane(store, lastTerminalIdRef.current)) return;
+		queueMicrotask(() => {
+			if (focusAAActiveWorkstation()) return;
+			requestAnimationFrame(() => focusAAActiveWorkstation());
+		});
 	});
 
 	useEffect(
@@ -82,8 +127,7 @@ export function useWorkspaceHotkeys({
 	});
 
 	useHotkey("OPEN_DIFF_VIEWER", () => {
-		setRightSidebarOpen(true);
-		setRightSidebarTab("changes");
+		openWorkspaceSidebarTab("changes");
 
 		const state = store.getState();
 		for (const tab of state.tabs) {

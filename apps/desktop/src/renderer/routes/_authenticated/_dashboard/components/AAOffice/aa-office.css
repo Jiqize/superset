@@ -835,8 +835,8 @@
 }
 
 .aa-active-worker-card {
-	width: 208px;
-	min-width: 208px;
+	width: 190px;
+	min-width: 190px;
 }
 
 .aa-active-worker-card__actions {
@@ -857,9 +857,9 @@
 }
 
 .aa-active-worker-card__profile {
-	width: 14px;
-	height: 14px;
-	min-width: 14px;
+	width: 18px;
+	height: 18px;
+	min-width: 18px;
 	padding: 1px;
 }
 
@@ -893,6 +893,15 @@
 	line-height: 8px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.aa-active-worker-card__reasoning {
+	color: var(--aa-selection);
+	font-weight: 900;
+}
+
+.aa-active-worker-card__model {
+	color: var(--aa-muted);
 }
 
 .aa-active-worker-card[data-runtime-health="offline_resumable"]
@@ -1413,6 +1422,49 @@
 .aa-task-folder-card__facts dd {
 	margin: 0;
 	font-family: var(--aa-font-mono);
+}
+
+.aa-task-folder-card__runtime-details {
+	background: var(--aa-surface, #c9c8c3);
+	border-top: 1px solid var(--aa-border);
+}
+
+.aa-task-folder-card__runtime-details > summary {
+	display: flex;
+	min-height: 24px;
+	align-items: center;
+	padding: 3px 7px;
+	cursor: pointer;
+	color: var(--aa-muted);
+	font-family: var(--aa-font-mono);
+	font-size: 7px;
+	font-weight: 900;
+	letter-spacing: 0.55px;
+	list-style: none;
+}
+
+.aa-task-folder-card__runtime-details > summary::-webkit-details-marker {
+	display: none;
+}
+
+.aa-task-folder-card__runtime-details > summary::before {
+	margin-right: 5px;
+	color: var(--aa-selection);
+	content: "+";
+}
+
+.aa-task-folder-card__runtime-details[open] > summary::before {
+	content: "−";
+}
+
+.aa-task-folder-card__runtime-details > summary:focus-visible {
+	outline: 2px solid var(--aa-working);
+	outline-offset: -3px;
+}
+
+.aa-task-folder-card__facts--secondary {
+	padding-top: 0;
+	border-top: 1px solid var(--aa-border-soft);
 }
 
 .aa-task-folder-card__facts dt {

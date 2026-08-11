@@ -2,11 +2,16 @@ import type { AARuntimeSessionSnapshot } from "@superset/session-protocol";
 import { Button } from "@superset/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@superset/ui/popover";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useHotkey, useHotkeyDisplay } from "renderer/hotkeys";
 import { useWorkspaceGitStatus } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/providers/WorkspaceGitStatusProvider";
 import type { AAActiveWorkerPresentation } from "../AAActiveWorkerCard";
 import { AAEmployeeProfile } from "../AAEmployeeProfile";
 import { AAIcon } from "../AAIcon";
 import { AAStatusLight, type AAStatusTone } from "../AAStatusLight";
+import {
+	captureAATerminalFocus,
+	restoreAAWorkflowFocus,
+} from "../aaDailyWorkflowFocus";
 import { AATaskFolderContextCard } from "./AATaskFolderContextCard";
 import {
 	type AATaskFolderState,
@@ -23,6 +28,7 @@ interface AATaskFolderProps {
 	runtimeSnapshot?: AARuntimeSessionSnapshot;
 	sessionLabel?: string;
 	terminalLabel?: string;
+	isActive?: boolean;
 	worker: AAActiveWorkerPresentation;
 }
 
@@ -32,6 +38,7 @@ export function AATaskFolder({
 	runtimeSnapshot,
 	sessionLabel,
 	terminalLabel,
+	isActive = false,
 	worker,
 }: AATaskFolderProps) {
 	const gitStatus = useWorkspaceGitStatus();
@@ -58,9 +65,15 @@ export function AATaskFolder({
 		worker.tracking === "unassigned" ? "—" : worker.displayName;
 	const workerMetric = worker.tracking === "tracked" ? "ASSIGNED" : "WORKER";
 	const [isEditing, setIsEditing] = useState(false);
+	const [contextOpen, setContextOpen] = useState(false);
 	const [draft, setDraft] = useState(title);
 	const finishingRef = useRef(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
+	const titleButtonRef = useRef<HTMLButtonElement>(null);
+	const returnFocusRef =
+		useRef<ReturnType<typeof captureAATerminalFocus>>(null);
+	const openShortcut = useHotkeyDisplay("AA_OPEN_TASK_FOLDER");
+	const renameShortcut = useHotkeyDisplay("AA_RENAME_TASK_FOLDER");
 
 	useEffect(() => {
 		if (!isEditing) {
@@ -77,9 +90,21 @@ export function AATaskFolder({
 		setDraft(title);
 		setIsEditing(true);
 	}, [onTitleChange, title]);
+	const rememberTerminalFocus = useCallback(() => {
+		returnFocusRef.current = captureAATerminalFocus();
+	}, []);
+	const restoreWorkflowFocus = useCallback((fallbackToTitle = false) => {
+		queueMicrotask(() => {
+			if (restoreAAWorkflowFocus(returnFocusRef.current)) {
+				returnFocusRef.current = null;
+				return;
+			}
+			if (fallbackToTitle) titleButtonRef.current?.focus();
+		});
+	}, []);
 
 	const finishEditing = useCallback(
-		(action: "cancel" | "save") => {
+		(action: "cancel" | "save", restoreFocus = false) => {
 			if (finishingRef.current) return;
 			finishingRef.current = true;
 			const result = resolveAATaskFolderRename({
@@ -89,12 +114,30 @@ export function AATaskFolder({
 			});
 			setIsEditing(false);
 			if (result.committed) onTitleChange?.(result.titleOverride);
+			if (restoreFocus) restoreWorkflowFocus(true);
 		},
-		[draft, explicitTitle, onTitleChange],
+		[draft, explicitTitle, onTitleChange, restoreWorkflowFocus],
+	);
+
+	useHotkey(
+		"AA_OPEN_TASK_FOLDER",
+		() => {
+			rememberTerminalFocus();
+			setContextOpen(true);
+		},
+		{ enabled: isActive && !isEditing },
+	);
+	useHotkey(
+		"AA_RENAME_TASK_FOLDER",
+		() => {
+			rememberTerminalFocus();
+			beginEditing();
+		},
+		{ enabled: isActive && Boolean(onTitleChange) },
 	);
 
 	return (
-		<Popover modal={false}>
+		<Popover modal={false} open={contextOpen} onOpenChange={setContextOpen}>
 			<section
 				aria-label={`Task folder: ${title}; ${workerMetric.toLowerCase()}: ${workerLabel}; ${stateMetric.accessibleSummary}`}
 				className="aa-task-folder"
@@ -105,8 +148,9 @@ export function AATaskFolder({
 					<button
 						aria-label={`Open Task Folder details: ${title}`}
 						className="aa-task-folder__mark"
-						title="Open Task Folder details"
+						title={`Open Task Folder details · ${openShortcut.text}`}
 						type="button"
+						onPointerDownCapture={rememberTerminalFocus}
 					>
 						<AAIcon name="folder" />
 					</button>
@@ -126,10 +170,10 @@ export function AATaskFolder({
 								event.stopPropagation();
 								if (event.key === "Enter") {
 									event.preventDefault();
-									finishEditing("save");
+									finishEditing("save", true);
 								} else if (event.key === "Escape") {
 									event.preventDefault();
-									finishEditing("cancel");
+									finishEditing("cancel", true);
 								}
 							}}
 							onKeyUp={(event) => event.stopPropagation()}
@@ -138,18 +182,20 @@ export function AATaskFolder({
 						<button
 							aria-label={`Rename task folder: ${title}`}
 							className="aa-task-folder__title-button"
+							ref={titleButtonRef}
 							type="button"
 							onDoubleClick={(event) => {
 								event.stopPropagation();
 								beginEditing();
 							}}
+							onPointerDownCapture={rememberTerminalFocus}
 							onKeyDown={(event) => {
 								if (event.key !== "Enter" && event.key !== "F2") return;
 								event.preventDefault();
 								event.stopPropagation();
 								beginEditing();
 							}}
-							title="Double-click or press Enter to rename"
+							title={`Rename Task Folder · ${renameShortcut.text}`}
 						>
 							{title}
 						</button>
@@ -175,6 +221,12 @@ export function AATaskFolder({
 				className="aa-task-folder-popover"
 				side="bottom"
 				sideOffset={7}
+				onCloseAutoFocus={(event) => {
+					if (!returnFocusRef.current?.isConnected) return;
+					event.preventDefault();
+					restoreAAWorkflowFocus(returnFocusRef.current);
+					returnFocusRef.current = null;
+				}}
 			>
 				<AATaskFolderContextCard
 					presentation={contextPresentation}

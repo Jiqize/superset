@@ -1,5 +1,6 @@
 import { Button } from "@superset/ui/button";
 import { useTerminalResumeCandidate } from "renderer/hooks/host-service/useTerminalResumeCandidate";
+import { useHotkeyDisplay } from "renderer/hotkeys";
 import { AAAgentAvatar } from "../AAAgentAvatar";
 import { useAAAgentStatus } from "../AAAgentStatus";
 import { AAEmployeeAvatar } from "../AAEmployeeAvatar";
@@ -16,6 +17,7 @@ interface AAActiveWorkerCardProps {
 }
 
 export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
+	const profileShortcut = useHotkeyDisplay("AA_OPEN_EMPLOYEE_PROFILE");
 	const { bindings, runtimeSnapshots, workspaceId } = useAAAgentStatus();
 	const { candidate: resumeCandidate } = useTerminalResumeCandidate(
 		workspaceId,
@@ -76,6 +78,7 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 					<span className="aa-active-worker-card__actions">
 						<AAEmployeeProfile
 							agentId={presentation.agentId}
+							dailyWorkflowShortcut={Boolean(terminal)}
 							name={presentation.displayName}
 							resumeAvailable={presentation.resumeLabel === "AVAILABLE"}
 							runtimeSnapshot={runtimeSnapshot}
@@ -85,7 +88,7 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 								aria-label={`View ${presentation.displayName} employee profile`}
 								className="aa-active-worker-card__profile"
 								size="icon"
-								title={`View ${presentation.displayName} employee profile`}
+								title={`View ${presentation.displayName} employee profile · ${profileShortcut.text}`}
 								variant="ghost"
 							>
 								<AAIcon name="agents" />
@@ -100,29 +103,17 @@ export function AAActiveWorkerCard({ terminal }: AAActiveWorkerCardProps) {
 				<span className="aa-agent-status__state">
 					{presentation.statusLabel}
 				</span>
-				<span
-					className="aa-active-worker-card__authority"
-					title={presentation.authorityLabel}
-				>
-					{presentation.runtimeLabel} · {presentation.transportLabel} ·{" "}
-					{presentation.authorityLabel}
-				</span>
-				{presentation.model && (
-					<span
-						className="aa-active-worker-card__runtime"
-						title={formatModelDetail(presentation.model)}
-					>
-						MODEL: {presentation.model.displayName ?? presentation.model.id}
-					</span>
-				)}
 				{presentation.reasoning && (
-					<span className="aa-active-worker-card__runtime">
+					<span className="aa-active-worker-card__runtime aa-active-worker-card__reasoning">
 						REASONING: {presentation.reasoning.value}
 					</span>
 				)}
-				{presentation.resumeLabel && (
-					<span className="aa-active-worker-card__runtime aa-active-worker-card__resume">
-						RESUME: {presentation.resumeLabel}
+				{presentation.model && (
+					<span
+						className="aa-active-worker-card__runtime aa-active-worker-card__model"
+						title={formatModelDetail(presentation.model)}
+					>
+						MODEL: {presentation.model.displayName ?? presentation.model.id}
 					</span>
 				)}
 			</div>

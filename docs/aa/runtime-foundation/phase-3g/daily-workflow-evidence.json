@@ -1,0 +1,144 @@
+{
+	"contract": "AA Runtime Contract v0.1",
+	"scenario": "Phase 3G Pi-first daily workflow",
+	"baselineCommit": "ced39d1db35dbf1d549eefa6d0b3ee1e89046b88",
+	"environment": {
+		"platform": "macOS 26.4 arm64",
+		"bun": "1.3.14",
+		"node": "24.14.0",
+		"pi": "0.82.1",
+		"viewport": ["1440x800", "1920x976"],
+		"qaProfile": "disposable phase-3g"
+	},
+	"workflowAudit": {
+		"openProjectToUsablePi": {
+			"beforeInteractionGroups": 7,
+			"afterInteractionGroups": 7,
+			"decision": "Unchanged because reducing project/workspace/agent launch steps was not safely Renderer-local."
+		},
+		"renameTaskFolder": {
+			"beforeInteractionGroups": 3,
+			"afterInteractionGroups": 2,
+			"afterPath": "Command-Option-R, edit and confirm"
+		},
+		"inspectTaskFolder": {
+			"beforeInteractionGroups": 3,
+			"afterInteractionGroups": 2,
+			"afterPath": "Command-Option-T, Escape with xterm focus restored"
+		},
+		"inspectEmployeeProfile": {
+			"beforeInteractionGroups": 3,
+			"afterInteractionGroups": 2,
+			"afterPath": "Command-Option-E, Escape with xterm focus restored"
+		},
+		"openFiles": {
+			"before": "one distant pointer action",
+			"after": "Command-Option-F"
+		},
+		"openChanges": {
+			"before": "one distant pointer action",
+			"after": "Command-L"
+		},
+		"openDeterministicChangedFileDiff": {
+			"before": "one changed-file row action after opening Changes",
+			"after": "unchanged; no output file is guessed"
+		},
+		"returnToPiFromDiff": {
+			"before": "three pointer actions through the terminal picker",
+			"after": "Command-Shift-A"
+		},
+		"resumeAfterFullRestart": {
+			"beforeInteractionGroups": 1,
+			"afterInteractionGroups": 1,
+			"decision": "Kept the exact-resume action count and made its context concise and unambiguous."
+		}
+	},
+	"piDogfood": {
+		"taskFolderTitle": "Build line report utility",
+		"runtime": "pi",
+		"transport": "terminal",
+		"authority": "runtime verified",
+		"model": "Gemini 3.5 Flash",
+		"reasoning": "high",
+		"statesObserved": [
+			"working",
+			"idle",
+			"offline_resumable",
+			"starting",
+			"idle"
+		],
+		"outputFiles": ["line_report.ts", "line_report.test.ts", "README.md"],
+		"fixtureTests": {
+			"runner": "bun test",
+			"passed": 9,
+			"failed": 0
+		},
+		"changedCountsObserved": [4, 3],
+		"changedCountNote": "The pre-restart count included Pi-owned ephemeral task metadata; the post-resume product output count was three. AA displayed the live Git count in both states."
+	},
+	"outputInspection": {
+		"files": true,
+		"changes": true,
+		"diff": true,
+		"review": true,
+		"deliveryState": "no GitHub repository",
+		"keyboardReturnFocusedRealXterm": true
+	},
+	"exactResume": {
+		"before": {
+			"nativeSessionFingerprint": "c8cedff76340",
+			"epochFingerprint": "fe487a54b5c0",
+			"state": "idle",
+			"stateReason": "turn_settled",
+			"canResume": true
+		},
+		"after": {
+			"nativeSessionFingerprint": "c8cedff76340",
+			"epochFingerprint": "4754c2ef0307",
+			"state": "idle",
+			"stateReason": "session_attach",
+			"canResume": true
+		},
+		"nativeSessionMatched": true,
+		"epochChanged": true,
+		"taskFolderTitlePreserved": true,
+		"conversationContextConfirmed": true,
+		"xtermFocusedAfterResume": true
+	},
+	"compatibilityRegression": {
+		"employee": "Superset CLI",
+		"taskFolderTitleCarried": true,
+		"dispatchAcknowledged": true,
+		"tracking": "untracked",
+		"piRuntimeDetailLeaked": false
+	},
+	"grokRegression": {
+		"authenticatedLaunchAttempted": false,
+		"profileStatus": "no live runtime",
+		"runtime": "Grok Build",
+		"transport": "ACP",
+		"speculativeCapabilitiesShown": false,
+		"phase3FDeferred": true
+	},
+	"uiRegression": {
+		"rendererReload": true,
+		"rightSidebarStatePersisted": true,
+		"homeReturnToPriorWorkspace": true,
+		"viewport1440x800": true,
+		"viewport1920x976": true,
+		"horizontalDocumentOverflow": false,
+		"reducedMotionMatched": true,
+		"animatedAACandidatesUnderReducedMotion": 0
+	},
+	"safety": {
+		"rawRuntimeIdentityRecorded": false,
+		"rawWorkspaceOrTerminalIdRecorded": false,
+		"terminalTranscriptStoredInJson": false,
+		"credentialRecorded": false,
+		"productionRepositoryDataUsed": false,
+		"ptyDaemonModified": false,
+		"gitOrWorktreeSemanticsModified": false,
+		"databaseSchemaModified": false,
+		"runtimeAdapterModified": false
+	}
+}

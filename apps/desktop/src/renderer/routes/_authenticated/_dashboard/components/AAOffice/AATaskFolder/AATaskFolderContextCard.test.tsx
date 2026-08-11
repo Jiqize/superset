@@ -30,6 +30,18 @@ describe("AA Task Folder context card", () => {
 		expect(markup).toContain("REASONING");
 		expect(markup).toContain("2 CHANGED");
 		expect(markup).toContain("TURN SETTLED");
+		expect(markup).toContain("RUNTIME DETAILS");
+		const primaryFacts = markup.slice(
+			markup.indexOf('<dl class="aa-task-folder-card__facts"'),
+			markup.indexOf("</dl>"),
+		);
+		expect(primaryFacts).toContain("EMPLOYEE");
+		expect(primaryFacts).toContain("STATUS");
+		expect(primaryFacts).toContain("OUTPUT");
+		expect(primaryFacts).toContain("RESUME");
+		expect(primaryFacts).not.toContain("RUNTIME");
+		expect(primaryFacts).not.toContain("MODEL");
+		expect(primaryFacts).not.toContain("REASONING");
 		expect(markup).not.toContain("TRANSCRIPT");
 		expect(markup).not.toContain("PROGRESS");
 	});

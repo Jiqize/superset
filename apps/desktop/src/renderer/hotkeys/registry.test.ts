@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { HOTKEYS_REGISTRY } from "./registry";
+import type { ShortcutBinding } from "./types";
 
 // Locks in the shape of shipped defaults so the toggle keeps doing
 // something. The original "Adaptive layout mapping" toggle was decorative
@@ -42,7 +43,7 @@ function terminalToken(chord: string): string {
 function* allBindings(): Generator<{
 	id: string;
 	platform: "mac" | "windows" | "linux";
-	binding: unknown;
+	binding: ShortcutBinding | null;
 }> {
 	for (const [id, def] of Object.entries(HOTKEYS_REGISTRY)) {
 		for (const platform of ["mac", "windows", "linux"] as const) {
@@ -52,6 +53,51 @@ function* allBindings(): Generator<{
 }
 
 describe("HOTKEYS_REGISTRY shape", () => {
+	it("ships a mnemonic macOS-first AA daily workflow without duplicate chords", () => {
+		expect(HOTKEYS_REGISTRY.AA_FOCUS_WORKSTATION.key.mac).toMatchObject({
+			chord: "meta+shift+a",
+		});
+		expect(HOTKEYS_REGISTRY.AA_OPEN_TASK_FOLDER.key.mac).toMatchObject({
+			chord: "meta+alt+t",
+		});
+		expect(HOTKEYS_REGISTRY.AA_RENAME_TASK_FOLDER.key.mac).toMatchObject({
+			chord: "meta+alt+r",
+		});
+		expect(HOTKEYS_REGISTRY.AA_OPEN_EMPLOYEE_PROFILE.key.mac).toMatchObject({
+			chord: "meta+alt+e",
+		});
+		expect(HOTKEYS_REGISTRY.AA_OPEN_FILES.key.mac).toMatchObject({
+			chord: "meta+alt+f",
+		});
+
+		const macChords = Array.from(allBindings())
+			.filter(({ platform }) => platform === "mac")
+			.flatMap(({ id, binding }) =>
+				binding === null
+					? []
+					: [
+							{
+								id,
+								chord: typeof binding === "string" ? binding : binding.chord,
+							},
+						],
+			);
+		const aaIds = [
+			"AA_FOCUS_WORKSTATION",
+			"AA_OPEN_TASK_FOLDER",
+			"AA_RENAME_TASK_FOLDER",
+			"AA_OPEN_EMPLOYEE_PROFILE",
+			"AA_OPEN_FILES",
+		];
+		for (const entry of macChords.filter(({ id }) => aaIds.includes(id))) {
+			expect(
+				macChords
+					.filter((candidate) => candidate.chord === entry.chord)
+					.map(({ id }) => id),
+			).toEqual([entry.id]);
+		}
+	});
+
 	it("authors printable defaults as mode: 'logical'", () => {
 		const offenders: string[] = [];
 		for (const { id, platform, binding } of allBindings()) {
