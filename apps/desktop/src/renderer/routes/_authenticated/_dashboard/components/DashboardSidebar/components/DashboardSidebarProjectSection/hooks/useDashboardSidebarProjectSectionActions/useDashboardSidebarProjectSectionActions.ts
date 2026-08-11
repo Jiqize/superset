@@ -6,6 +6,7 @@ import { useHostProjects } from "renderer/hooks/host-projects/useHostProjects";
 import { useHostUrl } from "renderer/hooks/host-service/useHostTargetUrl";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import { electronTrpcClient } from "renderer/lib/trpc-client";
+import { openAANewTaskDialog } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useDashboardSidebarSectionRename } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/components/DashboardSidebarSectionRenameContext";
 import { useDashboardSidebarState } from "renderer/routes/_authenticated/hooks/useDashboardSidebarState";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
@@ -133,6 +134,20 @@ export function useDashboardSidebarProjectSectionActions({
 		openModal(project.id);
 	};
 
+	const handleNewTask = () => {
+		if (!servingHostId || !servingHostUrl) {
+			toast.error(
+				"Project's host is unreachable — cannot start a new task right now",
+			);
+			return;
+		}
+		openAANewTaskDialog({
+			hostId: servingHostId,
+			projectId: project.id,
+			projectName: project.name,
+		});
+	};
+
 	// Menu action: list the worktrees git knows about that have no workspace
 	// row yet and open the confirmation dialog.
 	const handleImportWorktrees = async () => {
@@ -236,12 +251,14 @@ export function useDashboardSidebarProjectSectionActions({
 		deleteSection,
 		handleImportWorktrees,
 		handleNewSection,
+		handleNewTask,
 		handleNewWorkspace,
 		handleOpenInFinder,
 		handleOpenSettings,
 		importableWorktrees,
 		isImportingWorktrees,
 		isRenaming,
+		isNewTaskAvailable: Boolean(servingHostId && servingHostUrl),
 		renameSection,
 		renameValue,
 		setImportableWorktrees,

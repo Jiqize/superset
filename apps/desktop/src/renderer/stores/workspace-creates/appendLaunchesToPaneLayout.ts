@@ -20,6 +20,13 @@ interface AppendArgs {
 	existing: WorkspaceState<PaneViewerData> | undefined;
 	terminals: Array<{ terminalId: string; label?: string }>;
 	agents: AgentLaunchResult[];
+	initialAgentPresentation?: InitialAgentPanePresentation;
+}
+
+export interface InitialAgentPanePresentation {
+	agentId: string;
+	agentResultIndex: number;
+	title: string;
 }
 
 interface PaneLaunch {
@@ -27,27 +34,49 @@ interface PaneLaunch {
 	launchIdentity?: TerminalPaneData["launchIdentity"];
 	sessionId: string;
 	label?: string;
+	taskTitle?: string;
+	taskTitleEdited?: boolean;
 }
 
 export function appendLaunchesToPaneLayout({
 	existing,
 	terminals,
 	agents,
+	initialAgentPresentation,
 }: AppendArgs): WorkspaceState<PaneViewerData> {
 	const terminalLaunches: PaneLaunch[] = terminals.map((entry) => ({
 		kind: "terminal",
 		sessionId: entry.terminalId,
 		label: entry.label,
 	}));
-	const agentLaunches: PaneLaunch[] = agents
-		.filter((entry): entry is Extract<typeof entry, { ok: true }> => entry.ok)
-		.map((entry) => ({
-			kind: entry.kind,
-			launchIdentity:
-				entry.kind === "terminal" ? { label: entry.label } : undefined,
-			sessionId: entry.sessionId,
-			label: entry.label,
-		}));
+	const agentLaunches: PaneLaunch[] = agents.flatMap((entry, index) => {
+		if (!entry.ok) return [];
+		const hasInitialPresentation =
+			entry.kind === "terminal" &&
+			initialAgentPresentation?.agentResultIndex === index;
+		return [
+			{
+				kind: entry.kind,
+				launchIdentity:
+					entry.kind === "terminal"
+						? {
+								...(hasInitialPresentation
+									? { agentId: initialAgentPresentation.agentId }
+									: {}),
+								label: entry.label,
+							}
+						: undefined,
+				sessionId: entry.sessionId,
+				label: entry.label,
+				...(hasInitialPresentation
+					? {
+							taskTitle: initialAgentPresentation.title,
+							taskTitleEdited: true,
+						}
+					: {}),
+			},
+		];
+	});
 	// A wait-for-setup chained agent reuses the setup terminal, so its result
 	// carries the same session id as the setup terminal descriptor — dedupe to
 	// one tab (first entry wins, keeping the setup terminal's label).
@@ -60,6 +89,10 @@ export function appendLaunchesToPaneLayout({
 			// label while retaining the real agent launch identity separately.
 			if (!existingLaunch.launchIdentity && launch.launchIdentity) {
 				existingLaunch.launchIdentity = launch.launchIdentity;
+			}
+			if (launch.taskTitle) {
+				existingLaunch.taskTitle = launch.taskTitle;
+				existingLaunch.taskTitleEdited = launch.taskTitleEdited;
 			}
 			continue;
 		}
@@ -78,7 +111,7 @@ export function appendLaunchesToPaneLayout({
 
 	for (const launch of launches) {
 		store.getState().addTab({
-			titleOverride: launch.label,
+			titleOverride: launch.taskTitle ?? launch.label,
 			panes: [
 				launch.kind === "chat"
 					? {
@@ -89,6 +122,7 @@ export function appendLaunchesToPaneLayout({
 							kind: "terminal",
 							data: {
 								launchIdentity: launch.launchIdentity,
+								taskTitleEdited: launch.taskTitleEdited,
 								terminalId: launch.sessionId,
 							} satisfies TerminalPaneData,
 						},

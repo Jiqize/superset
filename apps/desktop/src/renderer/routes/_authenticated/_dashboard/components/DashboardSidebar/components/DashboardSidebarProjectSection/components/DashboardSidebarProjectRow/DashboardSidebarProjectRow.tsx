@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { type ComponentPropsWithoutRef, forwardRef } from "react";
 import { HiChevronRight, HiMiniPlus } from "react-icons/hi2";
-import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAIcon";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
 import { RenameInput } from "renderer/screens/main/components/WorkspaceSidebar/RenameInput";
 
@@ -19,6 +19,8 @@ interface DashboardSidebarProjectRowProps
 	onCancelRename: () => void;
 	onStartRename: () => void;
 	onToggleCollapse: () => void;
+	onNewTask?: () => void;
+	isNewTaskAvailable?: boolean;
 	onNewWorkspace: () => void;
 }
 
@@ -39,6 +41,8 @@ export const DashboardSidebarProjectRow = forwardRef<
 			onCancelRename,
 			onStartRename,
 			onToggleCollapse,
+			onNewTask,
+			isNewTaskAvailable = false,
 			onNewWorkspace,
 			className,
 			...props
@@ -106,6 +110,33 @@ export const DashboardSidebarProjectRow = forwardRef<
 					aria-hidden="true"
 					className="aa-briefcase-row__chevron hidden size-3 shrink-0"
 				/>
+
+				{!isRenaming && onNewTask && (
+					<Tooltip delayDuration={300}>
+						<TooltipTrigger asChild>
+							<button
+								type="button"
+								disabled={!isNewTaskAvailable}
+								onClick={(event) => {
+									event.stopPropagation();
+									onNewTask();
+								}}
+								onKeyDown={(event) => event.stopPropagation()}
+								onContextMenu={(event) => event.stopPropagation()}
+								aria-label={`New task in ${projectName}`}
+								className="aa-new-task-trigger"
+							>
+								<AAIcon name="folder" />
+								<span>NEW TASK</span>
+							</button>
+						</TooltipTrigger>
+						<TooltipContent side="bottom">
+							{isNewTaskAvailable
+								? "Create a new Pi task in its own work folder"
+								: "Project host is unreachable"}
+						</TooltipContent>
+					</Tooltip>
+				)}
 
 				{!isRenaming && (
 					<div className="ml-1 flex size-6 shrink-0 items-center justify-center">

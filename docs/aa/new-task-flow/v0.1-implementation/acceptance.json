@@ -1,0 +1,63 @@
+{
+	"schemaVersion": 1,
+	"phase": "3H",
+	"baselineCommit": "d57858aff388a7742e9653674425996ced37362a",
+	"environment": {
+		"platform": "macOS arm64",
+		"primaryViewport": "1440x800",
+		"secondaryViewport": "1920x976",
+		"piVersion": "0.82.1"
+	},
+	"journey": {
+		"entry": "briefcase-local-new-task",
+		"defaultEmployee": "pi",
+		"defaultWorkLocation": "new-work-folder",
+		"interactionGroupsBefore": 7,
+		"interactionGroupsAfter": 2,
+		"initialPromptMatchedNormalizedTitle": true,
+		"xtermFocusedWhenReady": true,
+		"runtimeStatesObserved": ["working", "idle"],
+		"rendererReloadPassed": true,
+		"fullRestartPassed": true,
+		"reducedMotionPassed": true
+	},
+	"outputs": {
+		"asciiTaskFile": "aa_task_marker.txt",
+		"unicodeTaskFile": "unicode_marker.txt",
+		"filesChangesDiffPassed": true
+	},
+	"collisionAndUnicode": {
+		"sameHumanTitleWorkspaceCount": 2,
+		"distinctGeneratedBranches": true,
+		"unicodeTitlePassed": true
+	},
+	"exactResume": {
+		"asciiTask": {
+			"nativeSessionFingerprintBefore": "559861d24f3d",
+			"nativeSessionFingerprintAfter": "559861d24f3d",
+			"epochFingerprintBefore": "bafc5b7f3f3f",
+			"epochFingerprintAfter": "6c38a310b83e",
+			"titlePreserved": true
+		},
+		"unicodeTask": {
+			"nativeSessionFingerprintBefore": "b68249231450",
+			"nativeSessionFingerprintAfter": "b68249231450",
+			"epochFingerprintBefore": "db1cf9a5651c",
+			"epochFingerprintAfter": "459d56e9c94d",
+			"titlePreserved": true
+		}
+	},
+	"boundaries": {
+		"emptyTitleRejectedWithoutGitMutation": true,
+		"existingNewWorkspacePathPassed": true,
+		"tier2DispatchStayedUntracked": true,
+		"grokStayedAuthenticationGated": true,
+		"redAreaFilesModified": false
+	},
+	"motion": {
+		"prefersReducedMotion": true,
+		"sampledAnimationDurationMs": 0.01,
+		"sampledTransitionDurationMs": 0.01,
+		"sampledIterationCount": 1
+	}
+}

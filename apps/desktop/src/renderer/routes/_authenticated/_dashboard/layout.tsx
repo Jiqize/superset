@@ -26,7 +26,7 @@ import {
 	MAX_WORKSPACE_SIDEBAR_WIDTH,
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
-import { AANavigationRail } from "./components/AAOffice";
+import { AANavigationRail, AANewTaskDialog } from "./components/AAOffice";
 import { AddRepositoryModals } from "./components/AddRepositoryModals";
 import "./components/AAOffice/aa-office.css";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
@@ -240,6 +240,7 @@ function DashboardLayout() {
 			)}
 		>
 			<CommandPaletteHost />
+			<AANewTaskDialog />
 			{aaOfficeActive && <AANavigationRail />}
 			{sidebarOutsideColumn && sidebarPanel}
 			<div className="flex flex-1 flex-col min-w-0 min-h-0">

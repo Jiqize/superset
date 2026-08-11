@@ -15,6 +15,7 @@ import { useDashboardSidebarProjectSectionActions } from "./hooks/useDashboardSi
 
 interface DashboardSidebarProjectSectionProps {
 	project: DashboardSidebarProject;
+	aaOffice?: boolean;
 	isSidebarCollapsed?: boolean;
 	isDraggingProject?: boolean;
 	workspaceShortcutLabels: Map<string, string>;
@@ -26,6 +27,7 @@ interface DashboardSidebarProjectSectionProps {
 
 export function DashboardSidebarProjectSection({
 	project,
+	aaOffice = false,
 	isSidebarCollapsed = false,
 	isDraggingProject = false,
 	workspaceShortcutLabels,
@@ -46,12 +48,14 @@ export function DashboardSidebarProjectSection({
 		deleteSection,
 		handleImportWorktrees,
 		handleNewSection,
+		handleNewTask,
 		handleNewWorkspace,
 		handleOpenInFinder,
 		handleOpenSettings,
 		importableWorktrees,
 		isImportingWorktrees,
 		isRenaming,
+		isNewTaskAvailable,
 		renameSection,
 		renameValue,
 		setImportableWorktrees,
@@ -129,6 +133,8 @@ export function DashboardSidebarProjectSection({
 					onCancelRename={cancelRename}
 					onStartRename={startRename}
 					onToggleCollapse={() => onToggleCollapse(project.id)}
+					onNewTask={aaOffice ? handleNewTask : undefined}
+					isNewTaskAvailable={isNewTaskAvailable}
 					onNewWorkspace={handleNewWorkspace}
 					{...(dragHandleAttributes ?? {})}
 					{...(dragHandleListeners ?? {})}

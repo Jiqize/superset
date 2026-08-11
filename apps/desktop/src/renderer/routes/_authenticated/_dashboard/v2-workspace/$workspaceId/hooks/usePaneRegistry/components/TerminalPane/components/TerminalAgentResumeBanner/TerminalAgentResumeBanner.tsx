@@ -9,7 +9,6 @@ import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-
 import {
 	AAIcon,
 	resolveAAHandoffPanePresentation,
-	resolveAAHandoffTaskTitle,
 	resolveAAResumeSessionPresentation,
 	useAAAgentStatus,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
@@ -17,6 +16,7 @@ import type {
 	PaneViewerData,
 	TerminalPaneData,
 } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/types";
+import { resolveTerminalResumeTaskTitle } from "./TerminalAgentResumeBanner.utils";
 
 interface TerminalAgentResumeBannerProps {
 	workspaceId: string;
@@ -71,8 +71,9 @@ export function TerminalAgentResumeBanner({
 		runtimeSnapshot: runtimeSnapshots.get(terminalId),
 	});
 	const paneData = ctx.pane.data as TerminalPaneData;
-	const taskFolderTitle = resolveAAHandoffTaskTitle({
+	const taskFolderTitle = resolveTerminalResumeTaskTitle({
 		paneTitle: ctx.pane.titleOverride,
+		tabTitle: ctx.tab.titleOverride,
 		taskTitleEdited: paneData.taskTitleEdited,
 	});
 	if (!candidate || presentation.availability !== "available" || dismissed)
@@ -93,10 +94,7 @@ export function TerminalAgentResumeBanner({
 			const state = ctx.store.getState();
 			const panePresentation = resolveAAHandoffPanePresentation({
 				employeeTitle: result.label,
-				taskFolderTitle: resolveAAHandoffTaskTitle({
-					paneTitle: ctx.pane.titleOverride,
-					taskTitleEdited: paneData.taskTitleEdited,
-				}),
+				taskFolderTitle,
 			});
 			state.setPaneData({
 				paneId: ctx.pane.id,

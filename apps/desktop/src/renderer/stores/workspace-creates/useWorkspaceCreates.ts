@@ -10,6 +10,11 @@ import { useCollections } from "renderer/routes/_authenticated/providers/Collect
 import type { WorkspacesCreateInput } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
+import type { InitialAgentPanePresentation } from "./appendLaunchesToPaneLayout";
+import {
+	createWorkspaceSuccessOutcome,
+	type WorkspaceCreateSuccessOutcome,
+} from "./workspaceCreateOutcome";
 import { useWorkspaceTransactionsStore } from "./workspaceTransactions";
 import { writeWorkspacePaneLayout } from "./writeWorkspacePaneLayout";
 
@@ -18,10 +23,11 @@ export type { WorkspacesCreateInput };
 export interface SubmitArgs {
 	hostId: string;
 	snapshot: WorkspacesCreateInput;
+	initialAgentPresentation?: InitialAgentPanePresentation;
 }
 
 export type SubmitOutcome =
-	| { ok: true; workspaceId: string }
+	| WorkspaceCreateSuccessOutcome
 	| { ok: false; error: string };
 
 export interface SubmitHandle {
@@ -50,7 +56,7 @@ export function useWorkspaceCreates(): UseWorkspaceCreatesApi {
 
 	const submit = useCallback(
 		(args: SubmitArgs): SubmitHandle => {
-			const { snapshot } = args;
+			const { initialAgentPresentation, snapshot } = args;
 			const workspaceId = snapshot.id;
 			if (!workspaceId) {
 				throw new Error("workspaces.create requires `id`");
@@ -157,15 +163,13 @@ export function useWorkspaceCreates(): UseWorkspaceCreatesApi {
 						result.workspace,
 						result.terminals,
 						result.agents,
+						initialAgentPresentation,
 					);
 					if (result.workspace.id !== workspaceId) {
 						deleteWorkspaceLocalState(workspaceId);
 						hostWorkspacesCache.removeWorkspace(args.hostId, workspaceId);
 					}
-					return {
-						ok: true,
-						workspaceId: result.workspace.id,
-					};
+					return createWorkspaceSuccessOutcome(result);
 				})
 				.catch<SubmitOutcome>((error: unknown) => {
 					const message =

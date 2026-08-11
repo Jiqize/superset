@@ -61,6 +61,99 @@ describe("appendLaunchesToPaneLayout", () => {
 		});
 	});
 
+	it("applies an explicit Task Folder title only to the intended Pi pane", () => {
+		const state = appendLaunchesToPaneLayout({
+			existing: undefined,
+			terminals: [],
+			agents: [
+				{ ok: true, kind: "terminal", sessionId: "term-pi", label: "Pi" },
+			],
+			initialAgentPresentation: {
+				agentId: "pi-config",
+				agentResultIndex: 0,
+				title: "Fix login state",
+			},
+		});
+
+		expect(state.tabs[0].titleOverride).toBe("Fix login state");
+		const pane = Object.values(state.tabs[0].panes)[0];
+		expect(pane).toMatchObject({
+			kind: "terminal",
+			data: {
+				launchIdentity: { agentId: "pi-config", label: "Pi" },
+				taskTitleEdited: true,
+				terminalId: "term-pi",
+			},
+		});
+	});
+
+	it("carries Task Folder presentation onto a chained setup terminal", () => {
+		const state = appendLaunchesToPaneLayout({
+			existing: undefined,
+			terminals: [{ terminalId: "term-shared", label: "Workspace Setup" }],
+			agents: [
+				{
+					ok: true,
+					kind: "terminal",
+					sessionId: "term-shared",
+					label: "Pi",
+				},
+			],
+			initialAgentPresentation: {
+				agentId: "pi-config",
+				agentResultIndex: 0,
+				title: "Run guarded setup",
+			},
+		});
+
+		expect(state.tabs).toHaveLength(1);
+		expect(state.tabs[0].titleOverride).toBe("Run guarded setup");
+		const pane = Object.values(state.tabs[0].panes)[0];
+		expect(pane.data).toMatchObject({
+			launchIdentity: { agentId: "pi-config", label: "Pi" },
+			taskTitleEdited: true,
+			terminalId: "term-shared",
+		});
+	});
+
+	it("does not fabricate a task pane when the intended Pi launch fails", () => {
+		const state = appendLaunchesToPaneLayout({
+			existing: undefined,
+			terminals: [{ terminalId: "term-setup", label: "Workspace Setup" }],
+			agents: [{ ok: false, error: "Pi executable missing" }],
+			initialAgentPresentation: {
+				agentId: "pi-config",
+				agentResultIndex: 0,
+				title: "Should not appear",
+			},
+		});
+
+		expect(state.tabs).toHaveLength(1);
+		expect(state.tabs[0].titleOverride).toBe("Workspace Setup");
+		const pane = Object.values(state.tabs[0].panes)[0];
+		expect((pane.data as TerminalPaneData).taskTitleEdited).toBeUndefined();
+	});
+
+	it("leaves unrelated command and setup panes unchanged", () => {
+		const state = appendLaunchesToPaneLayout({
+			existing: undefined,
+			terminals: [{ terminalId: "term-command", label: "Bootstrap" }],
+			agents: [
+				{ ok: true, kind: "terminal", sessionId: "term-pi", label: "Pi" },
+			],
+			initialAgentPresentation: {
+				agentId: "pi-config",
+				agentResultIndex: 0,
+				title: "Implement New Task",
+			},
+		});
+
+		expect(state.tabs.map((tab) => tab.titleOverride)).toEqual([
+			"Bootstrap",
+			"Implement New Task",
+		]);
+	});
+
 	it("preserves an existing split layout when appending a launch", () => {
 		const initial = appendLaunchesToPaneLayout({
 			existing: undefined,

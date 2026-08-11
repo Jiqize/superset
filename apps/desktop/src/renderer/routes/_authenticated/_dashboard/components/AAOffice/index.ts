@@ -42,6 +42,13 @@ export {
 export { AAIcon, type AAIconName } from "./AAIcon";
 export { AANavigationRail } from "./AANavigationRail";
 export {
+	AANewTaskDialog,
+	AANewTaskWorkspaceGate,
+	aaNewTaskFlowStore,
+	openAANewTaskDialog,
+	useAANewTaskFlow,
+} from "./AANewTask";
+export {
 	AA_PI_REASONING_LEVELS,
 	type AAHairStateName,
 	type AAPiReasoningLevel,

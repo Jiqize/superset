@@ -15,6 +15,7 @@ import {
 	type AAActiveTerminalPresentationInput,
 	AAAgentStatusProvider,
 	AABottomStatusBar,
+	AANewTaskWorkspaceGate,
 	AAWindowFrame,
 	AAWorkspaceHeader,
 	resolveAAHandoffTaskTitleFromPaneCandidates,
@@ -364,6 +365,11 @@ function V2WorkspaceContent() {
 				store={store}
 				sidebarOpen={sidebarOpen}
 			>
+				<AANewTaskWorkspaceGate
+					isLayoutReady={isLayoutReady}
+					store={store}
+					workspaceId={workspaceId}
+				/>
 				<AAWindowFrame
 					footer={
 						<AABottomStatusBar

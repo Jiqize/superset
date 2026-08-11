@@ -8,7 +8,10 @@ import {
 	getPrependTabOrder,
 	isSidebarWorkspaceVisible,
 } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
-import { appendLaunchesToPaneLayout } from "./appendLaunchesToPaneLayout";
+import {
+	appendLaunchesToPaneLayout,
+	type InitialAgentPanePresentation,
+} from "./appendLaunchesToPaneLayout";
 
 type HostWorkspacesCreateResult = NonNullable<
 	WorkspaceCreateMutationMetadata["result"]
@@ -25,6 +28,7 @@ export function writeWorkspacePaneLayout(
 	workspace: { id: string; projectId: string },
 	terminals: HostWorkspacesCreateResult["terminals"],
 	agents: HostWorkspacesCreateResult["agents"],
+	initialAgentPresentation?: InitialAgentPanePresentation,
 ): void {
 	const existing = collections.v2WorkspaceLocalState.get(workspace.id);
 	const paneLayout = appendLaunchesToPaneLayout({
@@ -33,6 +37,7 @@ export function writeWorkspacePaneLayout(
 			| undefined,
 		terminals,
 		agents,
+		initialAgentPresentation,
 	});
 
 	if (existing) {

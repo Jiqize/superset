@@ -57,6 +57,7 @@ interface DashboardSidebarProps {
 
 interface SortableProjectWrapperProps {
 	project: DashboardSidebarProject;
+	aaOffice: boolean;
 	isCollapsed: boolean;
 	isDraggingProject: boolean;
 	workspaceShortcutLabels: Map<string, string>;
@@ -66,6 +67,7 @@ interface SortableProjectWrapperProps {
 
 const SortableProjectWrapper = memo(function SortableProjectWrapper({
 	project,
+	aaOffice,
 	isCollapsed,
 	isDraggingProject,
 	workspaceShortcutLabels,
@@ -91,6 +93,7 @@ const SortableProjectWrapper = memo(function SortableProjectWrapper({
 			}}
 		>
 			<DashboardSidebarProjectSection
+				aaOffice={aaOffice}
 				project={project}
 				isSidebarCollapsed={isCollapsed}
 				isDraggingProject={isDraggingProject}
@@ -274,6 +277,7 @@ export function DashboardSidebar({
 													<SortableProjectWrapper
 														key={project.id}
 														project={project}
+														aaOffice={aaOffice}
 														isCollapsed={isCollapsed}
 														isDraggingProject={activeProject != null}
 														workspaceShortcutLabels={workspaceShortcutLabels}
@@ -293,6 +297,7 @@ export function DashboardSidebar({
 														<div>
 															<DashboardSidebarProjectSection
 																project={activeProject}
+																aaOffice={aaOffice}
 																isSidebarCollapsed={isCollapsed}
 																isDraggingProject
 																workspaceShortcutLabels={
