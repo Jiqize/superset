@@ -1,0 +1,158 @@
+{
+	"classifications": [
+		"authoritative and durable",
+		"authoritative but live-only",
+		"persisted presentation only",
+		"unavailable",
+		"unsafe to infer"
+	],
+	"columns": [
+		"live app",
+		"Renderer reload",
+		"full app restart",
+		"Pi process exit",
+		"exact Pi resume",
+		"Pi intentionally ended/no resume candidate",
+		"Workspace removal",
+		"worktree removal"
+	],
+	"rows": [
+		{
+			"evidence": "explicit Task Folder title",
+			"values": [
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"unavailable",
+				"persisted presentation only"
+			]
+		},
+		{
+			"evidence": "Workspace identity/project ownership",
+			"values": [
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"unavailable",
+				"authoritative and durable"
+			]
+		},
+		{
+			"evidence": "pane layout/title metadata",
+			"values": [
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"unavailable",
+				"persisted presentation only"
+			]
+		},
+		{
+			"evidence": "terminal launch identity",
+			"values": [
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"unavailable",
+				"persisted presentation only"
+			]
+		},
+		{
+			"evidence": "live Runtime snapshot",
+			"values": [
+				"authoritative but live-only",
+				"authoritative but live-only",
+				"unavailable",
+				"unavailable",
+				"authoritative but live-only",
+				"unavailable",
+				"unavailable",
+				"authoritative but live-only"
+			]
+		},
+		{
+			"evidence": "saved Pi resume candidate",
+			"values": [
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"unsafe to infer",
+				"unavailable",
+				"unavailable",
+				"unavailable",
+				"unsafe to infer"
+			]
+		},
+		{
+			"evidence": "changed-file count",
+			"values": [
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"unavailable",
+				"unavailable"
+			]
+		},
+		{
+			"evidence": "Git branch/worktree existence",
+			"values": [
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"unsafe to infer",
+				"unsafe to infer"
+			]
+		},
+		{
+			"evidence": "PR/delivery state if applicable",
+			"values": [
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"authoritative and durable",
+				"unsafe to infer",
+				"authoritative and durable"
+			]
+		},
+		{
+			"evidence": "compatibility employee identity",
+			"values": [
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"persisted presentation only",
+				"unavailable",
+				"persisted presentation only"
+			]
+		}
+	],
+	"notes": [
+		"Changed-file count is recomputed from authoritative Git truth; the numeric count itself is not stored.",
+		"Pi process exit alone is insufficient for resume: only an exact terminal-exited binding with a captured session id and progressed lifecycle is resumable.",
+		"Git branch and worktree must be checked separately after cleanup because worktree deletion does not imply branch deletion.",
+		"Workspace removal removes the local PR link but does not prove that a remote pull request was deleted.",
+		"Manual worktree removal can leave Workspace and presentation records behind; those records must not be treated as proof that the checkout exists."
+	]
+}

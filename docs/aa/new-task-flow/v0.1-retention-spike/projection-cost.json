@@ -1,0 +1,58 @@
+{
+	"source": "static inspection plus guarded local QA",
+	"unit": "eligible Work Folder with explicit Task Folder terminal evidence and a real Host Workspace",
+	"initialQueriesPerUnit": {
+		"aaRuntime.list": 1,
+		"terminalAgents.resumeCandidate": 1,
+		"git.getStatus": 1,
+		"total": 3
+	},
+	"logicalEventSubscriptionsPerUnit": {
+		"aa-runtime:changed": 1,
+		"agent:lifecycle": 1,
+		"terminal:lifecycle": 1,
+		"git:changed": 1,
+		"eventBusRetain": 1
+	},
+	"cachePolicy": {
+		"runtimeStaleMs": 30000,
+		"resumeStaleMs": 15000,
+		"gitStale": "infinite until git:changed invalidation",
+		"polling": false,
+		"refetchGitOnWindowFocus": false
+	},
+	"fanOut": [
+		{
+			"eligibleWorkFolders": 5,
+			"initialQueries": 15,
+			"logicalEventListeners": 20
+		},
+		{
+			"eligibleWorkFolders": 10,
+			"initialQueries": 30,
+			"logicalEventListeners": 40
+		},
+		{
+			"eligibleWorkFolders": 13,
+			"initialQueries": 39,
+			"logicalEventListeners": 52,
+			"observedMinimumInPhase3K": true
+		},
+		{
+			"eligibleWorkFolders": 20,
+			"initialQueries": 60,
+			"logicalEventListeners": 80
+		}
+	],
+	"observed": {
+		"totalWorkFolders": 17,
+		"minimumEligibleWorkFolders": 13,
+		"maximumProjectedRows": 13,
+		"rendererNavigationDomReadyMsRange": [2822, 3104],
+		"projectionSpecificFailures": 0,
+		"inputOrNavigationBlocker": false,
+		"timingCaveat": "Navigation timing includes renderer and route hydration and is not an isolated Host query benchmark. Thirteen is the UI-proven minimum eligible count; rows later omitted by the pure projection may still have issued reads."
+	},
+	"decision": "Keep event-driven per-workspace reads for the current 20-Work-Folder product envelope; do not add a batched endpoint yet.",
+	"batchTrigger": "Revisit before supporting more than 20 eligible Work Folders, or when a controlled 20-folder run twice exceeds five seconds to settle all evidence, produces Host worker/backpressure errors, or causes observable input/navigation stalls."
+}

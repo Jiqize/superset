@@ -1,0 +1,73 @@
+{
+	"phase": "3K",
+	"baselineCommit": "f051062f9297924418c8dc8ba4fb27c21ed0b40f",
+	"date": "2026-08-11",
+	"environment": {
+		"platform": "macOS 26.4 (25E246), arm64",
+		"bun": "1.3.14",
+		"git": "2.50.1 (Apple Git-155)",
+		"pi": "0.82.1",
+		"profile": "guarded isolated disposable AA profile",
+		"project": "disposable local one-commit Git project without a remote"
+	},
+	"interaction": {
+		"productionNewTaskSubmissions": 10,
+		"driver": "visible AA controls with real Chromium pointer and keyboard events",
+		"rendererReload": "passed",
+		"fullElectronHostRestartCycles": 2,
+		"keyboardTabEnterNavigation": "passed",
+		"repeatedRowSwitching": "passed"
+	},
+	"briefcase": {
+		"workFoldersAfterCreation": 17,
+		"minimumEligibleTaskFoldersAtPeak": 13,
+		"projectedRowsAtPeak": 13,
+		"projectedRowsAfterIntentionalCleanEnd": 12,
+		"duplicateTitleRows": 2,
+		"realChangedTasksObserved": 3,
+		"tier2CompatibilityRows": 1
+	},
+	"runtime": {
+		"concurrentRealLifecycleStates": ["idle", "working"],
+		"firstRestart": {
+			"staleLiveRows": 0,
+			"exactResumablePiRows": 3,
+			"untrackedCompatibilityRows": 1
+		},
+		"exactPiResumesCompleted": 3,
+		"secondRestart": {
+			"staleLiveRows": 0,
+			"exactResumablePiRows": 1,
+			"untrackedCompatibilityRows": 1
+		},
+		"intentionalCleanEnd": {
+			"method": "Pi TUI /quit",
+			"activeTaskRowAfterEnd": false,
+			"workFolderCountAfterEnd": 17,
+			"resumeCandidateAfterEnd": false
+		}
+	},
+	"viewports": [
+		{
+			"width": 1440,
+			"height": 800,
+			"result": "usable with sidebar scrolling for lower evidence groups"
+		},
+		{
+			"width": 1920,
+			"height": 976,
+			"result": "all 12 projected rows and evidence groups visible together"
+		}
+	],
+	"observedNavigation": {
+		"rendererNavigationDomReadyMs": [2833, 3104, 2822],
+		"note": "Whole renderer navigation timing, not isolated Host query latency"
+	},
+	"knownDevelopmentFindings": [
+		"Existing DockBadgeController render-time update warning",
+		"Expected background base-ref fetch failure because the disposable project has no origin",
+		"Existing Electric HTTP development guidance"
+	],
+	"productCodeModified": false,
+	"grokAuthenticated": false
+}
