@@ -2,13 +2,14 @@
 
 ## Verdict
 
-The visible application now reads as one AA Office product rather than an AA
-Work Folder embedded in otherwise unrelated Superset pages. The accepted
-Runtime, terminal, Git/worktree, New Task, Active Tasks, and Archive models did
-not change. Remaining mature Superset language is confined to the controls
-whose underlying meaning is still Superset-specific.
+After the Phase 4C refinement, the visible application reads as one precise AA
+Office product rather than an AA Work Folder embedded in otherwise unrelated
+Superset pages. The accepted Runtime, terminal, Git/worktree, New Task, Active
+Tasks, and Archive models did not change. Remaining mature Superset language is
+confined to controls whose underlying meaning is still Superset-specific.
 
-The detailed before/after route record is in
+The current paired before/after route record is in
+`docs/aa/v0.2/phase-4c/ROUTE-MATRIX.md`; the Phase 4B foundation remains in
 `docs/aa/v0.2/phase-4b/route-matrix.md`.
 
 ## Information architecture
@@ -54,7 +55,10 @@ remain unchanged.
 - Reused the existing AA warm neutral, paper, inset, charcoal, navy, amber,
   green, and error palette; no new theme system was added.
 - Removed the visible Automations gradient only inside the scoped AA route.
-- Kept compact headers at 48px minimum height rather than adding hero space.
+- Refined application headers from 48 px to 46 px rather than adding hero
+  space.
+- Refined the Work Folder header and Roster from 102 px combined to 94 px,
+  reclaiming 14 px of measured terminal viewport height at 1440×800.
 - Used inset/raised surfaces and one-pixel highlights instead of large shadow,
   blur, glass, texture, scanline, or CRT effects.
 - Kept the mature Settings black navigation because it provides dense,
@@ -91,10 +95,12 @@ work.
 ## Density and viewport result
 
 Both 1440×800 and 1920×976 passed without document-level horizontal overflow.
-The small viewport kept every rail destination, page header, primary action,
-and mature body usable. The wide viewport remained anchored rather than
-stretching into oversized decorative gaps. Existing Work Folder pane layout
-continued to resize xterm correctly.
+At 1440×800, the rail narrowed from 52 px to 50 px, the terminal frame increased
+from 589 px to 599 px high, its viewport increased from 547 px to 561 px, and
+xterm width increased from 724 px to 730 px in the matched two-cabinet state.
+The wide viewport remained anchored rather than stretching into oversized
+decorative gaps. Existing Work Folder pane layout continued to resize xterm
+correctly.
 
 ## Accessibility result
 
@@ -106,10 +112,10 @@ continued to resize xterm correctly.
 - Color is accompanied by explicit lifecycle/selection text.
 - Reduced motion collapses repeating AA animations and transitions to one
   effectively instantaneous iteration.
-
-The legacy File Cabinet tab state lacks explicit `aria-selected`/`aria-pressed`
-semantics; this is recorded in the v0.2 debt register instead of being silently
-claimed fixed.
+- File Cabinet now exposes tablist/tab/tabpanel structure, `aria-selected`,
+  panel relationships, roving focus, Arrow Left/Right, Home, and End behavior.
+- The selected Task Folder exposes `aria-current="true"` without losing its full
+  functional label.
 
 ## Accepted boundary
 
@@ -117,5 +123,15 @@ Mature forms still use terms such as Project, Workspace, agent, terminal
 preset, and Superset when those are the real underlying controls. Advanced Work
 Folder creation keeps its mature form and defaults. Nested Tasks, Automations,
 and Pull Request bodies were unavailable without fabricating fixture data.
-These choices preserve product truth and keep Phase 4B out of Runtime, Host,
-PTY, xterm, Git/worktree, task-model, and archive-model architecture.
+These choices preserve product truth and keep both Phase 4B and Phase 4C out of
+Runtime, Host, PTY, xterm, Git/worktree, task-model, and archive-model
+architecture.
+
+## Phase 4C scope audit
+
+The refinement changes only AAOffice presentation/tests and the existing V2
+WorkspaceSidebar File Cabinet header/panel semantics. It adds no route, asset
+family, task field, persistence, poller, runtime adapter, or product action.
+Pi remains fixed first/PRIMARY, Tier 2 remains compatibility-only, and the real
+terminal remains the darkest and largest Work Folder surface. The resulting
+verdict is `AA OFFICE V0.2 VISUAL REFINEMENT ACCEPTED WITH DEBT`.
