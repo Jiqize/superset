@@ -135,6 +135,7 @@ function AAActiveTaskRow({
 		>
 			<button
 				type="button"
+				aria-current={row.isSelected ? "true" : undefined}
 				aria-label={getAAActiveTaskAriaLabel(row)}
 				className="aa-active-task-row__select"
 				onClick={() => onSelect(row.workspaceId)}

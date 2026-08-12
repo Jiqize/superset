@@ -48,7 +48,11 @@ export {
 	getAAEmployeeRosterOverflowState,
 	getAAEmployeeRosterScrollDistance,
 } from "./AAEmployeeRosterOverflow";
-export { AAFileCabinetHeader } from "./AAFileCabinetHeader";
+export {
+	AA_FILE_CABINET_PANEL_ID,
+	AAFileCabinetHeader,
+	getAAFileCabinetTabId,
+} from "./AAFileCabinetHeader";
 export { AAHairState } from "./AAHairState";
 export {
 	type AAHandoffPanePresentation,

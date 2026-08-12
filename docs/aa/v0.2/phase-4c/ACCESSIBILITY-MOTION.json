@@ -1,0 +1,27 @@
+{
+	"fileCabinet": {
+		"pattern": "tablist/tab/tabpanel",
+		"selectedState": "aria-selected",
+		"panelRelationship": "aria-controls and aria-labelledby",
+		"rovingTabIndex": true,
+		"keysVerified": ["ArrowLeft", "ArrowRight", "Home", "End"],
+		"activationFollowsFocus": true,
+		"visibleFocus": "2px solid amber inset outline",
+		"mouseAndExistingShortcutsPreserved": true
+	},
+	"activeTask": {
+		"currentSelection": "aria-current=true",
+		"functionalLabelPreserved": true
+	},
+	"xterm": {
+		"helperTextareaFocused": true,
+		"keyboardInputVerified": true
+	},
+	"reducedMotion": {
+		"mediaQueryMatched": true,
+		"statusAnimationDuration": "0.00001s",
+		"statusAnimationIterationCount": "1",
+		"navigationTransitionDuration": "0.00001s",
+		"repeatingAAMotionObserved": false
+	}
+}

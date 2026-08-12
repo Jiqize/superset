@@ -2,7 +2,11 @@ import { eq } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LuFile, LuGitCompareArrows } from "react-icons/lu";
-import { AAFileCabinetHeader } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
+import {
+	AA_FILE_CABINET_PANEL_ID,
+	AAFileCabinetHeader,
+	getAAFileCabinetTabId,
+} from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useWorkspaceGitStatus } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/providers/WorkspaceGitStatusProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { useSettings } from "renderer/stores/settings";
@@ -183,7 +187,12 @@ export function WorkspaceSidebar({
 				compact={compact}
 				aaOffice
 			/>
-			<div className="aa-file-cabinet__contents flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+			<div
+				aria-labelledby={getAAFileCabinetTabId(activeTab)}
+				className="aa-file-cabinet__contents flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
+				id={AA_FILE_CABINET_PANEL_ID}
+				role="tabpanel"
+			>
 				{activeTabDef?.content}
 			</div>
 		</div>

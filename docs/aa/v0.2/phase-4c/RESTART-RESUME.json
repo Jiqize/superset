@@ -1,0 +1,11 @@
+{
+	"fullElectronHostRestart": true,
+	"firstSettledWorkerState": "OFFLINE / RESUMABLE",
+	"staleLiveObserved": false,
+	"exactResumeActionVisible": true,
+	"resumeTransitions": ["STARTING", "IDLE"],
+	"contextContinuity": "verified with a bounded preselected marker",
+	"changedFileCountAfterResume": 1,
+	"rawSessionIdentifiersIncluded": false,
+	"terminalTranscriptIncluded": false
+}

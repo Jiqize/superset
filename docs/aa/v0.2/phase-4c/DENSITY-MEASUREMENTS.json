@@ -1,0 +1,33 @@
+{
+	"viewport": "1440x800",
+	"state": "same real Work Folder with cabinet and File Cabinet open",
+	"before": {
+		"navigationRailWidth": 52,
+		"workspaceHeaderHeight": 58,
+		"employeeRosterHeight": 44,
+		"persistentHeaderAndRosterHeight": 102,
+		"terminalFrame": { "x": 338, "y": 177, "width": 756, "height": 589 },
+		"terminalViewportHeight": 547,
+		"xtermWidth": 724
+	},
+	"after": {
+		"navigationRailWidth": 50,
+		"workspaceHeaderHeight": 54,
+		"employeeRosterHeight": 40,
+		"persistentHeaderAndRosterHeight": 94,
+		"terminalFrame": { "x": 335, "y": 168, "width": 760, "height": 599 },
+		"terminalViewportHeight": 561,
+		"xtermWidth": 730
+	},
+	"delta": {
+		"persistentHeaderAndRosterHeight": -8,
+		"terminalFrameHeight": 10,
+		"terminalViewportHeight": 14,
+		"xtermWidth": 6
+	},
+	"documentOverflow": {
+		"1440x800": false,
+		"1920x976": false
+	},
+	"units": "CSS pixels"
+}

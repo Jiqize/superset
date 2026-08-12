@@ -1,9 +1,12 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
+import type { KeyboardEvent } from "react";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import {
+	AA_FILE_CABINET_PANEL_ID,
 	AAIcon,
 	type AAIconName,
+	getAAFileCabinetTabId,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { getSidebarHeaderTabButtonClassName } from "renderer/screens/main/components/WorkspaceView/RightSidebar/headerTabStyles";
 import type { SidebarTabDefinition } from "../../types";
@@ -26,13 +29,48 @@ export function SidebarHeader({
 	const actions = tabs.find((t) => t.id === activeTab)?.actions;
 	const filesShortcut = useHotkeyDisplay("AA_OPEN_FILES");
 	const changesShortcut = useHotkeyDisplay("TOGGLE_SIDEBAR");
+	const focusAATab = (index: number) => {
+		const tab = tabs[index];
+		if (!tab) return;
+		onTabChange(tab.id);
+		requestAnimationFrame(() => {
+			document.getElementById(getAAFileCabinetTabId(tab.id))?.focus();
+		});
+	};
+	const handleAATabKeyDown = (
+		event: KeyboardEvent<HTMLButtonElement>,
+		index: number,
+	) => {
+		if (!aaOffice || tabs.length < 2) return;
+		let nextIndex: number | null = null;
+		switch (event.key) {
+			case "ArrowLeft":
+				nextIndex = (index - 1 + tabs.length) % tabs.length;
+				break;
+			case "ArrowRight":
+				nextIndex = (index + 1) % tabs.length;
+				break;
+			case "Home":
+				nextIndex = 0;
+				break;
+			case "End":
+				nextIndex = tabs.length - 1;
+				break;
+			default:
+				return;
+		}
+		event.preventDefault();
+		focusAATab(nextIndex);
+	};
 
 	return (
 		<div
+			aria-label="File Cabinet views"
 			className={cn(
 				"flex h-10 shrink-0 items-stretch",
 				aaOffice && "aa-file-cabinet__tabs",
 			)}
+			role="tablist"
 		>
 			<div className="flex min-w-0 flex-1 items-center h-full overflow-hidden">
 				{tabs.map((tab, index) => {
@@ -55,7 +93,13 @@ export function SidebarHeader({
 							key={tab.id}
 							type="button"
 							onClick={() => onTabChange(tab.id)}
+							onKeyDown={(event) => handleAATabKeyDown(event, index)}
 							aria-label={accessibleLabel}
+							aria-controls={AA_FILE_CABINET_PANEL_ID}
+							aria-selected={isActive}
+							id={getAAFileCabinetTabId(tab.id)}
+							role="tab"
+							tabIndex={isActive ? 0 : -1}
 							title={accessibleLabel}
 							className={cn(
 								getSidebarHeaderTabButtonClassName({

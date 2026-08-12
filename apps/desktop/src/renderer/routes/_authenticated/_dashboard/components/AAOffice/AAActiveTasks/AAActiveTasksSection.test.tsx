@@ -48,6 +48,7 @@ describe("AAActiveTasksSection", () => {
 		expect(html).toContain(
 			'aria-label="Fix restart status #A3F2, PI, LIVE WORKING, 3 changed files"',
 		);
+		expect(html).toContain('aria-current="true"');
 		expect(html).not.toContain("workspace-secret-id");
 	});
 
