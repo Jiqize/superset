@@ -1,0 +1,101 @@
+{
+	"phase": "4A",
+	"baselineCommit": "f0b7a1018c148f670de05d58cdddd3a9310ba196",
+	"environment": {
+		"application": "Superset Desktop development build",
+		"architecture": "arm64",
+		"bun": "1.3.14",
+		"macOS": "26.4",
+		"node": "24.14.0",
+		"viewports": ["1440x800", "1920x976"]
+	},
+	"isolation": {
+		"cleanProfile": true,
+		"fixture": "synthetic local Git repository",
+		"productionProfileTouched": false
+	},
+	"scenarios": [
+		{
+			"id": "pi-config-without-user-preset",
+			"result": "pass",
+			"facts": [
+				"Pi rendered first as PRIMARY from the real Host agent config",
+				"compatibility employees followed in their existing order",
+				"one explicit activation added one focused Pi terminal in the same Work Folder"
+			]
+		},
+		{
+			"id": "pi-authoritative-lifecycle",
+			"result": "pass",
+			"facts": [
+				"explicit Task Folder title carried into the launched pane",
+				"Worker transitioned through authoritative WORKING to IDLE",
+				"real model and reasoning values remained read-only"
+			]
+		},
+		{
+			"id": "pi-config-unavailable",
+			"result": "pass",
+			"facts": [
+				"Pi remained first as SETUP REQUIRED",
+				"activation opened existing Agent settings",
+				"terminal count did not increase"
+			]
+		},
+		{
+			"id": "pi-linked-compatibility-preset",
+			"result": "pass",
+			"facts": [
+				"one Pi Employee rendered",
+				"the underlying settings row remained present",
+				"no duplicate roster launch or hotkey was introduced"
+			]
+		},
+		{
+			"id": "compatibility-runtime",
+			"result": "pass",
+			"facts": [
+				"Codex launched through the existing preset path",
+				"the pane remained truthfully UNTRACKED",
+				"no Pi authority was assigned"
+			]
+		},
+		{
+			"id": "global-route-journey",
+			"result": "pass",
+			"facts": [
+				"Home, Cases, Work Folder, Files, Sessions, Agents, Settings, Tasks, Automations, Pull Requests, Advanced Workspace, and return to Active Task were exercised",
+				"active rail state followed the route",
+				"Files was disabled outside a real Work Folder"
+			]
+		},
+		{
+			"id": "full-restart-and-exact-resume",
+			"result": "pass",
+			"facts": [
+				"full Electron and Host restart reconstructed the route and Pi availability",
+				"the saved Pi surface reported OFFLINE / RESUMABLE",
+				"exact resume restored the same native Pi identity and a focused xterm"
+			]
+		},
+		{
+			"id": "viewport-motion-accessibility",
+			"result": "pass",
+			"facts": [
+				"both target viewports fit without document overflow",
+				"expanded and collapsed Briefcase states remained usable",
+				"reduced motion, visible focus, accessible labels, aria-current, and disabled Files behavior were verified"
+			]
+		}
+	],
+	"runtimeBoundaries": {
+		"hostServiceChanged": false,
+		"piBridgeChanged": false,
+		"ptyChanged": false,
+		"xtermChanged": false,
+		"gitOrWorktreeChanged": false,
+		"taskOrArchiveModelChanged": false
+	},
+	"uncaughtRendererErrors": 0,
+	"result": "pass"
+}

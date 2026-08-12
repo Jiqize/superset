@@ -1,3 +1,4 @@
+import type { HostAgentConfig } from "@superset/host-service/settings";
 import type { CreatePaneInput, Pane, WorkspaceStore } from "@superset/panes";
 import { toast } from "@superset/ui/sonner";
 import { workspaceTrpc } from "@superset/workspace-client";
@@ -10,6 +11,7 @@ import {
 	normalizeTerminalCommand,
 } from "renderer/lib/terminal/launch-command";
 import { resolveAAHandoffPanePresentation } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAHandoff";
+import { filterAACompatibilityPresets } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAPiEmployee/aaPiEmployeePresentation";
 import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
@@ -30,12 +32,14 @@ function makeTerminalPane(
 	employeeTitle?: string,
 	launchIdentity?: TerminalPaneData["launchIdentity"],
 	taskFolderTitle?: string,
+	paneId?: string,
 ): CreatePaneInput<PaneViewerData> {
 	const presentation = resolveAAHandoffPanePresentation({
 		employeeTitle,
 		taskFolderTitle,
 	});
 	return {
+		...(paneId ? { id: paneId } : {}),
 		kind: "terminal",
 		titleOverride: presentation.titleOverride,
 		data: {
@@ -131,6 +135,7 @@ export function useV2PresetExecution({
 		},
 	);
 	const writeInput = workspaceTrpc.terminal.writeInput.useMutation();
+	const runAgent = workspaceTrpc.agents.run.useMutation();
 
 	const { data: allPresets = [] } = useLiveQuery(
 		(query) =>
@@ -149,6 +154,10 @@ export function useV2PresetExecution({
 	const matchedPresets = useMemo(
 		() => filterMatchingPresetsForProject(allPresets, projectId),
 		[allPresets, projectId],
+	);
+	const rosterPresets = useMemo(
+		() => filterAACompatibilityPresets(matchedPresets, agents),
+		[agents, matchedPresets],
 	);
 	const newTabPresets = useMemo(
 		() => selectAutoApplyPresets(matchedPresets, "applyOnNewTab"),
@@ -382,10 +391,62 @@ export function useV2PresetExecution({
 		],
 	);
 
+	const executeHostAgentConfig = useCallback(
+		async (
+			agentConfig: HostAgentConfig,
+			options?: { taskFolderTitle?: string },
+		): Promise<boolean> => {
+			try {
+				const result = await runAgent.mutateAsync({
+					workspaceId,
+					agent: agentConfig.id,
+					prompt: options?.taskFolderTitle ?? "",
+				});
+				if (result.kind !== "terminal") {
+					toast.error("Selected employee isn't a terminal agent");
+					return false;
+				}
+
+				const paneId = crypto.randomUUID();
+				const tabId = crypto.randomUUID();
+				const employeeTitle = result.label || agentConfig.label || "Pi";
+				store.getState().addTab({
+					id: tabId,
+					activePaneId: paneId,
+					panes: [
+						makeTerminalPane(
+							result.sessionId,
+							employeeTitle,
+							{ agentId: agentConfig.id, label: employeeTitle },
+							options?.taskFolderTitle,
+							paneId,
+						),
+					],
+				});
+				return true;
+			} catch (error) {
+				console.error(
+					"[useV2PresetExecution] Failed to launch Host employee:",
+					error,
+				);
+				toast.error("Failed to send Task Folder", {
+					description:
+						error instanceof Error
+							? error.message
+							: "Terminal employee launch failed.",
+				});
+				return false;
+			}
+		},
+		[runAgent, store, workspaceId],
+	);
+
 	return {
 		matchedPresets,
+		rosterPresets,
 		newTabPresets,
 		executePreset,
+		executeHostAgentConfig,
 		resolvePresetCommands,
 	};
 }

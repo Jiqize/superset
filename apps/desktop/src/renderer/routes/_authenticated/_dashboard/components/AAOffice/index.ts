@@ -11,6 +11,18 @@ export {
 	useAAAgentStatus,
 } from "./AAAgentStatus";
 export {
+	type AAApplicationRouteKind,
+	AAApplicationShell,
+	type AANavigationContext,
+	type AANavigationDestination,
+	isAAApplicationShellRoute,
+	isAADashboardShellRoute,
+	resolveAAActiveNavigation,
+	resolveAAApplicationRoute,
+	resolveAANavigationContext,
+	resolveAAWorkspaceId,
+} from "./AAApplicationShell";
+export {
 	AAAssignmentLabel,
 	type AAAssignmentPhase,
 	getAAAssignmentPresentation,
@@ -48,6 +60,21 @@ export {
 	openAANewTaskDialog,
 	useAANewTaskFlow,
 } from "./AANewTask";
+export {
+	AA_PI_AGENT_SETTINGS_ROUTE,
+	type AAPiEmployeeAction,
+	type AAPiEmployeeAvailability,
+	AAPiEmployeeRosterItem,
+	type AAPiLinkedPresetLike,
+	type AASingleFlight,
+	createAASingleFlight,
+	filterAACompatibilityPresets,
+	getAAPiEmployeeAccessibleName,
+	isPresetLinkedToAAPi,
+	resolveAAPiEmployeeAction,
+	resolveAAPiEmployeeAvailability,
+	selectAAPiHostConfig,
+} from "./AAPiEmployee";
 export {
 	AA_PI_REASONING_LEVELS,
 	type AAHairStateName,

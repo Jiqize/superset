@@ -204,7 +204,9 @@ function V2WorkspaceContent() {
 	const launcher = useV2TerminalLauncher();
 	const {
 		matchedPresets,
+		rosterPresets,
 		newTabPresets,
+		executeHostAgentConfig,
 		executePreset,
 		resolvePresetCommands,
 	} = useV2PresetExecution({
@@ -321,7 +323,7 @@ function V2WorkspaceContent() {
 	useWorkspaceHotkeys({
 		activeTerminalId: activeTerminal?.terminalId,
 		store,
-		matchedPresets,
+		matchedPresets: rosterPresets,
 		executePreset,
 		addTerminalTab,
 		paneRegistry,
@@ -407,6 +409,7 @@ function V2WorkspaceContent() {
 									{showPresetsBar && (
 										<V2PresetsBar
 											matchedPresets={matchedPresets}
+											executeHostAgentConfig={executeHostAgentConfig}
 											executePreset={executePreset}
 											taskFolderTitle={handoffTaskTitle}
 											showPresetsBar={showPresetsBar}

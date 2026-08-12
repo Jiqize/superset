@@ -1,7 +1,8 @@
-import type { HostAgentConfig } from "@superset/host-service/settings";
 import { sanitizeSegment } from "@superset/shared/workspace-launch";
 import type { WorkspacesCreateInput } from "renderer/stores/workspace-creates";
 import { normalizeAATaskFolderTitleInput } from "../AATaskFolder/aaTaskFolderPresentation";
+
+export { selectAAPiHostConfig as selectAANewTaskPiConfig } from "../AAPiEmployee/aaPiEmployeePresentation";
 
 const WORKSPACE_UUID_PATTERN =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -35,12 +36,6 @@ export function buildAANewTaskBranch(
 	// The Host may add a 50-character branch prefix. Keeping this input at 46
 	// characters preserves the shared 100-character branch-name budget.
 	return candidate.slice(0, 46);
-}
-
-export function selectAANewTaskPiConfig(
-	configs: readonly HostAgentConfig[],
-): HostAgentConfig | null {
-	return configs.find((config) => config.presetId === "pi") ?? null;
 }
 
 interface BuildAANewTaskCreateSnapshotInput {

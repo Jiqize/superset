@@ -1,0 +1,19 @@
+{
+	"phase": "4A",
+	"scenario": "full Electron and Host restart followed by exact Pi resume",
+	"identityProof": {
+		"algorithm": "sha256-prefix-12",
+		"beforeRestart": "b7aaaf936ba2",
+		"afterResume": "b7aaaf936ba2",
+		"rawIdentityRecorded": false,
+		"sameNativeSession": true,
+		"newRuntimeEpoch": true
+	},
+	"presentation": {
+		"beforeResume": "OFFLINE / RESUMABLE",
+		"action": "RESUME PI SESSION",
+		"afterResume": "IDLE"
+	},
+	"terminalFocusedAfterResume": true,
+	"result": "pass"
+}

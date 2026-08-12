@@ -6,6 +6,16 @@ This register is the release-candidate classification from Phase 3M. Closed
 items remain listed so future work does not accidentally restore the old
 behavior. Only `RC BLOCKER` and `FIX IN 3M` items were changed in Phase 3M.
 
+## RESOLVED IN PHASE 4A
+
+These real-use findings were discovered after the v0.1 RC on another Mac. They
+remain listed for historical traceability.
+
+| ID | Status | Finding and resolution | Regression gate |
+| --- | --- | --- | --- |
+| P4A-01 | **Resolved** | Employee Roster could omit Pi because it projected only user terminal-preset rows. AA now projects one fixed first Pi Employee from the first ordered real Host Pi config, shows truthful `SETUP REQUIRED` when absent, and deduplicates only a preset linked to that selected config without mutating settings. | Host-config selection/setup/dedupe tests plus isolated available, missing, and duplicate UI acceptance. |
+| P4A-02 | **Resolved** | AA identity stopped at the V2 Work Folder while Home, Sessions, Agents, Settings, Tasks, Automations, Pull Requests, and advanced Workspace creation fell back to the plain Superset shell. One route-aware authenticated AA outer shell now frames required V2 routes while existing page bodies and V1/auth/onboarding routes remain unchanged. | Route/shell/CSS contract tests plus the real route journey at both target viewports. |
+
 ## RC BLOCKER
 
 | ID | Status | Finding and resolution | Regression gate |

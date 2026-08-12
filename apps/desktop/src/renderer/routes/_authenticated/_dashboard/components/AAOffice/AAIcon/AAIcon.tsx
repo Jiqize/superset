@@ -4,13 +4,16 @@ import type { SVGProps } from "react";
 export type AAIconName =
 	| "agents"
 	| "archive"
+	| "automations"
 	| "briefcase"
 	| "changes"
 	| "folder"
 	| "home"
+	| "pull-requests"
 	| "review"
 	| "sessions"
 	| "settings"
+	| "tasks"
 	| "terminal";
 
 interface AAIconProps extends SVGProps<SVGSVGElement> {
@@ -78,6 +81,39 @@ function renderIcon(name: AAIconName) {
 						fill="var(--aa-paper)"
 						d="M8 9h3v3H8zm5 0h3v3h-3zm-3 6h5v2h-5z"
 					/>
+				</>
+			);
+		case "tasks":
+			return (
+				<>
+					<path fill="currentColor" d="M4 3h16v19H4z" />
+					<path fill="var(--aa-paper)" d="M6 5h12v15H6z" />
+					<path
+						fill="currentColor"
+						d="M8 8h2v2H8zm4 0h4v2h-4zm-4 4h2v2H8zm4 0h4v2h-4zm-4 4h2v2H8zm4 0h4v2h-4z"
+					/>
+				</>
+			);
+		case "automations":
+			return (
+				<>
+					<path fill="currentColor" d="M3 5h7v6H3zm11 0h7v6h-7zM8 15h8v7H8z" />
+					<path fill="currentColor" d="M9 8h6v2H9zm2 2h2v6h-2z" />
+					<path
+						fill="var(--aa-paper)"
+						d="M5 7h3v2H5zm11 0h3v2h-3zm-6 10h4v3h-4z"
+					/>
+				</>
+			);
+		case "pull-requests":
+			return (
+				<>
+					<path
+						fill="currentColor"
+						d="M5 3h4v4H5zm10 14h4v4h-4zM5 9h2v12H5zm10-6h2v12h-2z"
+					/>
+					<path fill="currentColor" d="M7 16h9v2H7zM12 6h5v2h-5z" />
+					<path fill="currentColor" d="m10 4 4 3-4 3z" />
 				</>
 			);
 		case "settings":

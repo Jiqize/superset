@@ -1,3 +1,4 @@
+import { cn } from "@superset/ui/utils";
 import {
 	createFileRoute,
 	Outlet,
@@ -6,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import {
 	type SettingsSection,
@@ -107,6 +109,7 @@ function getPathFromSection(section: SettingsSection): string {
 }
 
 function SettingsLayout() {
+	const aaOfficeEnabled = useIsV2CloudEnabled();
 	const { data: platform } = electronTrpc.window.getPlatform.useQuery();
 	const isMac = platform === undefined || platform === "darwin";
 	const searchQuery = useSettingsSearchQuery();
@@ -168,7 +171,14 @@ function SettingsLayout() {
 		location.pathname.startsWith("/settings/agents");
 
 	return (
-		<div className="flex flex-col h-screen w-screen bg-tertiary">
+		<div
+			className={cn(
+				"flex flex-col bg-tertiary",
+				aaOfficeEnabled
+					? "aa-settings-shell h-full w-full"
+					: "h-screen w-screen",
+			)}
+		>
 			<div className="flex h-12 w-full items-center bg-tertiary">
 				<div
 					className="drag h-full shrink-0"
@@ -178,7 +188,12 @@ function SettingsLayout() {
 				<div className="drag h-full min-w-0 flex-1" />
 			</div>
 
-			<div className="flex flex-1 overflow-hidden bg-background">
+			<div
+				className={cn(
+					"flex flex-1 overflow-hidden bg-background",
+					aaOfficeEnabled && "aa-settings-shell__body",
+				)}
+			>
 				<SettingsSidebar />
 				<div ref={contentRef} className="flex-1 overflow-auto">
 					{isSearchActive && (

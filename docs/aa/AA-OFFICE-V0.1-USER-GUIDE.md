@@ -1,4 +1,9 @@
-# AA Office v0.1 — User Guide
+# AA Office — User Guide (v0.1 RC + v0.2 foundation)
+
+> **Current branch note:** this guide now describes the `aa-spike` v0.2
+> foundation after Phase 4A. The accepted AA Office v0.1 RC runtime, New Task,
+> Active Tasks, Archive, Git, terminal, and exact-resume contracts remain
+> frozen underneath the new Pi-first Employee and global application shell.
 
 ## 1. What this build is
 
@@ -10,6 +15,8 @@ RC status:
 - RC closeout commit: `e34b5f07afffb795d08abba75ccb1b61ef4c6812`
 - Runnable RC implementation commit: `04c2fb53b78455f696f8be7f81108ab3c06b691d`
 - Development branch: `aa-spike`
+- Current presentation foundation: Phase 4A, Pi-first Employee + global AA
+  shell (baseline `f0b7a1018c148f670de05d58cdddd3a9310ba196`)
 
 The primary product flow is:
 
@@ -134,6 +141,42 @@ The Employee is the agent/CLI working in the Work Folder.
 - Pi: primary Tier 1 daily employee.
 - Grok Build: Tier 1 target, currently authentication-gated.
 - Codex / Claude / Superset CLI / other CLIs: compatibility employees. They can be launched, but AA may truthfully show `UNTRACKED` because it does not claim their lifecycle authority.
+
+In the current v0.2 foundation, Pi is always the first Employee tile. AA reads
+that tile from the first ordered real Host agent configuration whose preset is
+Pi; it does not depend on a user-created terminal preset and does not persist a
+synthetic row. If that real configuration is missing, Pi remains first as
+`SETUP REQUIRED` and opens the existing Agents setup page without launching a
+fake terminal.
+
+Activating available Pi in the Roster sends the current Task Folder to one new
+Pi conversation in the same Work Folder. It preserves the explicit Task Folder
+title, focuses the new real terminal, and waits for normal Runtime evidence.
+An existing Pi-linked terminal preset remains editable in Settings but is
+deduplicated from the visible Roster.
+
+## 5.1 Global AA navigation
+
+The compact AA rail is now stable across the daily first-level application
+routes:
+
+```text
+HOME    Briefcase / Workspaces index
+CASES   Briefcases; toggles the cabinet inside a Work Folder
+FILES   current Work Folder files (disabled outside a Work Folder)
+TASKS   existing Superset Tasks
+AUTO    existing Automations
+PRS     existing Pull Requests
+SESS    terminal/session preset settings
+AGENTS  agent setup and configuration
+SET     general Settings
+```
+
+The selected state follows the current route. Settings and the mature Tasks,
+Automations, Pull Requests, Home, and advanced Workspace pages retain their
+existing data/actions inside the AA hard-edge outer frame. `FILES` intentionally
+fails closed outside a real Work Folder and explains that a Work Folder must be
+opened first.
 
 ## 6. Starting a new task
 
@@ -431,6 +474,8 @@ Reference documents:
 - `docs/aa/AA-V0.1-DEBT-REGISTER.md`
 - `docs/aa/AA-RUNTIME-CONTRACT-V0.1.md`
 - `docs/aa/PHASE-3M-AA-V0.1-PRODUCT-CONSOLIDATION-RC-REPORT.md`
+- `docs/aa/AA-V0.2-SHELL-EMPLOYEE-CHECKPOINT.md`
+- `docs/aa/PHASE-4A-PI-FIRST-EMPLOYEE-GLOBAL-SHELL-REPORT.md`
 
 ## 19. Packaging later
 

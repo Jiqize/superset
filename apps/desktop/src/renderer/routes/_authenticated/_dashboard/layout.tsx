@@ -3,6 +3,7 @@ import {
 	createFileRoute,
 	Navigate,
 	Outlet,
+	useLocation,
 	useMatchRoute,
 	useNavigate,
 } from "@tanstack/react-router";
@@ -26,9 +27,11 @@ import {
 	MAX_WORKSPACE_SIDEBAR_WIDTH,
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
-import { AANavigationRail, AANewTaskDialog } from "./components/AAOffice";
+import {
+	AANewTaskDialog,
+	isAADashboardShellRoute,
+} from "./components/AAOffice";
 import { AddRepositoryModals } from "./components/AddRepositoryModals";
-import "./components/AAOffice/aa-office.css";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
 import { TopBar } from "./components/TopBar";
 
@@ -52,6 +55,7 @@ type DeleteTarget =
 
 function DashboardLayout() {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const openNewWorkspaceModal = useOpenNewWorkspaceModal();
 	const isV2CloudEnabled = useIsV2CloudEnabled();
 	const { workspaces: hostWorkspaces } = useHostWorkspaces();
@@ -78,12 +82,15 @@ function DashboardLayout() {
 		matchRoute({ to: "/automations", fuzzy: true }) !== false ||
 		matchRoute({ to: "/tasks", fuzzy: true }) !== false ||
 		matchRoute({ to: "/pull-requests", fuzzy: true }) !== false ||
+		matchRoute({ to: "/project/$projectId", fuzzy: true }) !== false ||
 		matchRoute({ to: "/v2-workspaces", fuzzy: true }) !== false;
 	const versionMismatch =
 		(isV2CloudEnabled && onV1WorkspaceRoute) ||
 		(!isV2CloudEnabled && onV2WorkspaceRoute);
 	const aaOfficeActive =
-		isV2CloudEnabled && onV2WorkspaceRoute && !versionMismatch;
+		isV2CloudEnabled &&
+		isAADashboardShellRoute(location.pathname) &&
+		!versionMismatch;
 
 	const { data: currentWorkspace } = electronTrpc.workspaces.get.useQuery(
 		{ id: currentWorkspaceId ?? "" },
@@ -236,12 +243,11 @@ function DashboardLayout() {
 		<div
 			className={cn(
 				"flex h-full w-full overflow-hidden",
-				aaOfficeActive && "aa-office-shell",
+				aaOfficeActive && "aa-dashboard-shell",
 			)}
 		>
 			<CommandPaletteHost />
 			<AANewTaskDialog />
-			{aaOfficeActive && <AANavigationRail />}
 			{sidebarOutsideColumn && sidebarPanel}
 			<div className="flex flex-1 flex-col min-w-0 min-h-0">
 				{!hideTopBar && <TopBar />}

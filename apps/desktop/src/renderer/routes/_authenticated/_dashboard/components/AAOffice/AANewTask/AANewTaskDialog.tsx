@@ -96,7 +96,7 @@ export function AANewTaskDialog() {
 		}
 		if (!piConfig) {
 			setValidationError(
-				"Pi is not configured on this Host. Add a Pi agent before starting work.",
+				"Pi setup is required on this Host. Open Agent settings before starting work.",
 			);
 			return;
 		}
@@ -353,7 +353,7 @@ export function AANewTaskDialog() {
 								{validationError ??
 									(configsQuery.isError
 										? "AA Office could not read the Host agent configuration."
-										: "Pi is not configured on this Host. Add Pi in Agent Settings before starting work.")}
+										: "PI · SETUP REQUIRED. Open Agent settings before starting work.")}
 								{piUnavailable && (
 									<button type="button" onClick={openAgentSettings}>
 										OPEN AGENT SETTINGS

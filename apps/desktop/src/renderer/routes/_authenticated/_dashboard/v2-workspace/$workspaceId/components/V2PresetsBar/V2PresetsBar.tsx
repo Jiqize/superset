@@ -1,3 +1,4 @@
+import type { HostAgentConfig } from "@superset/host-service/settings";
 import { Button } from "@superset/ui/button";
 import {
 	DropdownMenu,
@@ -27,7 +28,13 @@ import {
 	AAAssignmentLabel,
 	type AAAssignmentPhase,
 	AAEmployeeRosterOverflow,
+	AAPiEmployeeRosterItem,
+	createAASingleFlight,
+	filterAACompatibilityPresets,
+	resolveAAPiEmployeeAction,
+	resolveAAPiEmployeeAvailability,
 	selectAAEmployeeRuntimeSnapshot,
+	selectAAPiHostConfig,
 	useAAAgentStatus,
 } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
@@ -37,6 +44,10 @@ import { BuiltinPresetBarItem } from "./components/BuiltinPresetBarItem";
 import { V2PresetBarItem } from "./components/V2PresetBarItem";
 
 interface V2PresetsBarProps {
+	executeHostAgentConfig: (
+		agentConfig: HostAgentConfig,
+		options?: { taskFolderTitle?: string },
+	) => Promise<boolean>;
 	matchedPresets: V2TerminalPresetRow[];
 	executePreset: (
 		preset: V2TerminalPresetRow,
@@ -62,6 +73,8 @@ const PRESET_HOTKEY_IDS: HotkeyId[] = [
 	"OPEN_PRESET_9",
 ];
 
+const EMPTY_AGENT_CONFIGS: HostAgentConfig[] = [];
+
 function isPresetVisibleInBar(pinnedToBar: boolean | undefined): boolean {
 	// The persisted field is legacy "pinned" wording; the v2 UI treats it as
 	// show/hide visibility. Undefined defaults to visible for compatibility.
@@ -82,6 +95,7 @@ function getVisiblePresetOrder(
 }
 
 export function V2PresetsBar({
+	executeHostAgentConfig,
 	matchedPresets,
 	executePreset,
 	taskFolderTitle,
@@ -92,7 +106,8 @@ export function V2PresetsBar({
 	const isDark = useIsDarkTheme();
 	const collections = useCollections();
 	const { activeHostUrl } = useLocalHostService();
-	const { data: agents } = useV2AgentConfigs(activeHostUrl);
+	const agentsQuery = useV2AgentConfigs(activeHostUrl);
+	const agents = agentsQuery.data ?? EMPTY_AGENT_CONFIGS;
 	const builtinPresets = useBuiltinPresets();
 	const { setBuiltinPresetHidden } = useV2UserPreferences();
 	const { runtimeSnapshotsByRuntime } = useAAAgentStatus();
@@ -100,9 +115,19 @@ export function V2PresetsBar({
 		() => Array.from(runtimeSnapshotsByRuntime.values()),
 		[runtimeSnapshotsByRuntime],
 	);
+	const piConfig = useMemo(() => selectAAPiHostConfig(agents), [agents]);
+	const piAvailability = resolveAAPiEmployeeAvailability({
+		config: piConfig,
+		isError: agentsQuery.isError,
+		isPending: agentsQuery.isPending,
+	});
+	const compatibilityPresets = useMemo(
+		() => filterAACompatibilityPresets(matchedPresets, agents),
+		[agents, matchedPresets],
+	);
 
 	const [localVisiblePresetIds, setLocalVisiblePresetIds] = useState<string[]>(
-		() => getVisiblePresetOrder(matchedPresets),
+		() => getVisiblePresetOrder(compatibilityPresets),
 	);
 	const [assignmentPhase, setAssignmentPhase] =
 		useState<AAAssignmentPhase>("idle");
@@ -110,6 +135,8 @@ export function V2PresetsBar({
 		null,
 	);
 	const assignmentAttemptRef = useRef(0);
+	const piLaunchGateRef = useRef(createAASingleFlight<boolean>());
+	const [isPiLaunching, setIsPiLaunching] = useState(false);
 	const assignmentResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
 		null,
 	);
@@ -124,17 +151,20 @@ export function V2PresetsBar({
 	);
 
 	useEffect(() => {
-		const serverVisiblePresetIds = getVisiblePresetOrder(matchedPresets);
+		const serverVisiblePresetIds = getVisiblePresetOrder(compatibilityPresets);
 		setLocalVisiblePresetIds((current) =>
 			areStringArraysEqual(current, serverVisiblePresetIds)
 				? current
 				: serverVisiblePresetIds,
 		);
-	}, [matchedPresets]);
+	}, [compatibilityPresets]);
 
 	const visiblePresets = useMemo(() => {
 		const presetById = new Map(
-			matchedPresets.map((preset, index) => [preset.id, { preset, index }]),
+			compatibilityPresets.map((preset, index) => [
+				preset.id,
+				{ preset, index },
+			]),
 		);
 		const orderedVisiblePresets: Array<{
 			preset: V2TerminalPresetRow;
@@ -150,14 +180,14 @@ export function V2PresetsBar({
 			seenIds.add(presetId);
 		}
 
-		for (const [index, preset] of matchedPresets.entries()) {
+		for (const [index, preset] of compatibilityPresets.entries()) {
 			if (!isPresetVisibleInBar(preset.pinnedToBar)) continue;
 			if (seenIds.has(preset.id)) continue;
 			orderedVisiblePresets.push({ preset, index });
 		}
 
 		return orderedVisiblePresets;
-	}, [matchedPresets, localVisiblePresetIds]);
+	}, [compatibilityPresets, localVisiblePresetIds]);
 
 	const visiblePresetIndexById = useMemo(
 		() =>
@@ -214,22 +244,31 @@ export function V2PresetsBar({
 			reorderedVisiblePresetIds.splice(targetVisibleIndex, 0, moved);
 
 			const visibleSet = new Set(reorderedVisiblePresetIds);
-			const hidden = matchedPresets
+			const hidden = compatibilityPresets
 				.filter((preset) => !visibleSet.has(preset.id))
 				.map((preset) => preset.id);
 			const finalOrder = [...reorderedVisiblePresetIds, ...hidden];
 			const currentTabOrderById = new Map(
-				matchedPresets.map((preset) => [preset.id, preset.tabOrder]),
+				compatibilityPresets.map((preset) => [preset.id, preset.tabOrder]),
 			);
+			const availableTabOrders = compatibilityPresets
+				.map((preset) => preset.tabOrder)
+				.sort((left, right) => left - right);
 
 			for (const [index, id] of finalOrder.entries()) {
-				if (currentTabOrderById.get(id) === index) continue;
+				const nextTabOrder = availableTabOrders[index];
+				if (nextTabOrder === undefined) continue;
+				if (currentTabOrderById.get(id) === nextTabOrder) continue;
 				collections.v2TerminalPresets.update(id, (draft) => {
-					draft.tabOrder = index;
+					draft.tabOrder = nextTabOrder;
 				});
 			}
 		},
-		[collections.v2TerminalPresets, localVisiblePresetIds, matchedPresets],
+		[
+			collections.v2TerminalPresets,
+			compatibilityPresets,
+			localVisiblePresetIds,
+		],
 	);
 
 	const handleTogglePresetVisibility = useCallback(
@@ -254,17 +293,20 @@ export function V2PresetsBar({
 		[setBuiltinPresetHidden],
 	);
 
-	const assignPreset = useCallback(
-		async (preset: V2TerminalPresetRow): Promise<boolean> => {
+	const assignEmployee = useCallback(
+		async (
+			employeeName: string,
+			operation: () => Promise<boolean>,
+		): Promise<boolean> => {
 			const attempt = ++assignmentAttemptRef.current;
 			if (assignmentResetTimerRef.current) {
 				clearTimeout(assignmentResetTimerRef.current);
 				assignmentResetTimerRef.current = null;
 			}
-			setAssignmentEmployee(preset.name || "default");
+			setAssignmentEmployee(employeeName);
 			setAssignmentPhase("assigning");
 
-			const succeeded = await executePreset(preset, { taskFolderTitle });
+			const succeeded = await operation();
 			if (attempt !== assignmentAttemptRef.current) return succeeded;
 			if (!succeeded) {
 				setAssignmentEmployee(null);
@@ -281,8 +323,40 @@ export function V2PresetsBar({
 			}, 2600);
 			return true;
 		},
-		[executePreset, taskFolderTitle],
+		[],
 	);
+
+	const assignPreset = useCallback(
+		(preset: V2TerminalPresetRow): Promise<boolean> =>
+			assignEmployee(preset.name || "default", () =>
+				executePreset(preset, { taskFolderTitle }),
+			),
+		[assignEmployee, executePreset, taskFolderTitle],
+	);
+
+	const handleActivatePi = useCallback(() => {
+		const action = resolveAAPiEmployeeAction(piConfig);
+		if (action.kind === "open-setup") {
+			void navigate({ to: action.route });
+			return;
+		}
+		void piLaunchGateRef.current.run(async () => {
+			setIsPiLaunching(true);
+			try {
+				return await assignEmployee("Pi", () =>
+					executeHostAgentConfig(action.config, { taskFolderTitle }),
+				);
+			} finally {
+				setIsPiLaunching(false);
+			}
+		});
+	}, [
+		assignEmployee,
+		executeHostAgentConfig,
+		navigate,
+		piConfig,
+		taskFolderTitle,
+	]);
 
 	const handleAssignBuiltinPreset = useCallback(
 		(preset: V2TerminalPresetRow): Promise<boolean> => {
@@ -407,6 +481,16 @@ export function V2PresetsBar({
 				</DropdownMenuContent>
 			</DropdownMenu>
 			<AAEmployeeRosterOverflow>
+				<AAPiEmployeeRosterItem
+					availability={piAvailability}
+					config={piConfig}
+					isLaunching={isPiLaunching}
+					onActivate={handleActivatePi}
+					runtimeSnapshot={selectAAEmployeeRuntimeSnapshot(runtimeSnapshots, {
+						agentId: piConfig?.id ?? "pi",
+						name: "Pi",
+					})}
+				/>
 				{visiblePresets.map(({ preset }, visibleIndex) => {
 					const hotkeyId = PRESET_HOTKEY_IDS[visibleIndex];
 					return (

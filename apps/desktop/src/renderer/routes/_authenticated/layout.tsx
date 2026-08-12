@@ -24,6 +24,7 @@ import { electronTrpc } from "renderer/lib/electron-trpc";
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
 import { showWorkspaceAutoNameWarningToast } from "renderer/lib/workspaces/showWorkspaceAutoNameWarningToast";
 import { InitGitDialog } from "renderer/react-query/projects/InitGitDialog";
+import { AAApplicationShell } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import { DaemonAutoUpdateFailureDialog } from "renderer/routes/_authenticated/components/DaemonAutoUpdateFailureDialog";
 import { DashboardNewWorkspaceModal } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal";
 import { DiffThemeSync } from "renderer/routes/_authenticated/components/DiffThemeSync";
@@ -293,7 +294,12 @@ function AuthenticatedLayout() {
 								<V2NotificationController />
 								<DockBadgeController />
 								<DaemonAutoUpdateFailureDialog />
-								<Outlet />
+								<AAApplicationShell
+									enabled={isV2CloudEnabled}
+									pathname={location.pathname}
+								>
+									<Outlet />
+								</AAApplicationShell>
 								<V1ImportModal />
 								{isV2CloudEnabled ? (
 									<>
