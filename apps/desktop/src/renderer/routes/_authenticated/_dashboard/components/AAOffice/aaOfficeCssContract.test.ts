@@ -24,4 +24,11 @@ describe("AA Office CSS contract", () => {
 		expect(css).toContain("animation-iteration-count: 1");
 		expect(css).toContain("transition-duration: 0.01ms");
 	});
+
+	it("scopes the shared v0.2 page-body frame to AA routes", () => {
+		expect(css).toContain(".aa-application-page {");
+		expect(css).toContain(".aa-application-page__header {");
+		expect(css).toContain('[data-aa-page="automations"]');
+		expect(css).toContain(".aa-application-page--settings");
+	});
 });

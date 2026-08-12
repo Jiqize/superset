@@ -1,5 +1,6 @@
 import { PromptInputProvider } from "@superset/ui/ai-elements/prompt-input";
 import { createFileRoute } from "@tanstack/react-router";
+import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { NewWorkspaceScreen } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/NewWorkspaceScreen";
 import { DashboardNewWorkspaceDraftProvider } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/DashboardNewWorkspaceDraftContext";
 
@@ -21,10 +22,15 @@ export const Route = createFileRoute(
  */
 function NewWorkspacePage() {
 	const { projectId } = Route.useSearch();
+	const aaOffice = useIsV2CloudEnabled();
 	return (
 		<DashboardNewWorkspaceDraftProvider onClose={() => {}}>
 			<PromptInputProvider>
-				<NewWorkspaceScreen isOpen preSelectedProjectId={projectId ?? null} />
+				<NewWorkspaceScreen
+					isOpen
+					preSelectedProjectId={projectId ?? null}
+					aaOffice={aaOffice}
+				/>
 				{/* Window-drag surface replacing the hidden TopBar's drag region.
 				    Stops short of the top-right corner so the screen's naming
 				    instructions + prompt history buttons underneath stay

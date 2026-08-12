@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import { AAApplicationPage } from "renderer/routes/_authenticated/_dashboard/components/AAOffice";
 import {
 	type SettingsSection,
 	useSetSettingsSearchQuery,
@@ -169,6 +170,24 @@ function SettingsLayout() {
 		location.pathname.startsWith("/settings/projects") ||
 		location.pathname.startsWith("/settings/hosts") ||
 		location.pathname.startsWith("/settings/agents");
+	const settingsContent = (
+		<>
+			{isSearchActive && (
+				<SearchResultsBanner
+					query={normalizedSearchQuery}
+					matchCount={totalMatches}
+					onClear={() => setSearchQuery("")}
+				/>
+			)}
+			{usesInnerSidebar ? (
+				<Outlet />
+			) : (
+				<div className="mx-auto max-w-4xl">
+					<Outlet />
+				</div>
+			)}
+		</>
+	);
 
 	return (
 		<div
@@ -196,19 +215,12 @@ function SettingsLayout() {
 			>
 				<SettingsSidebar />
 				<div ref={contentRef} className="flex-1 overflow-auto">
-					{isSearchActive && (
-						<SearchResultsBanner
-							query={normalizedSearchQuery}
-							matchCount={totalMatches}
-							onClear={() => setSearchQuery("")}
-						/>
-					)}
-					{usesInnerSidebar ? (
-						<Outlet />
+					{aaOfficeEnabled ? (
+						<AAApplicationPage pathname={location.pathname} settings>
+							{settingsContent}
+						</AAApplicationPage>
 					) : (
-						<div className="mx-auto max-w-4xl">
-							<Outlet />
-						</div>
+						settingsContent
 					)}
 				</div>
 			</div>

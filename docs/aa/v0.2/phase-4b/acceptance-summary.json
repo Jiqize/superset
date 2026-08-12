@@ -1,0 +1,106 @@
+{
+	"phase": "4B",
+	"executionHead": "3ca1e4d52b83b9bd0c37d365c132ae85e21f8725",
+	"implementationBaseline": "9bffbf9f1cd3dce2b2ce9ce0c4edb64f84b1c456",
+	"environment": {
+		"application": "Superset Desktop development build",
+		"architecture": "arm64",
+		"bun": "1.3.14",
+		"macOS": "26.4",
+		"node": "24.14.0",
+		"viewports": ["1440x800", "1920x976"]
+	},
+	"singleMachine": {
+		"originalDevelopmentMacOnly": true,
+		"secondComputerInspected": false,
+		"secondComputerUpdated": false,
+		"secondComputerTested": false
+	},
+	"isolation": {
+		"repositoryManagedProfile": "phase-4b",
+		"fixture": "disposable local Git Briefcase",
+		"productionProfileTouched": false
+	},
+	"realWorkFolders": {
+		"totalIncludingMain": 4,
+		"newTaskWorkFolders": 3,
+		"piWorkFolders": 2,
+		"compatibilityDispatchWorkFolders": 1
+	},
+	"scenarios": [
+		{
+			"id": "shared-aa-page-body",
+			"result": "pass",
+			"facts": [
+				"Home, Tasks, Automations, Pull Requests, Sessions, Agents, Settings, and the Advanced path retained mature data and actions inside one scoped AA page frame",
+				"no document-level horizontal overflow occurred at either required viewport",
+				"one route-correct AA rail remained present"
+			]
+		},
+		{
+			"id": "pi-first-real-work",
+			"result": "pass",
+			"facts": [
+				"Pi remained the fixed first PRIMARY Employee",
+				"a real Pi turn moved from WORKING to IDLE",
+				"one harmless file change appeared in Files, Changes, Diff, Review, and the real changed-file count"
+			]
+		},
+		{
+			"id": "roster-launch-and-compatibility",
+			"result": "pass",
+			"facts": [
+				"one explicit Pi Roster activation added exactly one focused real conversation",
+				"Codex launched through the existing preset path and remained UNTRACKED",
+				"compatibility state did not inherit Pi Runtime evidence"
+			]
+		},
+		{
+			"id": "active-tasks-and-archive",
+			"result": "pass",
+			"facts": [
+				"three independent task Work Folders stayed distinguishable",
+				"Archive moved one row to the collapsed Archived group",
+				"Unarchive restored it without altering Runtime, Git, terminal, or Work Folder identity"
+			]
+		},
+		{
+			"id": "renderer-reload-and-route-continuity",
+			"result": "pass",
+			"facts": [
+				"Renderer reload preserved the original Work Folder route, title, changed count, Files state, and Pi truth",
+				"returning through the route journey reattached existing panes and the real terminal",
+				"navigation created or resumed no Task, Work Folder, or Pi session"
+			]
+		},
+		{
+			"id": "full-restart-and-exact-resume",
+			"result": "pass",
+			"facts": [
+				"after Electron and Host restart, stale LIVE evidence was absent",
+				"the product exposed OFFLINE / RESUMABLE and the visible RESUME PI SESSION action",
+				"exact resume preserved native Pi identity, created a new epoch, restored focused xterm, and retained conversation context"
+			]
+		},
+		{
+			"id": "accessibility-and-motion",
+			"result": "pass_with_accepted_legacy_debt",
+			"facts": [
+				"rail Tab order, full accessible labels, native disabled Files, headings, current route, and xterm focus were verified",
+				"reduced motion forced AA repeating animations and transitions to one 0.01ms iteration",
+				"legacy File Cabinet tab-state semantics remain recorded debt"
+			]
+		}
+	],
+	"runtimeBoundaries": {
+		"hostServiceChanged": false,
+		"runtimeContractChanged": false,
+		"piBridgeChanged": false,
+		"ptyChanged": false,
+		"xtermChanged": false,
+		"gitOrWorktreeChanged": false,
+		"taskOrArchiveModelChanged": false
+	},
+	"newAAOwnedUncaughtRendererErrors": 0,
+	"result": "pass_with_accepted_debt"
+}

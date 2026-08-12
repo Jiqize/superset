@@ -15,7 +15,7 @@ export function ProjectFilterTriggerLabel({
 		return (
 			<span className="flex items-center gap-2">
 				<LuFolders className="size-3.5" />
-				<span>All projects</span>
+				<span>All briefcases</span>
 			</span>
 		);
 	}

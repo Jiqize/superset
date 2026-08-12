@@ -217,7 +217,8 @@ export function DashboardSidebarHeader({
 							</button>
 						</TooltipTrigger>
 						<TooltipContent side="right">
-							New Workspace ({shortcutText})
+							{aaOffice ? "New Work Folder · Advanced" : "New Workspace"} (
+							{shortcutText})
 						</TooltipContent>
 					</Tooltip>
 
@@ -421,7 +422,7 @@ export function DashboardSidebarHeader({
 					<LuPlus className="size-3" strokeWidth={STROKE_WIDTH_THICK} />
 				</div>
 				<span className="flex-1 truncate text-left whitespace-nowrap">
-					{aaOffice ? "New Workspace · Advanced" : "New Workspace"}
+					{aaOffice ? "New Work Folder · Advanced" : "New Workspace"}
 				</span>
 				<SidebarKbdHint label={shortcutText} />
 			</button>

@@ -28,6 +28,7 @@ import {
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
 import {
+	AAApplicationPage,
 	AANewTaskDialog,
 	isAADashboardShellRoute,
 } from "./components/AAOffice";
@@ -238,6 +239,14 @@ function DashboardLayout() {
 			isV2CloudEnabled &&
 			isWorkspaceSidebarOpen) ||
 		((onNewWorkspaceRoute || onDashboardViewRoute) && sidebarOutsideColumn);
+	const routeOutlet =
+		aaOfficeActive && !onV2WorkspaceRoute ? (
+			<AAApplicationPage pathname={location.pathname}>
+				<Outlet />
+			</AAApplicationPage>
+		) : (
+			<Outlet />
+		);
 
 	return (
 		<div
@@ -265,7 +274,7 @@ function DashboardLayout() {
 								<CrossVersionMismatchState />
 							)
 						) : (
-							<Outlet />
+							routeOutlet
 						)}
 					</div>
 				</div>

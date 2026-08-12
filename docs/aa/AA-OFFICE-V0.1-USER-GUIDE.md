@@ -1,5 +1,9 @@
 # AA Office — User Guide (v0.1 RC + v0.2 foundation)
 
+> **Superseded for current use:** read
+> `docs/aa/AA-OFFICE-V0.2-USER-GUIDE.md`. This document remains the historical
+> v0.1 RC and Phase 4A foundation guide.
+
 > **Current branch note:** this guide now describes the `aa-spike` v0.2
 > foundation after Phase 4A. The accepted AA Office v0.1 RC runtime, New Task,
 > Active Tasks, Archive, Git, terminal, and exact-resume contracts remain

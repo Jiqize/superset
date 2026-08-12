@@ -11,6 +11,11 @@ export {
 	useAAAgentStatus,
 } from "./AAAgentStatus";
 export {
+	AAApplicationPage,
+	type AAApplicationPagePresentation,
+	resolveAAApplicationPagePresentation,
+} from "./AAApplicationPage";
+export {
 	type AAApplicationRouteKind,
 	AAApplicationShell,
 	type AANavigationContext,

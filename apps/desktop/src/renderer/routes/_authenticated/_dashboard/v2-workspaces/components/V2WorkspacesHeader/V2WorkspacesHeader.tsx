@@ -102,9 +102,11 @@ export function V2WorkspacesHeader({
 			: undefined;
 
 	return (
-		<div className="border-b border-border">
+		<div className="aa-work-folder-directory-header border-b border-border">
 			<div className="flex w-full flex-wrap items-center justify-between gap-3 px-6 py-4">
-				<h1 className="text-sm font-semibold tracking-tight">Workspaces</h1>
+				<h1 className="text-sm font-semibold tracking-tight">
+					Work Folder Directory
+				</h1>
 
 				{/* Window-drag leaf standing in for the hidden TopBar. */}
 				<div className="drag -my-4 min-w-0 flex-1 self-stretch" />
@@ -116,7 +118,7 @@ export function V2WorkspacesHeader({
 						</InputGroupAddon>
 						<InputGroupInput
 							type="text"
-							placeholder="Search workspaces…"
+							placeholder="Search work folders…"
 							value={searchQuery}
 							onChange={(event) => setSearchQuery(event.target.value)}
 						/>
@@ -148,7 +150,7 @@ export function V2WorkspacesHeader({
 									<span className="flex w-full min-w-0 items-center gap-2">
 										<LuFolders className="size-3.5" />
 										<span className="min-w-0 flex-1 truncate">
-											All projects
+											All briefcases
 										</span>
 									</span>
 								</SelectItem>
@@ -159,7 +161,7 @@ export function V2WorkspacesHeader({
 									<SelectSeparator />
 									<SelectGroup>
 										<SelectLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-											Projects
+											Briefcases
 										</SelectLabel>
 										{projectOptions.map((project) => (
 											<SelectItem

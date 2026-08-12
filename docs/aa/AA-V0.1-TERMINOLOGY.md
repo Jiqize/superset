@@ -30,7 +30,7 @@ needed to explain real system state.
 | **Output** | The current Work Folder's real Git changes, exposed through Files, Changes, and Diff. | Git/file/diff services | Output is evidence, not a productivity score. |
 | **Delivery** | Existing pull-request linkage/status when available. | Pull-request read model | Show the real state, including `NO GITHUB REPO`; never fabricate a delivery target. |
 | **File Cabinet** | The existing Files, Changes, and Review surfaces in AA presentation. | Workspace sidebar/panes | Preserve the explicit tab names and underlying interactions. |
-| **New Workspace · Advanced** | The unchanged generic Superset workspace-creation path retained for advanced use. | Global New Workspace action | Keep visually secondary to project-local `NEW TASK`; do not remove it. |
+| **New Work Folder · Advanced** | The unchanged generic Superset workspace-creation path retained for advanced use. | Global New Workspace action | Use the AA label at shell/header level and keep it visually secondary to project-local `NEW TASK`. Mature form controls may retain Workspace/Project when that is their real model. |
 
 ## State-language rules
 

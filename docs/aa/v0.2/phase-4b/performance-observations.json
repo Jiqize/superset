@@ -1,0 +1,33 @@
+{
+	"environment": "development-build-repository-managed-isolated-profile",
+	"disclaimer": "Observational development-build values; not packaged-build claims.",
+	"coldStart": {
+		"mainAndRendererBuildToVisibleShellApproxMs": 16000,
+		"rendererDomContentLoadedMsRange": [400, 514],
+		"activeTasksAndRuntimeSettleUpperBoundMs": 10000
+	},
+	"settledInteractionMs": {
+		"dashboardRouteRange": [38, 89],
+		"returnToExistingWorkFolder": 257,
+		"changesTab": 53,
+		"filesTab": 67,
+		"settingsRoute": 34
+	},
+	"viewport1440x800": {
+		"documentOverflow": false,
+		"terminalFrameWithExistingDiffPaneAndCabinetClosed": {
+			"width": 514,
+			"height": 589
+		},
+		"xtermWithExistingDiffPaneAndCabinetClosed": {
+			"width": 482,
+			"height": 527
+		}
+	},
+	"terminalFocus": {
+		"afterWorkFolderReturn": true,
+		"afterExactResume": true,
+		"focusShortcutRestoredXterm": true
+	},
+	"newCachingOrBatchingAdded": false
+}

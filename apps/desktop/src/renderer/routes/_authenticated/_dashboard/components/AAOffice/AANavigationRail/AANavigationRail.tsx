@@ -88,14 +88,16 @@ export function AANavigationRail({ pathname }: AANavigationRailProps) {
 			label: "Home",
 			icon: "home",
 			onClick: () => navigate({ to: "/v2-workspaces" }),
-			active: activeDestination === "home",
+			active: activeDestination === "home" && !projectIndexOpen,
 		},
 		{
 			id: "cases",
 			label: "Projects / Briefcases",
 			icon: "briefcase",
 			onClick: openCases,
-			active: activeDestination === "cases",
+			active:
+				activeDestination === "cases" ||
+				(activeDestination === "home" && projectIndexOpen),
 			pressed: projectIndexOpen,
 		},
 		{

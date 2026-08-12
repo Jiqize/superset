@@ -1,0 +1,27 @@
+{
+	"phase": "4B",
+	"scenario": "full Electron and Host restart followed by exact visible Pi resume",
+	"identityProof": {
+		"algorithm": "sha256-prefix-12",
+		"nativeSessionBeforeRestart": "90e23352d5b8",
+		"nativeSessionAfterResume": "90e23352d5b8",
+		"epochBeforeRestart": "1297dc2a579e",
+		"epochAfterResume": "b37053c86c20",
+		"rawIdentityRecorded": false,
+		"sameNativeSession": true,
+		"newRuntimeEpoch": true
+	},
+	"presentation": {
+		"beforeResume": "OFFLINE / RESUMABLE",
+		"action": "RESUME PI SESSION",
+		"afterResume": "IDLE"
+	},
+	"continuity": {
+		"priorFilenameRecalledWithoutReadingFiles": true,
+		"followupSettledIdle": true,
+		"terminalFocusedAfterResume": true,
+		"changedFileCountPreserved": 1
+	},
+	"secondRestartRequired": false,
+	"result": "pass"
+}

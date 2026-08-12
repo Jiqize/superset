@@ -42,6 +42,7 @@ import { track } from "renderer/lib/analytics";
 import { authClient } from "renderer/lib/auth-client";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import { showHostServiceUnavailableToast } from "renderer/lib/host-service-unavailable";
+import { AAIcon } from "renderer/routes/_authenticated/_dashboard/components/AAOffice/AAIcon";
 import { SupersetIcon } from "renderer/routes/_authenticated/onboarding/providers/components/SupersetIcon";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
 import { useNewWorkspacePromptContext } from "renderer/stores/new-workspace-prompt-context";
@@ -77,6 +78,7 @@ import { SamplePrompts } from "./components/SamplePrompts";
 interface NewWorkspaceScreenProps {
 	isOpen: boolean;
 	preSelectedProjectId: string | null;
+	aaOffice?: boolean;
 }
 
 /**
@@ -88,6 +90,7 @@ interface NewWorkspaceScreenProps {
 export function NewWorkspaceScreen({
 	isOpen,
 	preSelectedProjectId,
+	aaOffice = false,
 }: NewWorkspaceScreenProps) {
 	const navigate = useNavigate();
 	const [promptSeed, setPromptSeed] = useState(0);
@@ -482,7 +485,10 @@ export function NewWorkspaceScreen({
 
 	// ── Render ───────────────────────────────────────────────────────
 	return (
-		<div className="absolute inset-0 z-40 flex flex-col items-center overflow-y-auto bg-background">
+		<div
+			className="absolute inset-0 z-40 flex flex-col items-center overflow-y-auto bg-background"
+			data-aa-advanced-work-folder={aaOffice || undefined}
+		>
 			<AnimatePresence>
 				{isDraggingFiles && (
 					<motion.div
@@ -537,9 +543,17 @@ export function NewWorkspaceScreen({
 				</PromptHistoryCommand>
 			</div>
 			<div className="flex flex-1 flex-col items-center justify-center gap-8">
-				<SupersetIcon className="h-10 w-auto text-muted-foreground/70" />
+				{aaOffice ? (
+					<span className="aa-advanced-work-folder__mark" aria-hidden="true">
+						<AAIcon name="folder" />
+					</span>
+				) : (
+					<SupersetIcon className="h-10 w-auto text-muted-foreground/70" />
+				)}
 				<h1 className="text-center text-3xl font-medium text-foreground/90">
-					What should we build next?
+					{aaOffice
+						? "What should this Work Folder do?"
+						: "What should we build next?"}
 				</h1>
 			</div>
 			<div className="relative flex w-full max-w-[640px] flex-col px-6 pb-8">
