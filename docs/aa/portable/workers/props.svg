@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-worker-props-sheet" viewBox="0 0 240 48" role="img" aria-labelledby="props-title props-desc" shape-rendering="crispEdges">
+  <title id="props-title">AA office props</title>
+  <desc id="props-desc">Five optional composable office props: workstation, folder, approval paper, deliverable tray, and tool case.</desc>
+  <rect width="240" height="48" fill="#b5b4af"/>
+  <g id="prop-workstation" transform="translate(0 0)"><path fill="#242424" d="M4 8h40v28H28v4h8v4H12v-4h8v-4H4V8Z"/><path fill="#353633" d="M8 12h32v20H8z"/><path fill="#e0a11b" d="M12 16h4v4h4v4h-4v4h-4v-4h4v-4h-4v-4Z"/></g>
+  <g id="prop-folder" transform="translate(48 0)"><path fill="#242424" d="M4 12h16l4 4h20v28H4V12Z"/><path fill="#e9e5d8" d="M8 16h10l4 4h18v4H8v-8Z"/><path fill="#a9783e" d="M8 26h32v14H8z"/></g>
+  <g id="prop-approval-paper" transform="translate(96 0)"><path fill="#242424" d="M8 4h32v40H8V4Z"/><path fill="#e9e5d8" d="M12 8h24v32H12z"/><path fill="#5f5e5a" d="M16 14h16v4H16zm0 8h16v4H16z"/><path fill="#6e9b48" d="M16 30h4v4h4v-4h4v-4h4v8h-4v4h-8v-4h-4v-4Z"/></g>
+  <g id="prop-deliverable-tray" transform="translate(144 0)"><path fill="#242424" d="M4 20h12v8h16v-8h12v24H4V20Z"/><path fill="#9a6b3d" d="M8 30h32v10H8z"/><path fill="#e9e5d8" d="M16 4h16v20H16z"/><path fill="#6e9b48" d="M20 10h8v8h-8z"/></g>
+  <g id="prop-tool-case" transform="translate(192 0)"><path fill="#242424" d="M12 8h24v8h8v28H4V16h8V8Zm4 8h16v-4H16v4Z"/><path fill="#6d482c" d="M8 20h32v20H8z"/><path fill="#e0a11b" d="M20 24h8v8h-8z"/></g>
+</svg>

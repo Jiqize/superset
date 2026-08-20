@@ -1,0 +1,108 @@
+{
+	"name": "AA Portable Core Tokens",
+	"version": "0.1.0",
+	"status": "phase-5a-spike",
+	"license": "No independent package license declared; see ../AA-ASSET-PROVENANCE.md",
+	"gridUnit": 4,
+	"tokens": {
+		"color": {
+			"canvas": "#a5a49f",
+			"shell": "#8a8984",
+			"cabinet": "#979691",
+			"workspaceWell": "#7f7e79",
+			"pane": "#c1c0ba",
+			"paneHeader": "#a8a7a1",
+			"surface": "#cbc9c3",
+			"raised": "#e4e2dc",
+			"inset": "#b5b4af",
+			"border": "#242424",
+			"borderSoft": "#5d5c58",
+			"highlight": "#f0efea",
+			"text": "#171717",
+			"textMuted": "#5f5e5a",
+			"selection": "#173267",
+			"selectionText": "#f3f1e9",
+			"working": "#e0a11b",
+			"waiting": "#4d78a8",
+			"success": "#6e9b48",
+			"error": "#9c302b",
+			"offline": "#777a7e",
+			"terminal": "#353633",
+			"briefcase": "#6d482c",
+			"briefcaseLight": "#9a6b3d",
+			"folder": "#a9783e",
+			"paper": "#e9e5d8",
+			"disabled": "#8d8c87"
+		},
+		"space": {
+			"0": 0,
+			"1": 4,
+			"2": 8,
+			"3": 12,
+			"4": 16,
+			"5": 20,
+			"6": 24,
+			"8": 32,
+			"10": 40,
+			"12": 48
+		},
+		"dimension": {
+			"controlCompact": 24,
+			"controlDefault": 32,
+			"targetMinimum": 44,
+			"rail": 56,
+			"panelMinimum": 240,
+			"detailsPreferred": 320,
+			"contentMinimum": 640
+		},
+		"borderWidth": {
+			"hairline": 1,
+			"strong": 2,
+			"focus": 2
+		},
+		"radius": {
+			"none": 0,
+			"micro": 2,
+			"compact": 4
+		},
+		"depth": {
+			"raised": "inset 1px 1px 0 #f0efea, inset -1px -1px 0 #5d5c58",
+			"pressed": "inset 1px 1px 0 #5d5c58, inset -1px -1px 0 #f0efea",
+			"panel": "2px 2px 0 #242424",
+			"none": "none"
+		},
+		"type": {
+			"familyUi": "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+			"familyMono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"sizeMicro": 10,
+			"sizeCaption": 11,
+			"sizeBody": 12,
+			"sizeLabel": 13,
+			"sizeTitle": 16,
+			"sizeDisplay": 24,
+			"lineCompact": 1.2,
+			"lineBody": 1.45,
+			"weightRegular": 400,
+			"weightStrong": 700
+		},
+		"iconSize": {
+			"xs": 16,
+			"sm": 20,
+			"md": 24,
+			"lg": 32
+		},
+		"avatarSize": {
+			"sm": 24,
+			"md": 32,
+			"lg": 48
+		},
+		"motion": {
+			"instantMs": 0,
+			"fastMs": 80,
+			"standardMs": 160,
+			"attentionMs": 320,
+			"workingFrameMs": 400,
+			"workingFps": 2.5
+		}
+	}
+}

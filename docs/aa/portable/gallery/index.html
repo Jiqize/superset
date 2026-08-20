@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en" data-aa-motion="full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>AA Portable UI Kit v0.1 — Static Gallery</title>
+    <link rel="icon" href="../icons/home.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./aa-portable.css" />
+    <script src="./gallery.js" defer></script>
+  </head>
+  <body>
+    <a class="pk-skip" href="#main-content">Skip to gallery content</a>
+
+    <header class="pk-masthead">
+      <div class="pk-masthead__identity">
+        <div class="pk-monogram" aria-hidden="true">AA</div>
+        <div>
+          <p class="pk-kicker">Portable UI asset kit · v0.1</p>
+          <h1>Office systems specimen</h1>
+          <p class="pk-subhead">Framework-neutral assets and contracts. No host runtime attached.</p>
+        </div>
+      </div>
+      <div class="pk-masthead__controls">
+        <span class="pk-demo-flag">STATIC GALLERY · DEMO DATA</span>
+        <button id="motion-toggle" class="pk-button pk-button--dark" type="button" aria-pressed="false">
+          Reduce motion: off
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="pk-opening" aria-labelledby="opening-title">
+        <div class="pk-opening__statement">
+          <p class="pk-index">00 / Operating character</p>
+          <h2 id="opening-title">A compact office shell that tells the truth about work.</h2>
+          <p>
+            Warm grey hard edges carry structure. Navy marks selection. Amber marks verified activity.
+            Pixel workers clarify roles without replacing names, model labels, reasoning text, or runtime state.
+          </p>
+          <div class="pk-opening__actions" aria-label="Control examples">
+            <button class="pk-button" type="button">Open briefcase</button>
+            <button class="pk-button pk-button--selected" type="button">Selected task</button>
+            <button class="pk-button" type="button" disabled>Unavailable</button>
+          </div>
+        </div>
+
+        <aside class="pk-console" aria-label="Demonstration status console">
+          <div class="pk-console__bar">
+            <span>DEMO / WORKSTATION 04</span>
+            <span class="pk-status-text"><span class="pk-light pk-light--working" aria-hidden="true"></span>WORKING</span>
+          </div>
+          <div class="pk-console__body">
+            <img class="pk-worker pk-worker--48" src="../workers/anatomy.svg" alt="Base AA pixel worker anatomy" />
+            <div>
+              <strong>Employee role: Builder</strong>
+              <span>Model: Demo Model A</span>
+              <span>Reasoning: High</span>
+              <span>Runtime: Working · mock turn span</span>
+            </div>
+          </div>
+          <div class="pk-console__log" aria-label="Mock event log">
+            <span><b>09:42:08</b> demo turn/start</span>
+            <span><b>09:42:10</b> demo tool/call · files.write</span>
+            <span><b>09:42:11</b> awaiting structured result</span>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="pk-section-rail" aria-label="Gallery sections">
+        <a href="#tokens">01 Tokens</a>
+        <a href="#controls">02 Controls</a>
+        <a href="#icons">03 Icons</a>
+        <a href="#workers">04 Workers</a>
+        <a href="#objects">05 Objects</a>
+        <a href="#compositions">06 Hosts</a>
+      </nav>
+
+      <section id="tokens" class="pk-section" aria-labelledby="tokens-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">01 / Tokens and material</p>
+          <h2 id="tokens-title">One primitive palette, explicit product roles.</h2>
+          <p>Every swatch below is rendered locally from the portable core and semantic contract.</p>
+        </div>
+
+        <div class="pk-rack" aria-labelledby="core-palette-title">
+          <div class="pk-rack__label"><h3 id="core-palette-title">Core palette</h3><span>26 primitives</span></div>
+          <div id="core-palette" class="pk-swatch-grid"></div>
+        </div>
+
+        <div class="pk-rack" aria-labelledby="semantic-palette-title">
+          <div class="pk-rack__label"><h3 id="semantic-palette-title">Semantic roles</h3><span>21 mapped roles</span></div>
+          <div id="semantic-palette" class="pk-role-list"></div>
+        </div>
+
+        <div class="pk-surface-stack" aria-label="Surface and border hierarchy">
+          <div class="pk-surface pk-surface--canvas"><b>Canvas / level 0</b><span>application.canvas</span></div>
+          <div class="pk-surface pk-surface--shell"><b>Shell / level 1</b><span>shell.surface</span></div>
+          <div class="pk-surface pk-surface--inset"><b>Inset / level 2</b><span>surface.inset · soft border</span></div>
+          <div class="pk-surface pk-surface--raised"><b>Raised / level 3</b><span>surface.raised · strong border</span></div>
+        </div>
+
+        <div class="pk-type-specimen" aria-labelledby="type-title">
+          <h3 id="type-title">Typography scale</h3>
+          <p class="pk-type pk-type--display">24 / Office systems specimen</p>
+          <p class="pk-type pk-type--title">16 / Task folder title</p>
+          <p class="pk-type pk-type--label">13 / CONTROL LABEL · STRONG</p>
+          <p class="pk-type pk-type--body">12 / Dense body copy preserves clarity at workstation scale.</p>
+          <p class="pk-type pk-type--caption">11 / State text · updated just now (demo)</p>
+          <p class="pk-type pk-type--micro">10 / STRUCTURED METADATA ONLY</p>
+          <p class="pk-type pk-type--mono">12 mono / demo/session/turn-04</p>
+        </div>
+      </section>
+
+      <section id="controls" class="pk-section pk-section--dark" aria-labelledby="controls-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">02 / Controls and state</p>
+          <h2 id="controls-title">Hard edges, visible focus, redundant status.</h2>
+          <p>Controls are native HTML in this specimen. Hosts own persistence and side effects.</p>
+        </div>
+
+        <div class="pk-control-bench">
+          <div class="pk-panel" aria-labelledby="buttons-title">
+            <h3 id="buttons-title">Buttons and input</h3>
+            <div class="pk-button-row">
+              <button class="pk-button" type="button">Default</button>
+              <button class="pk-button pk-button--selected" type="button">Selected</button>
+              <button class="pk-button pk-button--danger" type="button">Stop</button>
+              <button class="pk-button" type="button" aria-busy="true">Pending…</button>
+            </div>
+            <label class="pk-field">
+              <span>Task folder label</span>
+              <input value="Demo migration notes" aria-describedby="input-help" />
+            </label>
+            <small id="input-help">Gallery fixture. No data is saved.</small>
+          </div>
+
+          <div class="pk-panel" aria-labelledby="tabs-title">
+            <h3 id="tabs-title">Tabs</h3>
+            <div class="pk-tabs" role="tablist" aria-label="Specimen views">
+								<button id="tab-summary" type="button" role="tab" aria-selected="true" aria-controls="panel-summary" tabindex="0">Summary</button>
+								<button id="tab-events" type="button" role="tab" aria-selected="false" aria-controls="panel-events" tabindex="-1">Events</button>
+								<button id="tab-files" type="button" role="tab" aria-selected="false" aria-controls="panel-files" tabindex="-1">Files</button>
+            </div>
+            <div id="panel-summary" class="pk-tab-panel" role="tabpanel" aria-labelledby="tab-summary">Structured state remains primary.</div>
+            <div id="panel-events" class="pk-tab-panel" role="tabpanel" aria-labelledby="tab-events" hidden>Event spans drive transient activity.</div>
+            <div id="panel-files" class="pk-tab-panel" role="tabpanel" aria-labelledby="tab-files" hidden>Only verified outputs enter the tray.</div>
+          </div>
+
+          <div class="pk-panel" aria-labelledby="lights-title">
+            <h3 id="lights-title">Status light contract</h3>
+            <ul class="pk-status-list">
+              <li><img src="../icons/status-idle.svg" alt="" /><span>Idle</span></li>
+              <li><img class="pk-activity" src="../icons/status-working.svg" alt="" /><span>Working</span></li>
+              <li><img src="../icons/status-waiting.svg" alt="" /><span>Waiting</span></li>
+              <li><img src="../icons/status-success.svg" alt="" /><span>Success</span></li>
+              <li><img src="../icons/status-error.svg" alt="" /><span>Error</span></li>
+              <li><img src="../icons/status-offline.svg" alt="" /><span>Offline</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pk-state-lab" aria-labelledby="state-lab-title">
+          <div>
+            <p class="pk-index">Interactive specimen</p>
+            <h3 id="state-lab-title">Worker state translator</h3>
+            <p>Buttons change presentation only. The live region always names the mock state.</p>
+          </div>
+          <div class="pk-state-lab__readout">
+            <img id="state-icon" src="../icons/status-idle.svg" alt="Idle status icon" />
+            <strong id="state-output" aria-live="polite">Demo runtime: Idle</strong>
+          </div>
+          <div id="state-buttons" class="pk-state-buttons" aria-label="Choose demonstration worker state"></div>
+        </div>
+      </section>
+
+      <section id="icons" class="pk-section" aria-labelledby="icons-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">03 / Pixel icon library</p>
+          <h2 id="icons-title">Nineteen local SVGs across four supported sizes.</h2>
+          <p>Each source uses an integer 24-unit viewBox, explicit metadata, and no external font or image.</p>
+        </div>
+        <div class="pk-icon-key" aria-hidden="true"><span>NAME</span><span>16</span><span>20</span><span>24</span><span>32</span></div>
+        <div id="icon-gallery" class="pk-icon-gallery"></div>
+      </section>
+
+      <section id="workers" class="pk-section pk-section--workers" aria-labelledby="workers-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">04 / Composable workers</p>
+          <h2 id="workers-title">Five layers, not a combinatorial image dump.</h2>
+          <p>Base anatomy + persona + reasoning hair + activity state + optional prop.</p>
+        </div>
+
+        <div class="pk-worker-equation" aria-label="Worker layer composition">
+          <div><img src="../workers/anatomy.svg" alt="Base worker anatomy layer" /><b>Base</b></div><span aria-hidden="true">+</span>
+          <div><img src="../workers/personas.svg" alt="Four persona appearance layers" /><b>Persona</b></div><span aria-hidden="true">+</span>
+          <div><img src="../workers/hair-levels.svg" alt="Five reasoning hair layers" /><b>Hair + text</b></div><span aria-hidden="true">+</span>
+          <div><img src="../workers/states.svg" alt="Six authoritative activity state layers" /><b>Activity + text</b></div><span aria-hidden="true">+</span>
+          <div><img src="../workers/props.svg" alt="Five optional office prop layers" /><b>Prop</b></div>
+        </div>
+
+        <div class="pk-worker-sheets">
+          <figure><figcaption>Personas · operator / analyst / builder / reviewer</figcaption><img src="../workers/personas.svg" alt="Persona sheet with operator, analyst, builder, and reviewer pixel workers" /></figure>
+          <figure><figcaption>Reasoning hair · low / medium / high / very high / maximum</figcaption><img src="../workers/hair-levels.svg" alt="Reasoning hair level sheet from low to maximum" /></figure>
+          <figure><figcaption>Activity · idle / thinking / working / waiting / error / offline</figcaption><img src="../workers/states.svg" alt="Worker activity state sheet showing six labelled-by-caption states" /></figure>
+          <figure><figcaption>Office props · workstation / folder / approval / outbox / tool case</figcaption><img src="../workers/props.svg" alt="Optional office prop sheet" /></figure>
+        </div>
+
+        <div class="pk-size-bench" aria-label="Worker anatomy at supported render sizes">
+          <span>24 px <img src="../workers/anatomy.svg" width="24" height="24" alt="Worker anatomy at 24 pixels" /></span>
+          <span>32 px <img src="../workers/anatomy.svg" width="32" height="32" alt="Worker anatomy at 32 pixels" /></span>
+          <span>48 px <img src="../workers/anatomy.svg" width="48" height="48" alt="Worker anatomy at 48 pixels" /></span>
+        </div>
+      </section>
+
+      <section id="objects" class="pk-section" aria-labelledby="objects-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">05 / Office objects</p>
+          <h2 id="objects-title">Metaphors stay bound to authoritative objects.</h2>
+          <p>All labels and counts in this section are invented gallery fixtures.</p>
+        </div>
+
+        <div class="pk-object-room">
+          <article class="pk-briefcase" aria-labelledby="briefcase-demo-title">
+            <div class="pk-briefcase__handle" aria-hidden="true"></div>
+            <div class="pk-briefcase__label">
+              <img src="../icons/briefcase.svg" alt="" />
+              <div><p>DEMO BRIEFCASE</p><h3 id="briefcase-demo-title">Portable kit review</h3></div>
+              <strong>3 folders</strong>
+            </div>
+            <div class="pk-folder-row">
+              <button type="button"><img src="../icons/folder.svg" alt="" /><span><b>Asset audit</b><small>Completed · demo</small></span></button>
+              <button type="button" class="is-selected"><img src="../icons/folder.svg" alt="" /><span><b>DSH adapter spike</b><small>Working · demo</small></span></button>
+              <button type="button"><img src="../icons/folder.svg" alt="" /><span><b>Verification</b><small>Waiting · demo</small></span></button>
+            </div>
+          </article>
+
+          <aside class="pk-cabinet" aria-labelledby="cabinet-demo-title">
+            <div class="pk-cabinet__top"><img src="../icons/filing-cabinet.svg" alt="" /><h3 id="cabinet-demo-title">File cabinet</h3><span>DEMO</span></div>
+            <button type="button"><b>Context</b><span>6 records</span></button>
+            <button type="button" class="is-open"><b>Files</b><span>2 verified</span></button>
+            <div class="pk-cabinet__contents"><code>tokens/core.tokens.json</code><code>icons/approval.svg</code></div>
+            <button type="button"><b>History</b><span>4 events</span></button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="compositions" class="pk-section pk-section--compositions" aria-labelledby="compositions-title">
+        <div class="pk-section__heading">
+          <p class="pk-index">06 / Host compositions</p>
+          <h2 id="compositions-title">Same AA language, different host semantics.</h2>
+          <p>These are static layout studies. They import no Superset or DSH code.</p>
+        </div>
+
+        <article class="pk-host-study" aria-labelledby="superset-study-title">
+          <div class="pk-host-study__caption"><div><span>DEMO COMPOSITION A</span><h3 id="superset-study-title">Superset-adapted host mapping</h3></div><code>Rail | Workspace | Inspector</code></div>
+          <div class="pk-superset-demo">
+            <nav aria-label="Mock Superset composition navigation"><img src="../icons/home.svg" alt="Home" /><img src="../icons/briefcase.svg" alt="Briefcases" /><img src="../icons/settings.svg" alt="Settings" /></nav>
+            <div class="pk-superset-demo__work"><b>DEMO WORKSPACE</b><h4>DSH adapter spike</h4><p>Selected workspace context. Runtime facts would arrive through the existing host projection.</p><div class="pk-terminal-line"><span>&gt;</span> verification boundary: portable UI only</div></div>
+            <aside><b>INSPECTOR</b><span>Files · 2</span><span>Changes · 4</span><span>Approval · none</span></aside>
+          </div>
+        </article>
+
+        <article class="pk-host-study" aria-labelledby="dsh-study-title">
+          <div class="pk-host-study__caption"><div><span>DEMO COMPOSITION B</span><h3 id="dsh-study-title">AA Office for DSH</h3></div><code>Sidebar | Conversation | Details</code></div>
+          <div class="pk-dsh-demo">
+            <aside class="pk-dsh-demo__sidebar" aria-label="Mock DSH Sidebar region">
+              <div class="pk-brand-mark" aria-label="AA Office brand mark">AA</div>
+              <b>SIDEBAR</b>
+              <button type="button" class="is-selected"><img src="../icons/briefcase.svg" alt="" /><span>Demo Workspace</span></button>
+              <button type="button"><img src="../icons/conversation.svg" alt="" /><span>Session 04</span></button>
+              <small>built on DeepSeek Harness</small>
+            </aside>
+            <section class="pk-dsh-demo__conversation" aria-label="Mock DSH Conversation region">
+              <header><div><b>CONVERSATION</b><span>Session → Work Folder</span></div><span class="pk-status-text"><span class="pk-light pk-light--waiting" aria-hidden="true"></span>Approval required</span></header>
+              <div class="pk-message"><span>DEMO USER</span><p>Prepare the portable verification report.</p></div>
+              <div class="pk-message pk-message--assistant"><span>DEMO WORKER · BUILDER</span><p>The asset audit is complete. A structured file mutation is ready for review.</p></div>
+              <section class="pk-approval" aria-labelledby="approval-demo-title">
+                <img src="../icons/approval.svg" alt="" />
+                <div><span>STRUCTURED DEMO APPROVAL</span><h4 id="approval-demo-title">Allow one fixture write?</h4><p>Tool: <code>files.write</code> · Target: <code>./demo-output/report.txt</code></p></div>
+                <div class="pk-approval__actions"><button class="pk-button pk-demo-action" data-decision="approved" type="button">Approve once</button><button class="pk-button pk-demo-action" data-decision="denied" type="button">Deny</button></div>
+                <strong id="approval-result" aria-live="polite">Pending demo decision</strong>
+              </section>
+              <label class="pk-composer"><span>DESK INBOX / COMPOSER</span><textarea rows="2" placeholder="Demo composer; nothing will be sent"></textarea></label>
+            </section>
+            <aside class="pk-dsh-demo__details" aria-label="Mock DSH Details region">
+              <b>DETAILS / FILE CABINET</b>
+              <dl><dt>Workspace</dt><dd>Demo Workspace</dd><dt>Session</dt><dd>Session 04</dd><dt>Agent preset</dt><dd>Builder</dd><dt>Model</dt><dd>Demo Model A</dd></dl>
+              <div class="pk-deliverable"><img src="../icons/deliverable.svg" alt="" /><div><span>DERIVED DEMO DELIVERABLE</span><b>report.txt</b><code>./demo-output/report.txt</code><small>Fixture: successful mutation + location</small></div></div>
+            </aside>
+          </div>
+        </article>
+      </section>
+
+      <section class="pk-verification" aria-labelledby="verification-title">
+        <p class="pk-index">Verification footer</p>
+        <h2 id="verification-title">Static by design.</h2>
+        <ul>
+          <li>No framework imports</li><li>No host modules</li><li>No remote assets</li><li>No official DeepSeek marks</li><li>Reduced-motion fallback</li><li>Structured demo labels</li>
+        </ul>
+        <p>Source pins and license boundary are documented in the portable manifest and provenance audit.</p>
+      </section>
+    </main>
+
+    <footer class="pk-footer"><span>AA PORTABLE UI KIT v0.1</span><span>PHASE 5A · STATIC EVIDENCE</span></footer>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{
+	"name": "AA Portable Motion Specification",
+	"version": "0.1.0",
+	"principle": "Motion reports a state transition; it never fabricates activity or decorates an idle screen.",
+	"defaults": {
+		"easing": "steps(2, end)",
+		"maximumLoopFps": 2.5,
+		"maximumAttentionDurationMs": 320,
+		"transforms": ["translateX", "translateY"],
+		"forbidden": [
+			"layout-shifting scale",
+			"parallax",
+			"continuous decorative shimmer"
+		]
+	},
+	"transitions": {
+		"controlPress": {
+			"durationMs": 80,
+			"frames": 2,
+			"reducedMotion": "instant-depth-swap"
+		},
+		"panelReveal": {
+			"durationMs": 160,
+			"frames": 2,
+			"reducedMotion": "instant"
+		},
+		"workingIndicator": {
+			"durationMs": 800,
+			"frames": 2,
+			"iterations": "while-authoritative-working",
+			"reducedMotion": "static-first-frame-plus-text"
+		},
+		"attentionPulse": {
+			"durationMs": 320,
+			"frames": 2,
+			"iterations": 2,
+			"reducedMotion": "static-outline-plus-text"
+		},
+		"statusChange": {
+			"durationMs": 0,
+			"frames": 1,
+			"reducedMotion": "unchanged"
+		}
+	},
+	"runtimeContract": {
+		"systemPreference": "prefers-reduced-motion: reduce",
+		"userOverride": "data-aa-motion=reduce",
+		"requiredFallback": "Every animated state also exposes persistent text and shape.",
+		"truthRule": "Stop working motion in the same render that authoritative working state ends."
+	}
+}

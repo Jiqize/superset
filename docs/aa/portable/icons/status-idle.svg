@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-icon-status-idle" viewBox="0 0 24 24" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">Idle status</title><desc id="desc">Neutral hollow square status light.</desc>
+  <path fill="#242424" d="M6 6h12v12H6V6Z"/><path fill="#cbc9c3" d="M9 9h6v6H9V9Z"/>
+</svg>

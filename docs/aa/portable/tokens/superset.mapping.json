@@ -1,0 +1,44 @@
+{
+	"name": "AA Portable to Current Superset AA Mapping",
+	"version": "0.1.0",
+	"verifiedAtCommit": "4cfff9261e2cbdb4f9d3f653312f80482657b0f1",
+	"source": "apps/desktop/src/renderer/routes/_authenticated/_dashboard/components/AAOffice/aa-office.css",
+	"mappings": {
+		"application.canvas": { "status": "supported", "target": "--aa-canvas" },
+		"shell.surface": { "status": "supported", "target": "--aa-shell" },
+		"surface.raised": { "status": "supported", "target": "--aa-raised" },
+		"surface.inset": { "status": "supported", "target": "--aa-inset" },
+		"border.strong": { "status": "supported", "target": "--aa-border" },
+		"border.soft": { "status": "supported", "target": "--aa-border-soft" },
+		"text.primary": { "status": "supported", "target": "--aa-text" },
+		"text.secondary": { "status": "supported", "target": "--aa-muted" },
+		"selection.background": {
+			"status": "supported",
+			"target": "--aa-selection"
+		},
+		"selection.text": {
+			"status": "supported",
+			"target": "--aa-selection-text"
+		},
+		"status.working": { "status": "supported", "target": "--aa-working" },
+		"status.waiting": { "status": "supported", "target": "--aa-attention" },
+		"status.success": { "status": "supported", "target": "--aa-success" },
+		"status.error": { "status": "supported", "target": "--aa-error" },
+		"status.offline": { "status": "supported", "target": "--aa-offline" },
+		"object.paper": { "status": "supported", "target": "--aa-paper" },
+		"workstation.surface": {
+			"status": "supported",
+			"target": "--aa-terminal-frame"
+		},
+		"object.briefcase": { "status": "supported", "target": "--aa-briefcase" },
+		"object.folder": {
+			"status": "unsupported",
+			"reason": "Current AA uses a composed folder treatment rather than a dedicated CSS variable."
+		},
+		"focus.ring": { "status": "supported", "target": "--aa-selection" },
+		"control.disabled": {
+			"status": "unsupported",
+			"reason": "Current AA derives disabled presentation from opacity and existing surfaces."
+		}
+	}
+}

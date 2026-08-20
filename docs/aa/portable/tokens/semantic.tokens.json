@@ -1,0 +1,32 @@
+{
+	"name": "AA Portable Semantic Tokens",
+	"version": "0.1.0",
+	"status": "phase-5a-spike",
+	"coreSource": "./core.tokens.json",
+	"tokens": {
+		"application.canvas": { "coreRef": "color.canvas", "value": "#a5a49f" },
+		"shell.surface": { "coreRef": "color.shell", "value": "#8a8984" },
+		"surface.raised": { "coreRef": "color.raised", "value": "#e4e2dc" },
+		"surface.inset": { "coreRef": "color.inset", "value": "#b5b4af" },
+		"border.strong": { "coreRef": "color.border", "value": "#242424" },
+		"border.soft": { "coreRef": "color.borderSoft", "value": "#5d5c58" },
+		"text.primary": { "coreRef": "color.text", "value": "#171717" },
+		"text.secondary": { "coreRef": "color.textMuted", "value": "#5f5e5a" },
+		"selection.background": {
+			"coreRef": "color.selection",
+			"value": "#173267"
+		},
+		"selection.text": { "coreRef": "color.selectionText", "value": "#f3f1e9" },
+		"status.working": { "coreRef": "color.working", "value": "#e0a11b" },
+		"status.waiting": { "coreRef": "color.waiting", "value": "#4d78a8" },
+		"status.success": { "coreRef": "color.success", "value": "#6e9b48" },
+		"status.error": { "coreRef": "color.error", "value": "#9c302b" },
+		"status.offline": { "coreRef": "color.offline", "value": "#777a7e" },
+		"object.paper": { "coreRef": "color.paper", "value": "#e9e5d8" },
+		"workstation.surface": { "coreRef": "color.terminal", "value": "#353633" },
+		"object.briefcase": { "coreRef": "color.briefcase", "value": "#6d482c" },
+		"object.folder": { "coreRef": "color.folder", "value": "#a9783e" },
+		"focus.ring": { "coreRef": "color.selection", "value": "#173267" },
+		"control.disabled": { "coreRef": "color.disabled", "value": "#8d8c87" }
+	}
+}

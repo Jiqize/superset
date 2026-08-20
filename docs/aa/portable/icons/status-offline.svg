@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-icon-status-offline" viewBox="0 0 24 24" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">Offline status</title><desc id="desc">Grey disconnected status plug.</desc>
+  <path fill="#242424" d="M4 4h3v3h3v3h4V7h3V4h3v5h-3v3h-3v3h3v3h3v2h-5v-3h-3v3h-2v-3H7v3H4v-5h3v-3H4V4Z"/><path fill="#777a7e" d="M8 8h2v2H8V8Zm6 6h2v2h-2v-2Z"/>
+</svg>

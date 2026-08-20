@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-worker-anatomy-sheet" viewBox="0 0 48 48" role="img" aria-labelledby="anatomy-title anatomy-desc" shape-rendering="crispEdges">
+  <title id="anatomy-title">AA worker base anatomy</title>
+  <desc id="anatomy-desc">Framework-neutral pixel worker base with named body, face, uniform, hair anchor, status anchor, and prop anchor groups.</desc>
+  <rect width="48" height="48" fill="#b5b4af"/>
+  <g id="base-anatomy">
+    <g id="base-shadow" fill="#5d5c58"><path d="M8 40h32v4H8z"/></g>
+    <g id="base-body" fill="#242424"><path d="M12 28h24v4h4v12H8V32h4v-4Z"/></g>
+    <g id="base-uniform" fill="#173267"><path d="M12 32h8v4h8v-4h8v8H12v-8Z"/></g>
+    <g id="base-neck" fill="#c98f68"><path d="M20 24h8v8h-8z"/></g>
+    <g id="base-head" fill="#242424"><path d="M12 8h24v16h-4v4H16v-4h-4V8Z"/><path fill="#e2ad82" d="M16 8h16v16H16z"/></g>
+    <g id="base-face" fill="#171717"><path d="M18 16h4v4h-4v-4Zm8 0h4v4h-4v-4Zm-4 6h4v2h-4v-2Z"/></g>
+    <g id="hair-anchor" fill="#242424"><path d="M12 4h24v8h-4V8H16v4h-4V4Z"/></g>
+    <g id="status-anchor"><path fill="#6e9b48" d="M36 4h8v8h-8z"/><path fill="#f3f1e9" d="M38 6h4v4h-4z"/></g>
+    <g id="prop-anchor" fill="#9a6b3d"><path d="M36 32h8v12h-8z"/></g>
+  </g>
+</svg>

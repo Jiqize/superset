@@ -1,0 +1,225 @@
+{
+	"name": "AA Portable UI Asset Kit",
+	"version": "0.1.0",
+	"status": "phase-5a-spike",
+	"basePath": ".",
+	"gridUnit": 4,
+	"license": {
+		"declared": false,
+		"note": "Independent package licensing is intentionally deferred until the provenance gate is approved. See AA-ASSET-PROVENANCE.md."
+	},
+	"sourcePins": {
+		"superset": "4cfff9261e2cbdb4f9d3f653312f80482657b0f1",
+		"deepseekHarness": "141eb6fef83422698aef7a981029e843e8161534"
+	},
+	"assets": [
+		{
+			"id": "icon.home",
+			"path": "icons/home.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.briefcase",
+			"path": "icons/briefcase.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.folder",
+			"path": "icons/folder.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.filing-cabinet",
+			"path": "icons/filing-cabinet.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.conversation",
+			"path": "icons/conversation.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.agent",
+			"path": "icons/agent.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.settings",
+			"path": "icons/settings.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.terminal",
+			"path": "icons/terminal.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.files",
+			"path": "icons/files.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.changes",
+			"path": "icons/changes.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.diff",
+			"path": "icons/diff.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.approval",
+			"path": "icons/approval.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.deliverable",
+			"path": "icons/deliverable.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-idle",
+			"path": "icons/status-idle.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-working",
+			"path": "icons/status-working.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-waiting",
+			"path": "icons/status-waiting.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-success",
+			"path": "icons/status-success.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-error",
+			"path": "icons/status-error.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "icon.status-offline",
+			"path": "icons/status-offline.svg",
+			"kind": "icon",
+			"viewBox": "0 0 24 24",
+			"sizes": [16, 20, 24, 32],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "worker.anatomy",
+			"path": "workers/anatomy.svg",
+			"kind": "worker-reference",
+			"viewBox": "0 0 48 48",
+			"sizes": [24, 32, 48],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "worker.personas",
+			"path": "workers/personas.svg",
+			"kind": "worker-reference",
+			"viewBox": "0 0 192 48",
+			"sizes": [24, 32, 48],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "worker.hair-levels",
+			"path": "workers/hair-levels.svg",
+			"kind": "worker-reference",
+			"viewBox": "0 0 240 48",
+			"sizes": [24, 32, 48],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "worker.states",
+			"path": "workers/states.svg",
+			"kind": "worker-reference",
+			"viewBox": "0 0 288 48",
+			"sizes": [24, 32, 48],
+			"provenance": "AA-original-clean-room-redraw"
+		},
+		{
+			"id": "worker.props",
+			"path": "workers/props.svg",
+			"kind": "worker-reference",
+			"viewBox": "0 0 240 48",
+			"sizes": [24, 32, 48],
+			"provenance": "AA-original-clean-room-redraw"
+		}
+	],
+	"requiredRuntimeFiles": [
+		"tokens/core.tokens.json",
+		"tokens/semantic.tokens.json",
+		"tokens/superset.mapping.json",
+		"tokens/dsh.mapping.json",
+		"motion/motion-spec.json",
+		"gallery/index.html",
+		"gallery/aa-portable.css",
+		"gallery/gallery.js"
+	],
+	"requiredDocuments": [
+		"AA-PORTABLE-DESIGN-SYSTEM.md",
+		"AA-SEMANTIC-MODEL.md",
+		"AA-COMPONENT-CONTRACTS.md",
+		"AA-ASSET-PROVENANCE.md"
+	]
+}

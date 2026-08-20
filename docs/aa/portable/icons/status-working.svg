@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-icon-status-working" viewBox="0 0 24 24" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">Working status</title><desc id="desc">Amber stepped activity status light.</desc>
+  <path fill="#242424" d="M6 6h12v12H6V6Z"/><path fill="#e0a11b" d="M9 8h4v4h2v4h-4v-4H9V8Z"/>
+</svg>

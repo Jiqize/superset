@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-worker-states-sheet" viewBox="0 0 288 48" role="img" aria-labelledby="states-title states-desc" shape-rendering="crispEdges">
+  <title id="states-title">AA worker activity states</title>
+  <desc id="states-desc">Six worker activity overlays: idle, thinking, working, waiting, error, and offline. Color and shape are redundant; product use also requires state text.</desc>
+  <rect width="288" height="48" fill="#b5b4af"/>
+  <g id="state-idle" transform="translate(0 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#242424" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#e2ad82" d="M16 12h16v12H16z"/><path fill="#cbc9c3" d="M12 34h24v8H12z"/><path fill="#f0efea" d="M36 4h8v8h-8z"/></g>
+  <g id="state-thinking" transform="translate(48 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#242424" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#e2ad82" d="M16 12h16v12H16z"/><path fill="#4d78a8" d="M12 34h24v8H12zM34 4h4v4h-4zm6-4h4v4h-4zm0 10h4v4h-4z"/></g>
+  <g id="state-working" transform="translate(96 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#242424" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#e2ad82" d="M16 12h16v12H16z"/><path fill="#173267" d="M12 34h24v8H12z"/><path fill="#e0a11b" d="M36 4h4v4h4v8h-4v4h-4v-4h4V8h-4V4Z"/></g>
+  <g id="state-waiting" transform="translate(144 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#242424" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#e2ad82" d="M16 12h16v12H16z"/><path fill="#4d78a8" d="M12 34h24v8H12zM36 4h8v4h-2v4l2 4v4h-8v-4l2-4-2-4V4Z"/></g>
+  <g id="state-error" transform="translate(192 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#242424" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#e2ad82" d="M16 12h16v12H16z"/><path fill="#9c302b" d="M12 34h24v8H12zM36 4h8v16h-8V4Z"/><path fill="#f3f1e9" d="M38 7h4v6h-4zm0 9h4v2h-4z"/></g>
+  <g id="state-offline" transform="translate(240 0)"><path fill="#5d5c58" d="M8 42h32v4H8z"/><path fill="#777a7e" d="M12 8h24v18h-4v4h4v4h4v10H8V34h4v-4h4v-4h-4V8Z"/><path fill="#b5b4af" d="M16 12h16v12H16z"/><path fill="#5f5e5a" d="M12 34h24v8H12z"/><path fill="#242424" d="M36 5h3v3h2V5h3v5h-2v4h2v5h-3v-3h-2v3h-3v-5h2v-4h-2V5Z"/></g>
+</svg>

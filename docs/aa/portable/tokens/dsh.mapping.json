@@ -1,0 +1,108 @@
+{
+	"name": "AA Portable to DeepSeek Harness Theme Mapping",
+	"version": "0.1.0",
+	"verifiedAtDshCommit": "141eb6fef83422698aef7a981029e843e8161534",
+	"source": "packages/client/ui-theme/src/styles/design-platform.css",
+	"policy": "Only aliases verified in the pinned checkout are named. Unsupported AA roles require scoped skin CSS rather than invented DSH variables.",
+	"mappings": {
+		"application.canvas": {
+			"status": "supported",
+			"target": "--dsw-alias-bg-base",
+			"confidence": "exact-role"
+		},
+		"shell.surface": {
+			"status": "supported",
+			"target": "--dsw-specific-sidebar-fill",
+			"confidence": "exact-role"
+		},
+		"surface.raised": {
+			"status": "supported",
+			"target": "--dsw-alias-bg-layer-1",
+			"confidence": "close-role"
+		},
+		"surface.inset": {
+			"status": "supported",
+			"target": "--dsw-alias-bg-layer-2",
+			"confidence": "close-role"
+		},
+		"border.strong": {
+			"status": "supported",
+			"target": "--dsw-alias-border-l2",
+			"confidence": "close-role"
+		},
+		"border.soft": {
+			"status": "supported",
+			"target": "--dsw-alias-border-l1",
+			"confidence": "close-role"
+		},
+		"text.primary": {
+			"status": "supported",
+			"target": "--dsw-alias-label-primary",
+			"confidence": "exact-role"
+		},
+		"text.secondary": {
+			"status": "supported",
+			"target": "--dsw-alias-label-secondary",
+			"confidence": "exact-role"
+		},
+		"selection.background": {
+			"status": "supported",
+			"target": "--dsw-specific-sidebar-nav-item-active",
+			"confidence": "scoped-role"
+		},
+		"selection.text": {
+			"status": "supported",
+			"target": "--dsw-alias-label-primary-foreground",
+			"confidence": "close-role"
+		},
+		"status.working": {
+			"status": "supported",
+			"target": "--dsw-alias-state-warn-primary",
+			"confidence": "close-role"
+		},
+		"status.waiting": {
+			"status": "unsupported",
+			"reason": "No verified DSH alias expresses AA's neutral waiting/attention role without changing its meaning."
+		},
+		"status.success": {
+			"status": "supported",
+			"target": "--dsw-alias-state-success-primary",
+			"confidence": "exact-role"
+		},
+		"status.error": {
+			"status": "supported",
+			"target": "--dsw-alias-state-error-primary",
+			"confidence": "exact-role"
+		},
+		"status.offline": {
+			"status": "unsupported",
+			"reason": "No verified offline-specific DSH alias exists in the pinned theme contract."
+		},
+		"object.paper": {
+			"status": "unsupported",
+			"reason": "AA object color; provide through scoped skin variables."
+		},
+		"workstation.surface": {
+			"status": "unsupported",
+			"reason": "AA object color; provide through scoped skin variables."
+		},
+		"object.briefcase": {
+			"status": "unsupported",
+			"reason": "AA object color; provide through scoped skin variables."
+		},
+		"object.folder": {
+			"status": "unsupported",
+			"reason": "AA object color; provide through scoped skin variables."
+		},
+		"focus.ring": {
+			"status": "supported",
+			"target": "--dsw-alias-brand-primary",
+			"confidence": "close-role"
+		},
+		"control.disabled": {
+			"status": "supported",
+			"target": "--dsw-alias-label-dimmed",
+			"confidence": "text-only-role"
+		}
+	}
+}

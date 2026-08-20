@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="aa-worker-hair-sheet" viewBox="0 0 240 48" role="img" aria-labelledby="hair-title hair-desc" shape-rendering="crispEdges">
+  <title id="hair-title">AA reasoning hair levels</title>
+  <desc id="hair-desc">Five text-free hair layers for low, medium, high, very high, and maximum reasoning. Hair is always paired with visible text in product use.</desc>
+  <rect width="240" height="48" fill="#b5b4af"/>
+  <g id="hair-low" transform="translate(0 0)"><path fill="#242424" d="M12 16h24v20H12V16Z"/><path fill="#e2ad82" d="M16 20h16v14H16z"/><path fill="#171717" d="M12 12h24v8H12z"/></g>
+  <g id="hair-medium" transform="translate(48 0)"><path fill="#242424" d="M12 16h24v20H12V16Z"/><path fill="#e2ad82" d="M16 20h16v14H16z"/><path fill="#171717" d="M12 8h8v4h16v8H12V8Z"/></g>
+  <g id="hair-high" transform="translate(96 0)"><path fill="#242424" d="M12 16h24v20H12V16Z"/><path fill="#e2ad82" d="M16 20h16v14H16z"/><path fill="#171717" d="M12 8h4V4h8v8h4V4h8v16H12V8Z"/></g>
+  <g id="hair-very-high" transform="translate(144 0)"><path fill="#242424" d="M12 16h24v20H12V16Z"/><path fill="#e2ad82" d="M16 20h16v14H16z"/><path fill="#171717" d="M12 8h4V0h8v8h4V0h8v20H12V8Z"/><path fill="#e0a11b" d="M20 4h4v4h-4zm8 0h4v4h-4z"/></g>
+  <g id="hair-maximum" transform="translate(192 0)"><path fill="#242424" d="M12 16h24v20H12V16Z"/><path fill="#e2ad82" d="M16 20h16v14H16z"/><path fill="#171717" d="M8 8h4V0h8v8h4V0h8v8h4V0h4v20H8V8Z"/><path fill="#e0a11b" d="M12 4h4v4h-4zm12 0h4v4h-4zm12 0h4v4h-4z"/></g>
+</svg>
